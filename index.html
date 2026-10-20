@@ -305,6 +305,28 @@
         let playerHand = [];
         let drawPile = [];
 
+        // Automatically create and store unique browser session ID & inject into PayPal links
+        function initSessionAndLinks() {
+            let sessionId = localStorage.getItem('ec_session_id');
+            if (!sessionId) {
+                sessionId = 'hero_' + Math.random().toString(36).substring(2, 9);
+                localStorage.setItem('ec_session_id', sessionId);
+            }
+
+            // Bind session ID parameter to all shop purchase links automatically
+            const shopLinks = document.querySelectorAll('#modalShop a[href*="paypal.com"]');
+            shopLinks.forEach(link => {
+                let base = link.getAttribute('href').split('&custom_id=')[0];
+                link.setAttribute('href', `${base}&custom_id=${sessionId}`);
+            });
+            
+            const vipLink = document.getElementById('vipPassBtn');
+            if (vipLink) {
+                let baseVip = vipLink.getAttribute('href').split('&custom_id=')[0];
+                vipLink.setAttribute('href', `${baseVip}&custom_id=${sessionId}`);
+            }
+        }
+
         // Load saved purchases from local storage and update shop UI
         function loadPurchases() {
             if (localStorage.getItem('ec_vip') === 'true' || localStorage.getItem('ec_pass') === 'true') {
@@ -338,15 +360,12 @@
         // Restore purchases by talking directly to your local server.js
         async function restorePurchases() {
             let sessionId = localStorage.getItem('ec_session_id');
-            if (!sessionId) {
-                sessionId = 'hero_' + Math.random().toString(36).substring(2, 9);
-                localStorage.setItem('ec_session_id', sessionId);
-            }
+            if (!sessionId) initSessionAndLinks();
+            sessionId = localStorage.getItem('ec_session_id');
 
             try {
                 logMessage(`[Server Sync] Checking local payment server for session: ${sessionId}...`);
                 
-                // Communicates directly with your local server.js running on port 3000
                 const response = await fetch(`http://localhost:3000/check-payment?session=${sessionId}`);
                 const data = await response.json();
 
@@ -366,6 +385,7 @@
         }
 
         window.onload = () => {
+            initSessionAndLinks();
             loadPurchases();
         };
 
