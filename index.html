@@ -92,7 +92,7 @@
                             <div id="bossHpBar" class="bg-gradient-to-r from-red-600 to-orange-500 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
                         </div>
                         <div class="flex justify-between text-xs text-slate-400">
-                            <span>HP: <strong id="bossHpText" class="text-slate-200">50</strong>/<span id="bossMaxHpText">50</span></span>
+                            <span>HP: <strong id="bossHpText" class="text-slate-200">75</strong>/<span id="bossMaxHpText">75</span></span>
                             <span id="bossShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
                         </div>
                     </div>
@@ -170,13 +170,13 @@
                         <li><strong>Fire</strong> beats Earth (deals 1.4x damage).</li>
                         <li><strong>Earth</strong> beats Water (deals 1.4x damage).</li>
                         <li><strong>Water</strong> beats Fire (deals 1.4x damage).</li>
-                        <li>Bosses also gain advantage when their element counters yours!</li>
+                        <li>Bosses also gain elemental surges in combat!</li>
                     </ul>
                 </div>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
                     <p class="font-bold text-amber-400 mb-1">⚔️ Core Rules & Permadeath:</p>
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li><strong>20 Progressive Levels:</strong> Level 1 is very easy, scaling up to Level 20 (Apex Voidlord).</li>
+                        <li><strong>20 Progressive Levels:</strong> Challenging early curve scaling up to Level 20 (Apex Voidlord).</li>
                         <li><strong>Hardcore Permadeath:</strong> If your HP drops to 0, restart from Level 1 (Revive Token can only be used once per run!).</li>
                     </ul>
                 </div>
@@ -257,26 +257,27 @@
             { id: 's1', name: 'Aegis Shield', type: 'shield', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
         ];
 
+        // Tougher progression curve starting at 75 HP instead of 40 HP
         const bossList = [
-            { name: "Sparkling Sprite", hp: 40, element: "fire", theme: "The Outskirts", aiAggro: 0.4 },
-            { name: "Mossy Golem", hp: 50, element: "earth", theme: "Whispering Woods", aiAggro: 0.5 },
-            { name: "River Lurker", hp: 60, element: "water", theme: "Crystal River", aiAggro: 0.5 },
-            { name: "Flame Imp", hp: 70, element: "fire", theme: "Volcanic Vent", aiAggro: 0.6 },
-            { name: "Stone Guardian", hp: 85, element: "earth", theme: "Ancient Ruins", aiAggro: 0.5 },
-            { name: "Frost Serpent", hp: 100, element: "water", theme: "Frozen Cavern", aiAggro: 0.6 },
-            { name: "Magma Brute", hp: 115, element: "fire", theme: "Magma Chambers", aiAggro: 0.7 },
-            { name: "Thorn Queen", hp: 130, element: "earth", theme: "Tangled Thicket", aiAggro: 0.6 },
-            { name: "Tidal Kraken", hp: 150, element: "water", theme: "Abyssal Trench", aiAggro: 0.7 },
-            { name: "Blazing Phoenix", hp: 175, element: "fire", theme: "Sky Sanctuary", aiAggro: 0.8 },
-            { name: "Granite Titan", hp: 200, element: "earth", theme: "Mountain Peak", aiAggro: 0.6 },
-            { name: "Abyssal Leviathan", hp: 230, element: "water", theme: "Sunken Temple", aiAggro: 0.7 },
-            { name: "Infernal Overlord", hp: 260, element: "fire", theme: "Demon Gate", aiAggro: 0.85 },
-            { name: "Gaia Colossus", hp: 300, element: "earth", theme: "World Core", aiAggro: 0.7 },
-            { name: "Storm Sovereign", hp: 340, element: "water", theme: "Tempest Eye", aiAggro: 0.8 },
-            { name: "Solar Emperor", hp: 390, element: "fire", theme: "Solar Citadel", aiAggro: 0.9 },
-            { name: "Eldritch Treant", hp: 440, element: "earth", theme: "Corrupted Forest", aiAggro: 0.8 },
-            { name: "Titan of Tides", hp: 500, element: "water", theme: "Endless Sea", aiAggro: 0.85 },
-            { name: "Shadow Fiend", hp: 570, element: "fire", theme: "Shadow Realm", aiAggro: 0.95 },
+            { name: "Sparkling Sprite", hp: 75, element: "fire", theme: "The Outskirts", aiAggro: 0.65 },
+            { name: "Mossy Golem", hp: 90, element: "earth", theme: "Whispering Woods", aiAggro: 0.68 },
+            { name: "River Lurker", hp: 105, element: "water", theme: "Crystal River", aiAggro: 0.7 },
+            { name: "Flame Imp", hp: 120, element: "fire", theme: "Volcanic Vent", aiAggro: 0.72 },
+            { name: "Stone Guardian", hp: 135, element: "earth", theme: "Ancient Ruins", aiAggro: 0.75 },
+            { name: "Frost Serpent", hp: 150, element: "water", theme: "Frozen Cavern", aiAggro: 0.76 },
+            { name: "Magma Brute", hp: 170, element: "fire", theme: "Magma Chambers", aiAggro: 0.78 },
+            { name: "Thorn Queen", hp: 190, element: "earth", theme: "Tangled Thicket", aiAggro: 0.8 },
+            { name: "Tidal Kraken", hp: 215, element: "water", theme: "Abyssal Trench", aiAggro: 0.82 },
+            { name: "Blazing Phoenix", hp: 240, element: "fire", theme: "Sky Sanctuary", aiAggro: 0.85 },
+            { name: "Granite Titan", hp: 270, element: "earth", theme: "Mountain Peak", aiAggro: 0.86 },
+            { name: "Abyssal Leviathan", hp: 300, element: "water", theme: "Sunken Temple", aiAggro: 0.88 },
+            { name: "Infernal Overlord", hp: 335, element: "fire", theme: "Demon Gate", aiAggro: 0.9 },
+            { name: "Gaia Colossus", hp: 375, element: "earth", theme: "World Core", aiAggro: 0.92 },
+            { name: "Storm Sovereign", hp: 415, element: "water", theme: "Tempest Eye", aiAggro: 0.94 },
+            { name: "Solar Emperor", hp: 460, element: "fire", theme: "Solar Citadel", aiAggro: 0.95 },
+            { name: "Eldritch Treant", hp: 510, element: "earth", theme: "Corrupted Forest", aiAggro: 0.97 },
+            { name: "Titan of Tides", hp: 565, element: "water", theme: "Endless Sea", aiAggro: 0.98 },
+            { name: "Shadow Fiend", hp: 620, element: "fire", theme: "Shadow Realm", aiAggro: 0.99 },
             { name: "Apex Voidlord", hp: 650, element: "earth", theme: "The Void Apex", aiAggro: 1.0 }
         ];
 
@@ -372,7 +373,6 @@
                 playSound('attack');
                 let dmg = card.power;
                 
-                // Elemental Advantage Check (Player -> Boss)
                 let hasAdvantage = (card.type === 'fire' && currentBoss.element === 'earth') ||
                                    (card.type === 'earth' && currentBoss.element === 'water') ||
                                    (card.type === 'water' && currentBoss.element === 'fire');
@@ -412,13 +412,12 @@
 
         function bossTurn() {
             let bossActionType = Math.random() < currentBoss.aiAggro ? 'attack' : (Math.random() < 0.5 ? 'shield' : 'heal');
-            let bossPower = Math.round(12 + (currentLevel * 2.2));
+            let bossPower = Math.round(14 + (currentLevel * 2.5));
 
             if (bossActionType === 'attack') {
                 playSound('attack');
                 
-                // Boss Elemental Advantage Check (Boss element counters Player's most common element or gets a 1.3x boost)
-                let bossHasAdvantage = Math.random() < 0.35; // 35% chance for boss to strike with elemental proficiency
+                let bossHasAdvantage = Math.random() < 0.4;
                 if (bossHasAdvantage) {
                     bossPower = Math.round(bossPower * 1.3);
                     logMessage(`[⚠️ Boss Advantage!] ${currentBoss.name} unleashes an elemental surge! Attack boosted to ${bossPower}!`);
