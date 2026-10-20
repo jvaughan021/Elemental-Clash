@@ -305,7 +305,18 @@
         let playerHand = [];
         let drawPile = [];
 
-        // Initialize session ID and append custom tracking to shop links
+        // Dictionary for readable product names inside the game
+        const productFriendlyNames = {
+            'vip': 'VIP Pass (£4.99/mo)',
+            'pass': '7-Day Ad-Free Pass (£1.99)',
+            'tier1': 'Tier 1: Apprentice Blessing (£0.99)',
+            'tier2': 'Tier 2: Veteran’s Grace (£2.49)',
+            'tier3': 'Tier 3: Immortal Champion (£4.99)',
+            'gold': 'Golden Royal Deck Skin (£1.99)',
+            'neon': 'Neon Cyberpunk Deck Skin (£2.49)'
+        };
+
+        // Initialize session ID and append explicit product tracking to shop links
         function initSessionAndLinks() {
             let sessionId = localStorage.getItem('ec_session_id');
             if (!sessionId) {
@@ -313,7 +324,6 @@
                 localStorage.setItem('ec_session_id', sessionId);
             }
 
-            // Map each button to its specific product code for server tracking
             const productMap = {
                 'vipPassBtn': 'vip',
                 'shopItem_pass': 'pass',
@@ -336,7 +346,7 @@
             }
         }
 
-        // Apply saved purchases from local storage to UI
+        // Apply saved purchases from local storage and update shop UI
         function applyPurchasesToUI(purchases) {
             if (purchases.vip || purchases.pass) {
                 isVipActive = true;
@@ -347,6 +357,10 @@
                 if(label1) label1.innerText = 'VIP Free';
                 if(label2) label2.innerText = 'VIP Free';
                 
+                if (purchases.vip) {
+                    const vipShop = document.getElementById('vipPassBtn');
+                    if(vipShop) vipShop.innerText = '⭐ VIP Pass (Active)';
+                }
                 if (purchases.pass) {
                     const shopPass = document.getElementById('shopItem_pass');
                     if(shopPass) shopPass.innerHTML = `<span class="bg-purple-900/40 text-purple-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-purple-500/40">✓ Purchased</span>`;
@@ -373,7 +387,7 @@
             }
         }
 
-        // Restore purchases from the server
+        // Restore purchases and display explicitly what items were found
         async function restorePurchases() {
             let sessionId = localStorage.getItem('ec_session_id');
             if (!sessionId) initSessionAndLinks();
@@ -384,11 +398,16 @@
                 const response = await fetch(`http://localhost:3000/check-payment?session=${sessionId}`);
                 const purchases = await response.json();
 
-                if (Object.keys(purchases).length > 0) {
+                const keys = Object.keys(purchases).filter(k => purchases[k] === true);
+
+                if (keys.length > 0) {
                     localStorage.setItem('ec_purchases', JSON.stringify(purchases));
                     applyPurchasesToUI(purchases);
-                    alert('Purchases verified and restored by server!');
-                    logMessage(`[Success] Restored specific purchases for session ${sessionId}.`);
+
+                    // Build explicit readable list of purchased items
+                    let foundNames = keys.map(k => productFriendlyNames[k] || k).join(', ');
+                    alert(`Server Verified! Restored items:\n• ${foundNames}`);
+                    logMessage(`[Success] Restored products for session ${sessionId}: [${foundNames}]`);
                 } else {
                     alert('No completed purchases found on the server for this session yet.');
                     logMessage(`[Sync] Server checked session ${sessionId} - No purchases recorded.`);
@@ -846,7 +865,7 @@
             }, 1000);
         }
 
-        function openShop() { document.getElementById('modalShop').classList.add('hidden') === false ? '' : document.getElementById('modalShop').classList.remove('hidden'); }
+        function openShop() { document.getElementById('modalShop').classList.remove('hidden'); }
         function closeShop() { document.getElementById('modalShop').classList.add('hidden'); }
         function openRules() { document.getElementById('modalRules').classList.remove('hidden'); }
         function closeRules() { document.getElementById('modalRules').classList.add('hidden'); }
