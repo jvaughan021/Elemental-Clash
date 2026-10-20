@@ -170,7 +170,7 @@
                         <li><strong>Fire</strong> beats Earth (deals 1.4x damage).</li>
                         <li><strong>Earth</strong> beats Water (deals 1.4x damage).</li>
                         <li><strong>Water</strong> beats Fire (deals 1.4x damage).</li>
-                        <li><strong>Shield</strong> and <strong>Heal</strong> cards protect and restore HP.</li>
+                        <li>Bosses also gain advantage when their element counters yours!</li>
                     </ul>
                 </div>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
@@ -178,8 +178,6 @@
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
                         <li><strong>20 Progressive Levels:</strong> Level 1 is very easy, scaling up to Level 20 (Apex Voidlord).</li>
                         <li><strong>Hardcore Permadeath:</strong> If your HP drops to 0, restart from Level 1 (Revive Token can only be used once per run!).</li>
-                        <li><strong>Full Health Restore:</strong> Defeating a boss fully heals your HP to 100 for the next stage.</li>
-                        <li><strong>Unique Hand:</strong> Your hand automatically ensures no duplicate cards appear simultaneously.</li>
                     </ul>
                 </div>
             </div>
@@ -190,7 +188,7 @@
     <!-- Game Engine Script -->
     <script>
         let soundEnabled = true;
-        let hasRevived = false; // One-time revive token tracking per run
+        let hasRevived = false;
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
@@ -317,7 +315,7 @@
             resetDeck();
             drawNewHand(4);
             updateUI();
-            logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} (${currentBoss.theme})!`);
+            logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} [${currentBoss.element.toUpperCase()} element]!`);
         }
 
         function resetDeck() {
@@ -373,11 +371,17 @@
             } else {
                 playSound('attack');
                 let dmg = card.power;
-                if ((card.type === 'fire' && currentBoss.element === 'earth') ||
-                    (card.type === 'earth' && currentBoss.element === 'water') ||
-                    (card.type === 'water' && currentBoss.element === 'fire')) {
+                
+                // Elemental Advantage Check (Player -> Boss)
+                let hasAdvantage = (card.type === 'fire' && currentBoss.element === 'earth') ||
+                                   (card.type === 'earth' && currentBoss.element === 'water') ||
+                                   (card.type === 'water' && currentBoss.element === 'fire');
+
+                if (hasAdvantage) {
                     dmg = Math.round(dmg * 1.4);
-                    logMessage(`[Advantage!] Elemental advantage! ${card.name} deals bonus damage.`);
+                    logMessage(`[🔥 Elemental Advantage!] Your ${card.type.toUpperCase()} beats ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
+                } else {
+                    logMessage(`[Attack] You played ${card.name} for ${dmg} damage.`);
                 }
 
                 if (currentBoss.shield > 0) {
@@ -391,7 +395,6 @@
                 }
                 currentBoss.currentHp = Math.max(0, currentBoss.currentHp - dmg);
                 showPopup('bossDamagePopup', `-${dmg}`, 'text-amber-400');
-                logMessage(`[Attack] You played ${card.name} for ${dmg} damage!`);
 
                 if (currentBoss.currentHp <= 0) {
                     triggerStageVictory();
@@ -413,8 +416,14 @@
 
             if (bossActionType === 'attack') {
                 playSound('attack');
-                if (currentBoss.element === 'fire') bossPower = Math.round(bossPower * 1.1);
                 
+                // Boss Elemental Advantage Check (Boss element counters Player's most common element or gets a 1.3x boost)
+                let bossHasAdvantage = Math.random() < 0.35; // 35% chance for boss to strike with elemental proficiency
+                if (bossHasAdvantage) {
+                    bossPower = Math.round(bossPower * 1.3);
+                    logMessage(`[⚠️ Boss Advantage!] ${currentBoss.name} unleashes an elemental surge! Attack boosted to ${bossPower}!`);
+                }
+
                 let netDmg = bossPower;
                 if (hero.shield > 0) {
                     if (hero.shield >= netDmg) {
@@ -427,7 +436,9 @@
                 }
                 hero.hp = Math.max(0, hero.hp - netDmg);
                 showPopup('heroDamagePopup', `-${netDmg}`, 'text-red-500');
-                logMessage(`[Boss] ${currentBoss.name} attacks for ${netDmg} damage!`);
+                if (!bossHasAdvantage) {
+                    logMessage(`[Boss] ${currentBoss.name} attacks for ${netDmg} damage.`);
+                }
             } else if (bossActionType === 'shield') {
                 playSound('card');
                 currentBoss.shield += bossPower;
@@ -469,17 +480,17 @@
             playSound('attack');
             const reviveBtn = document.getElementById('smartlinkReviveBtn');
             if (hasRevived) {
-                reviveBtn.classList.add('hidden'); // Hide if already used this run
+                reviveBtn.classList.add('hidden');
             } else {
-                reviveBtn.classList.remove('hidden'); // Show if available
+                reviveBtn.classList.remove('hidden');
             }
             document.getElementById('modalGameOver').classList.remove('hidden');
         }
 
         function reviveHeroSmartlink() {
-            hasRevived = true; // Consume token for this run
+            hasRevived = true;
             document.getElementById('modalGameOver').classList.add('hidden');
-            hero.hp = Math.round(hero.maxHp * 0.5); // Revive with 50% HP
+            hero.hp = Math.round(hero.maxHp * 0.5);
             hero.shield = 10;
             hero.energy = hero.maxEnergy;
             drawNewHand(4);
@@ -488,7 +499,7 @@
         }
 
         function resetGameRun() {
-            hasRevived = false; // Reset token availability for the new run
+            hasRevived = false;
             document.getElementById('modalGameOver').classList.add('hidden');
             document.getElementById('modalGrandVictory').classList.add('hidden');
             currentLevel = 1;
