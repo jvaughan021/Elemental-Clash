@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Elemental Clash - Created by Jack Vaughan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; }
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .card-hover:hover { transform: translateY(-6px); }
+        .card-glow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.2); }
+        @keyframes float-up { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-40px); opacity: 0; } }
+        .floating-popup { animation: float-up 1s ease-out forwards; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
+
+    <!-- Header -->
+    <header class="bg-slate-900 border-b border-slate-800 py-3 px-4 shadow-md sticky top-0 z-30">
+        <div class="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-2">
+            <div>
+                <h1 class="font-cinzel text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent">Elemental Clash</h1>
+                <p class="text-xs text-slate-400">Created by <span class="text-amber-400 font-semibold">Jack Vaughan</span></p>
+            </div>
+            <div class="flex items-center gap-2">
+                <button onclick="toggleAudio()" id="audioToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 transition">🔊 Sound: ON</button>
+                <button onclick="openRules()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/30 transition">📖 How to Play</button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-grow max-w-4xl w-full mx-auto p-3 md:p-6 flex flex-col justify-center">
+
+        <!-- SCREEN 1: Name Entry -->
+        <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
+            <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
+            <p class="text-sm text-slate-400 mb-6">Choose your hero name to embark on your 20-level tactical journey.</p>
+            <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
+            <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin Journey</button>
+        </div>
+
+        <!-- SCREEN 2: Battle Dashboard -->
+        <div id="screenBattle" class="hidden flex flex-col gap-4">
+            
+            <!-- Level & Status Banner -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex justify-between items-center text-xs md:text-sm">
+                <div class="flex items-center gap-2">
+                    <span class="bg-amber-500/20 text-amber-400 font-bold px-2.5 py-1 rounded-lg border border-amber-500/30" id="currentLevelBadge">Level 1 / 20</span>
+                    <span class="text-slate-400 hidden sm:inline" id="stageThemeBadge">Stage: The Outskirts</span>
+                </div>
+                <div class="flex items-center gap-3">
+                    <span class="text-slate-300">Energy: <strong class="text-amber-400 text-base" id="playerEnergyDisplay">3</strong>/3</span>
+                    <button onclick="endTurn()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow">End Turn</button>
+                </div>
+            </div>
+
+            <!-- Combat Arena Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <!-- Hero Panel -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden">
+                    <div id="heroDamagePopup" class="absolute top-4 right-4 text-red-500 font-bold text-xl pointer-events-none hidden"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-cinzel font-bold text-base text-amber-400" id="heroNameDisplay">Hero</h3>
+                            <span class="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">Player</span>
+                        </div>
+                        <!-- Health Bar -->
+                        <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2">
+                            <div id="heroHpBar" class="bg-gradient-to-r from-emerald-500 to-green-400 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span>HP: <strong id="heroHpText" class="text-slate-200">100</strong>/100</span>
+                            <span id="heroShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-400 text-center" id="heroStatusText">Ready for battle. Play cards from your hand!</div>
+                </div>
+
+                <!-- Boss Panel -->
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden">
+                    <div id="bossDamagePopup" class="absolute top-4 right-4 text-amber-400 font-bold text-xl pointer-events-none hidden"></div>
+                    <div>
+                        <div class="flex justify-between items-center mb-2">
+                            <h3 class="font-cinzel font-bold text-base text-red-400" id="bossNameDisplay">Boss</h3>
+                            <span class="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded border border-red-500/20" id="bossElementBadge">Fire</span>
+                        </div>
+                        <!-- Health Bar -->
+                        <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2">
+                            <div id="bossHpBar" class="bg-gradient-to-r from-red-600 to-orange-500 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-400">
+                            <span>HP: <strong id="bossHpText" class="text-slate-200">50</strong>/<span id="bossMaxHpText">50</span></span>
+                            <span id="bossShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
+                        </div>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-red-300/80 text-center italic" id="bossIntentText">Boss is preparing an attack...</div>
+                </div>
+            </div>
+
+            <!-- Combat Log -->
+            <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
+                <div>[System] Welcome to Elemental Clash! Defeat all 20 levels to conquer the realm.</div>
+            </div>
+
+            <!-- Player Hand -->
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
+                <div class="flex justify-between items-center mb-3">
+                    <span class="text-xs font-cinzel font-bold text-slate-300 tracking-wider">YOUR HAND (Unique Cards)</span>
+                    <span class="text-xs text-slate-400">Click a card to play</span>
+                </div>
+                <div id="playerHandContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <!-- Cards injected dynamically -->
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-900 border-t border-slate-800 py-3 text-center text-xs text-slate-500">
+        Elemental Clash &bull; Tactical Card Battle Game
+    </footer>
+
+    <!-- MODAL: Stage Victory -->
+    <div id="modalVictory" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl card-glow">
+            <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2">Stage Cleared!</h3>
+            <p class="text-sm text-slate-300 mb-4" id="victoryMsg">You defeated the boss! Your health has been fully restored to 100 HP.</p>
+            <button onclick="advanceToNextLevel()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel">Proceed to Next Level</button>
+        </div>
+    </div>
+
+    <!-- MODAL: Game Over / Permadeath -->
+    <div id="modalGameOver" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl">
+            <h3 class="font-cinzel text-2xl font-bold text-red-500 mb-2">Defeated in Battle!</h3>
+            <p class="text-sm text-slate-300 mb-4">Hardcore Permadeath: Your health reached 0. Your journey resets back to Level 1.</p>
+            <button onclick="resetGameRun()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition font-cinzel">Restart at Level 1</button>
+        </div>
+    </div>
+
+    <!-- MODAL: Grand Victory (Level 20 Win) -->
+    <div id="modalGrandVictory" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-amber-500 rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl card-glow">
+            <h3 class="font-cinzel text-3xl font-bold text-amber-400 mb-2">Realm Conquered!</h3>
+            <p class="text-sm text-slate-300 mb-6">Incredible tactical mastery! You defeated all 20 bosses and saved the realm!</p>
+            <button onclick="resetGameRun()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel">Play Again</button>
+        </div>
+    </div>
+
+    <!-- MODAL: How to Play / Rules -->
+    <div id="modalRules" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[85vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="font-cinzel text-xl font-bold text-amber-400">How to Play & Rules</h3>
+                <button onclick="closeRules()" class="text-slate-400 hover:text-slate-200 text-lg font-bold px-2">✕</button>
+            </div>
+            <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
+                <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <p class="font-bold text-amber-400 mb-1">🔥 Elemental Rock-Paper-Scissors:</p>
+                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
+                        <li><strong>Fire</strong> beats Earth (deals 1.4x damage).</li>
+                        <li><strong>Earth</strong> beats Water (deals 1.4x damage).</li>
+                        <li><strong>Water</strong> beats Fire (deals 1.4x damage).</li>
+                        <li><strong>Shield</strong> and <strong>Heal</strong> cards protect and restore HP.</li>
+                    </ul>
+                </div>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
+                    <p class="font-bold text-amber-400 mb-1">⚔️ Core Rules & Permadeath:</p>
+                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
+                        <li><strong>20 Progressive Levels:</strong> Level 1 is very easy, scaling up to Level 20 (Apex Voidlord).</li>
+                        <li><strong>Hardcore Permadeath:</strong> If your HP drops to 0 on any level, you restart from Level 1!</li>
+                        <li><strong>Full Health Restore:</strong> Defeating a boss fully heals your HP to 100 for the next stage.</li>
+                        <li><strong>Unique Hand:</strong> Your hand automatically ensures no duplicate cards appear simultaneously.</li>
+                    </ul>
+                </div>
+            </div>
+            <button onclick="closeRules()" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Got it, Let's Play!</button>
+        </div>
+    </div>
+
+    <!-- Game Engine Script -->
+    <script>
+        let soundEnabled = true;
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        function playSound(type) {
+            if (!soundEnabled) return;
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            
+            const now = audioCtx.currentTime;
+            if (type === 'card') {
+                osc.type = 'triangle';
+                osc.frequency.setValueAtTime(300, now);
+                osc.frequency.exponentialRampToValueAtTime(600, now + 0.1);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.1);
+                osc.start(now);
+                osc.stop(now + 0.1);
+            } else if (type === 'attack') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(150, now);
+                osc.frequency.exponentialRampToValueAtTime(40, now + 0.2);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            } else if (type === 'heal') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(400, now);
+                osc.frequency.exponentialRampToValueAtTime(800, now + 0.3);
+                gain.gain.setValueAtTime(0.15, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.3);
+                osc.start(now);
+                osc.stop(now + 0.3);
+            } else if (type === 'win') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now);
+                osc.frequency.setValueAtTime(659.25, now + 0.1);
+                osc.frequency.setValueAtTime(783.99, now + 0.2);
+                gain.gain.setValueAtTime(0.2, now);
+                gain.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+                osc.start(now);
+                osc.stop(now + 0.4);
+            }
+        }
+
+        function toggleAudio() {
+            soundEnabled = !soundEnabled;
+            document.getElementById('audioToggleBtn').innerText = soundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
+        }
+
+        const masterDeck = [
+            { id: 'f1', name: 'Fireball', type: 'fire', cost: 1, power: 12, icon: '🔥', desc: 'Deals 12 Fire damage.' },
+            { id: 'f2', name: 'Flame Burst', type: 'fire', cost: 1, power: 15, icon: '💥', desc: 'Deals 15 Fire damage.' },
+            { id: 'f3', name: 'Inferno Strike', type: 'fire', cost: 2, power: 25, icon: '🌋', desc: 'Heavy Fire strike (25 dmg).' },
+            { id: 'w1', name: 'Aqua Bolt', type: 'water', cost: 1, power: 12, icon: '💧', desc: 'Deals 12 Water damage.' },
+            { id: 'w2', name: 'Tidal Splash', type: 'water', cost: 1, power: 15, icon: '🌊', desc: 'Deals 15 Water damage.' },
+            { id: 'w3', name: 'Tsunami Surge', type: 'water', cost: 2, power: 25, icon: '🌀', desc: 'Heavy Water surge (25 dmg).' },
+            { id: 'e1', name: 'Rock Throw', type: 'earth', cost: 1, power: 12, icon: '🪨', desc: 'Deals 12 Earth damage.' },
+            { id: 'e2', name: 'Vine Whip', type: 'earth', cost: 1, power: 15, icon: '🌿', desc: 'Deals 15 Earth damage.' },
+            { id: 'e3', name: 'Earthquake', type: 'earth', cost: 2, power: 25, icon: '⛰️', desc: 'Heavy Earth tremor (25 dmg).' },
+            { id: 'h1', name: 'Healing Salve', type: 'heal', cost: 1, power: 14, icon: '❤️', desc: 'Restores 14 HP.' },
+            { id: 'h2', name: 'Great Heal', type: 'heal', cost: 2, power: 24, icon: '✨', desc: 'Restores 24 HP.' },
+            { id: 's1', name: 'Aegis Shield', type: 'shield', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
+        ];
+
+        const bossList = [
+            { name: "Sparkling Sprite", hp: 40, element: "fire", theme: "The Outskirts", aiAggro: 0.4 },
+            { name: "Mossy Golem", hp: 50, element: "earth", theme: "Whispering Woods", aiAggro: 0.5 },
+            { name: "River Lurker", hp: 60, element: "water", theme: "Crystal River", aiAggro: 0.5 },
+            { name: "Flame Imp", hp: 70, element: "fire", theme: "Volcanic Vent", aiAggro: 0.6 },
+            { name: "Stone Guardian", hp: 85, element: "earth", theme: "Ancient Ruins", aiAggro: 0.5 },
+            { name: "Frost Serpent", hp: 100, element: "water", theme: "Frozen Cavern", aiAggro: 0.6 },
+            { name: "Magma Brute", hp: 115, element: "fire", theme: "Magma Chambers", aiAggro: 0.7 },
+            { name: "Thorn Queen", hp: 130, element: "earth", theme: "Tangled Thicket", aiAggro: 0.6 },
+            { name: "Tidal Kraken", hp: 150, element: "water", theme: "Abyssal Trench", aiAggro: 0.7 },
+            { name: "Blazing Phoenix", hp: 175, element: "fire", theme: "Sky Sanctuary", aiAggro: 0.8 },
+            { name: "Granite Titan", hp: 200, element: "earth", theme: "Mountain Peak", aiAggro: 0.6 },
+            { name: "Abyssal Leviathan", hp: 230, element: "water", theme: "Sunken Temple", aiAggro: 0.7 },
+            { name: "Infernal Overlord", hp: 260, element: "fire", theme: "Demon Gate", aiAggro: 0.85 },
+            { name: "Gaia Colossus", hp: 300, element: "earth", theme: "World Core", aiAggro: 0.7 },
+            { name: "Storm Sovereign", hp: 340, element: "water", theme: "Tempest Eye", aiAggro: 0.8 },
+            { name: "Solar Emperor", hp: 390, element: "fire", theme: "Solar Citadel", aiAggro: 0.9 },
+            { name: "Eldritch Treant", hp: 440, element: "earth", theme: "Corrupted Forest", aiAggro: 0.8 },
+            { name: "Titan of Tides", hp: 500, element: "water", theme: "Endless Sea", aiAggro: 0.85 },
+            { name: "Shadow Fiend", hp: 570, element: "fire", theme: "Shadow Realm", aiAggro: 0.95 },
+            { name: "Apex Voidlord", hp: 650, element: "earth", theme: "The Void Apex", aiAggro: 1.0 }
+        ];
+
+        let hero = { name: "Hero", hp: 100, maxHp: 100, shield: 0, energy: 3, maxEnergy: 3 };
+        let currentLevel = 1;
+        let currentBoss = {};
+        let playerHand = [];
+        let drawPile = [];
+
+        function startGameFlow() {
+            const nameInput = document.getElementById('heroNameInput').value.trim();
+            if (nameInput) hero.name = nameInput;
+            document.getElementById('heroNameDisplay').innerText = hero.name;
+            
+            document.getElementById('screenName').classList.add('hidden');
+            document.getElementById('screenBattle').classList.remove('hidden');
+
+            currentLevel = 1;
+            hero.hp = 100;
+            initBattle();
+        }
+
+        function initBattle() {
+            currentBoss = { ...bossList[currentLevel - 1] };
+            currentBoss.currentHp = currentBoss.hp;
+            currentBoss.shield = 0;
+
+            document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 20`;
+            document.getElementById('stageThemeBadge').innerText = `Stage: ${currentBoss.theme}`;
+            document.getElementById('bossNameDisplay').innerText = currentBoss.name;
+            document.getElementById('bossElementBadge').innerText = currentBoss.element.toUpperCase();
+            document.getElementById('bossMaxHpText').innerText = currentBoss.hp;
+
+            hero.energy = hero.maxEnergy;
+            resetDeck();
+            drawNewHand(4);
+            updateUI();
+            logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} (${currentBoss.theme})!`);
+        }
+
+        function resetDeck() {
+            drawPile = [...masterDeck].sort(() => Math.random() - 0.5);
+        }
+
+        function drawNewHand(count) {
+            playerHand = [];
+            for (let i = 0; i < count; i++) {
+                if (drawPile.length === 0) resetDeck();
+                let card = drawPile.pop();
+                while (playerHand.some(c => c.name === card.name)) {
+                    if (drawPile.length === 0) resetDeck();
+                    drawPile.unshift(card);
+                    card = drawPile.pop();
+                }
+                playerHand.push(card);
+            }
+        }
+
+        function playCard(index) {
+            const card = playerHand[index];
+            if (hero.energy < card.cost) {
+                logMessage(`[Action] Not enough energy to play ${card.name}!`);
+                return;
+            }
+
+            playSound('card');
+            hero.energy -= card.cost;
+            playerHand.splice(index, 1);
+
+            if (drawPile.length === 0) resetDeck();
+            if (drawPile.length > 0) {
+                let newCard = drawPile.pop();
+                while (playerHand.some(c => c.name === newCard.name) && drawPile.length > 0) {
+                    drawPile.unshift(newCard);
+                    newCard = drawPile.pop();
+                }
+                if (!playerHand.some(c => c.name === newCard.name)) {
+                    playerHand.push(newCard);
+                }
+            }
+
+            if (card.type === 'heal') {
+                playSound('heal');
+                hero.hp = Math.min(hero.maxHp, hero.hp + card.power);
+                showPopup('heroDamagePopup', `+${card.power}`, 'text-emerald-400');
+                logMessage(`[Action] You used ${card.name}, restoring ${card.power} HP.`);
+            } else if (card.type === 'shield') {
+                playSound('card');
+                hero.shield += card.power;
+                logMessage(`[Action] You used ${card.name}, gaining ${card.power} shield.`);
+            } else {
+                playSound('attack');
+                let dmg = card.power;
+                if ((card.type === 'fire' && currentBoss.element === 'earth') ||
+                    (card.type === 'earth' && currentBoss.element === 'water') ||
+                    (card.type === 'water' && currentBoss.element === 'fire')) {
+                    dmg = Math.round(dmg * 1.4);
+                    logMessage(`[Advantage!] Elemental advantage! ${card.name} deals bonus damage.`);
+                }
+
+                if (currentBoss.shield > 0) {
+                    if (currentBoss.shield >= dmg) {
+                        currentBoss.shield -= dmg;
+                        dmg = 0;
+                    } else {
+                        dmg -= currentBoss.shield;
+                        currentBoss.shield = 0;
+                    }
+                }
+                currentBoss.currentHp = Math.max(0, currentBoss.currentHp - dmg);
+                showPopup('bossDamagePopup', `-${dmg}`, 'text-amber-400');
+                logMessage(`[Attack] You played ${card.name} for ${dmg} damage!`);
+
+                if (currentBoss.currentHp <= 0) {
+                    triggerStageVictory();
+                    return;
+                }
+            }
+
+            updateUI();
+        }
+
+        function endTurn() {
+            logMessage(`[Turn] You ended your turn. ${currentBoss.name} prepares to strike...`);
+            bossTurn();
+        }
+
+        function bossTurn() {
+            let bossActionType = Math.random() < currentBoss.aiAggro ? 'attack' : (Math.random() < 0.5 ? 'shield' : 'heal');
+            let bossPower = Math.round(12 + (currentLevel * 2.2));
+
+            if (bossActionType === 'attack') {
+                playSound('attack');
+                if (currentBoss.element === 'fire') bossPower = Math.round(bossPower * 1.1);
+                
+                let netDmg = bossPower;
+                if (hero.shield > 0) {
+                    if (hero.shield >= netDmg) {
+                        hero.shield -= netDmg;
+                        netDmg = 0;
+                    } else {
+                        netDmg -= hero.shield;
+                        hero.shield = 0;
+                    }
+                }
+                hero.hp = Math.max(0, hero.hp - netDmg);
+                showPopup('heroDamagePopup', `-${netDmg}`, 'text-red-500');
+                logMessage(`[Boss] ${currentBoss.name} attacks for ${netDmg} damage!`);
+            } else if (bossActionType === 'shield') {
+                playSound('card');
+                currentBoss.shield += bossPower;
+                logMessage(`[Boss] ${currentBoss.name} raises a defensive shield of ${bossPower}!`);
+            } else {
+                playSound('heal');
+                currentBoss.currentHp = Math.min(currentBoss.hp, currentBoss.currentHp + bossPower);
+                showPopup('bossDamagePopup', `+${bossPower}`, 'text-emerald-400');
+                logMessage(`[Boss] ${currentBoss.name} heals for ${bossPower} HP!`);
+            }
+
+            if (hero.hp <= 0) {
+                triggerGameOver();
+                return;
+            }
+
+            hero.energy = hero.maxEnergy;
+            drawNewHand(4);
+            updateUI();
+        }
+
+        function triggerStageVictory() {
+            playSound('win');
+            if (currentLevel >= 20) {
+                document.getElementById('modalGrandVictory').classList.remove('hidden');
+            } else {
+                document.getElementById('modalVictory').classList.remove('hidden');
+            }
+        }
+
+        function advanceToNextLevel() {
+            document.getElementById('modalVictory').classList.add('hidden');
+            currentLevel++;
+            hero.hp = 100;
+            initBattle();
+        }
+
+        function triggerGameOver() {
+            playSound('attack');
+            document.getElementById('modalGameOver').classList.remove('hidden');
+        }
+
+        function resetGameRun() {
+            document.getElementById('modalGameOver').classList.add('hidden');
+            document.getElementById('modalGrandVictory').classList.add('hidden');
+            currentLevel = 1;
+            hero.hp = 100;
+            initBattle();
+        }
+
+        function updateUI() {
+            document.getElementById('heroHpText').innerText = hero.hp;
+            document.getElementById('heroHpBar').style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
+            
+            const heroShieldEl = document.getElementById('heroShieldText');
+            if (hero.shield > 0) {
+                heroShieldEl.innerText = `Shield: ${hero.shield}`;
+                heroShieldEl.classList.remove('hidden');
+            } else {
+                heroShieldEl.classList.add('hidden');
+            }
+
+            document.getElementById('bossHpText').innerText = currentBoss.currentHp;
+            document.getElementById('bossHpBar').style.width = `${Math.max(0, (currentBoss.currentHp / currentBoss.hp) * 100)}%`;
+
+            const bossShieldEl = document.getElementById('bossShieldText');
+            if (currentBoss.shield > 0) {
+                bossShieldEl.innerText = `Shield: ${currentBoss.shield}`;
+                bossShieldEl.classList.remove('hidden');
+            } else {
+                bossShieldEl.classList.add('hidden');
+            }
+
+            document.getElementById('playerEnergyDisplay').innerText = hero.energy;
+
+            const handContainer = document.getElementById('playerHandContainer');
+            handContainer.innerHTML = '';
+            playerHand.forEach((card, index) => {
+                const canAfford = hero.energy >= card.cost;
+                const cardEl = document.createElement('div');
+                cardEl.className = `bg-slate-950 border ${canAfford ? 'border-slate-700 hover:border-amber-500 cursor-pointer card-hover' : 'border-slate-900 opacity-50 cursor-not-allowed'} rounded-xl p-3 flex flex-col justify-between transition shadow`;
+                cardEl.innerHTML = `
+                    <div class="flex justify-between items-start mb-1">
+                        <span class="text-lg">${card.icon}</span>
+                        <span class="bg-amber-500/20 text-amber-400 font-bold px-1.5 py-0.5 rounded text-xs border border-amber-500/30">${card.cost} ⚡</span>
+                    </div>
+                    <div>
+                        <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
+                        <p class="text-[10px] text-slate-400 leading-tight">${card.desc}</p>
+                    </div>
+                `;
+                if (canAfford) {
+                    cardEl.onclick = () => playCard(index);
+                }
+                handContainer.appendChild(cardEl);
+            });
+        }
+
+        function logMessage(msg) {
+            const log = document.getElementById('combatLog');
+            const div = document.createElement('div');
+            div.innerText = msg;
+            log.appendChild(div);
+            log.scrollTop = log.scrollHeight;
+        }
+
+        function showPopup(elementId, text, colorClass) {
+            const popup = document.getElementById(elementId);
+            popup.innerText = text;
+            popup.className = `absolute top-4 right-4 font-bold text-xl pointer-events-none floating-popup ${colorClass}`;
+            setTimeout(() => {
+                popup.classList.add('hidden');
+            }, 1000);
+        }
+
+        function openRules() { document.getElementById('modalRules').classList.remove('hidden'); }
+        function closeRules() { document.getElementById('modalRules').classList.add('hidden'); }
+    </script>
+</body>
+</html>
