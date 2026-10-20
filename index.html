@@ -261,13 +261,10 @@
                 </div>
             </div>
 
-            <!-- Secure Manual Unlock / Claim Panel for Testing -->
+            <!-- Server Sync / Restore Purchases Button -->
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center space-y-2">
-                <p class="text-[10px] text-slate-400">Completed a purchase on PayPal? Enter your secure verification key or click below to unlock your item.</p>
-                <div class="flex gap-2">
-                    <input type="text" id="claimKeyInput" placeholder="Enter Unlock Code..." class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
-                    <button onclick="manualClaimByKey()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition">Claim Code</button>
-                </div>
+                <p class="text-[10px] text-slate-400">Finished paying? Click below to sync with your local server and lock in purchases.</p>
+                <button onclick="restorePurchases()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2 rounded-lg text-xs transition">🔄 Check / Restore Purchases (Server Sync)</button>
             </div>
 
             <button onclick="closeShop()" class="mt-4 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Close Shop</button>
@@ -308,7 +305,7 @@
         let playerHand = [];
         let drawPile = [];
 
-        // Load saved purchases and update shop UI states
+        // Load saved purchases from local storage and update shop UI
         function loadPurchases() {
             if (localStorage.getItem('ec_vip') === 'true' || localStorage.getItem('ec_pass') === 'true') {
                 isVipActive = true;
@@ -338,36 +335,34 @@
             }
         }
 
-        // Secure manual unlock via code or test key
-        function manualClaimByKey() {
-            const code = document.getElementById('claimKeyInput').value.trim().toLowerCase();
-            if (!code) {
-                alert('Please enter a valid unlock code.');
-                return;
+        // Restore purchases by talking directly to your local server.js
+        async function restorePurchases() {
+            let sessionId = localStorage.getItem('ec_session_id');
+            if (!sessionId) {
+                sessionId = 'hero_' + Math.random().toString(36).substring(2, 9);
+                localStorage.setItem('ec_session_id', sessionId);
             }
 
-            if (code === 'vip499' || code === 'vip') {
-                localStorage.setItem('ec_vip', 'true');
-                alert('✨ VIP Pass unlocked!');
-            } else if (code === 'pass199') {
-                localStorage.setItem('ec_pass', 'true');
-                alert('✨ 7-Day Pass unlocked!');
-            } else if (code === 'tier1' || code === 'tier2' || code === 'tier3') {
-                let tierNum = code.replace('tier', '');
-                localStorage.setItem('ec_perk', tierNum);
-                alert(`✨ Tier ${tierNum} Starter Perk unlocked!`);
-            } else if (code === 'gold' || code === 'neon') {
-                localStorage.setItem('ec_skin', code);
-                alert(`✨ ${code.toUpperCase()} Card Skin equipped!`);
-            } else {
-                alert('Invalid code. Check your PayPal receipt or enter a valid test key.');
-                return;
-            }
+            try {
+                logMessage(`[Server Sync] Checking local payment server for session: ${sessionId}...`);
+                
+                // Communicates directly with your local server.js running on port 3000
+                const response = await fetch(`http://localhost:3000/check-payment?session=${sessionId}`);
+                const data = await response.json();
 
-            document.getElementById('claimKeyInput').value = '';
-            loadPurchases();
-            updateUI();
-            closeShop();
+                if (data.paid) {
+                    localStorage.setItem('ec_vip', 'true');
+                    loadPurchases();
+                    alert('Payment confirmed by local server! Perks successfully unlocked!');
+                    logMessage(`[Success] Server verified purchase for session ${sessionId}.`);
+                } else {
+                    alert('No completed payment found on the server for this session yet.');
+                    logMessage(`[Sync] Server checked session ${sessionId} - No payment recorded.`);
+                }
+            } catch (err) {
+                console.error("Connection error:", err);
+                alert('Could not connect to your local server.js! Make sure node server.js is running in your terminal.');
+            }
         }
 
         window.onload = () => {
@@ -813,8 +808,7 @@
             }, 1000);
         }
 
-        function openShop() { document.getElementById('modalShop').classList.add('hidden'); // wait
-             document.getElementById('modalShop').classList.remove('hidden'); }
+        function openShop() { document.getElementById('modalShop').classList.remove('hidden'); }
         function closeShop() { document.getElementById('modalShop').classList.add('hidden'); }
         function openRules() { document.getElementById('modalRules').classList.remove('hidden'); }
         function closeRules() { document.getElementById('modalRules').classList.add('hidden'); }
