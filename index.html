@@ -305,7 +305,7 @@
         let playerHand = [];
         let drawPile = [];
 
-        // Automatically create and store unique browser session ID & inject into PayPal links
+        // Initialize session ID and append custom tracking to shop links
         function initSessionAndLinks() {
             let sessionId = localStorage.getItem('ec_session_id');
             if (!sessionId) {
@@ -313,23 +313,32 @@
                 localStorage.setItem('ec_session_id', sessionId);
             }
 
-            // Bind session ID parameter to all shop purchase links automatically
-            const shopLinks = document.querySelectorAll('#modalShop a[href*="paypal.com"]');
-            shopLinks.forEach(link => {
-                let base = link.getAttribute('href').split('&custom_id=')[0];
-                link.setAttribute('href', `${base}&custom_id=${sessionId}`);
-            });
-            
-            const vipLink = document.getElementById('vipPassBtn');
-            if (vipLink) {
-                let baseVip = vipLink.getAttribute('href').split('&custom_id=')[0];
-                vipLink.setAttribute('href', `${baseVip}&custom_id=${sessionId}`);
+            // Map each button to its specific product code for server tracking
+            const productMap = {
+                'vipPassBtn': 'vip',
+                'shopItem_pass': 'pass',
+                'shopItem_tier1': 'tier1',
+                'shopItem_tier2': 'tier2',
+                'shopItem_tier3': 'tier3',
+                'shopItem_gold': 'gold',
+                'shopItem_neon': 'neon'
+            };
+
+            for (let [elementId, productCode] of Object.entries(productMap)) {
+                let el = document.getElementById(elementId);
+                if (el) {
+                    let link = el.tagName === 'A' ? el : el.querySelector('a');
+                    if (link) {
+                        let base = link.getAttribute('href').split('?')[0];
+                        link.setAttribute('href', `${base}?custom_id=${sessionId}&product=${productCode}`);
+                    }
+                }
             }
         }
 
-        // Load saved purchases from local storage and update shop UI
-        function loadPurchases() {
-            if (localStorage.getItem('ec_vip') === 'true' || localStorage.getItem('ec_pass') === 'true') {
+        // Apply saved purchases from local storage to UI
+        function applyPurchasesToUI(purchases) {
+            if (purchases.vip || purchases.pass) {
                 isVipActive = true;
                 const btn = document.getElementById('vipPassBtn');
                 const label1 = document.getElementById('energyBoostLabel');
@@ -338,26 +347,33 @@
                 if(label1) label1.innerText = 'VIP Free';
                 if(label2) label2.innerText = 'VIP Free';
                 
-                const shopPass = document.getElementById('shopItem_pass');
-                if(shopPass) shopPass.innerHTML = `<span class="bg-purple-900/40 text-purple-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-purple-500/40">✓ Purchased</span>`;
+                if (purchases.pass) {
+                    const shopPass = document.getElementById('shopItem_pass');
+                    if(shopPass) shopPass.innerHTML = `<span class="bg-purple-900/40 text-purple-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-purple-500/40">✓ Purchased</span>`;
+                }
             }
 
-            let savedPerk = localStorage.getItem('ec_perk');
-            if (savedPerk) {
-                unlockedPerkTier = parseInt(savedPerk);
+            if (purchases.tier3) { unlockedPerkTier = 3; }
+            else if (purchases.tier2) { unlockedPerkTier = 2; }
+            else if (purchases.tier1) { unlockedPerkTier = 1; }
+
+            if (unlockedPerkTier > 0) {
                 const shopTier = document.getElementById(`shopItem_tier${unlockedPerkTier}`);
                 if(shopTier) shopTier.innerHTML = `<span class="bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30">✓ Purchased</span>`;
             }
 
-            let savedSkin = localStorage.getItem('ec_skin');
-            if (savedSkin) {
-                activeSkin = savedSkin;
-                const shopSkin = document.getElementById(`shopItem_${savedSkin}`);
+            if (purchases.gold) {
+                activeSkin = 'gold';
+                const shopSkin = document.getElementById(`shopItem_gold`);
+                if(shopSkin) shopSkin.innerHTML = `<span class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">✓ Equipped</span>`;
+            } else if (purchases.neon) {
+                activeSkin = 'neon';
+                const shopSkin = document.getElementById(`shopItem_neon`);
                 if(shopSkin) shopSkin.innerHTML = `<span class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">✓ Equipped</span>`;
             }
         }
 
-        // Restore purchases by talking directly to your local server.js
+        // Restore purchases from the server
         async function restorePurchases() {
             let sessionId = localStorage.getItem('ec_session_id');
             if (!sessionId) initSessionAndLinks();
@@ -365,18 +381,17 @@
 
             try {
                 logMessage(`[Server Sync] Checking local payment server for session: ${sessionId}...`);
-                
                 const response = await fetch(`http://localhost:3000/check-payment?session=${sessionId}`);
-                const data = await response.json();
+                const purchases = await response.json();
 
-                if (data.paid) {
-                    localStorage.setItem('ec_vip', 'true');
-                    loadPurchases();
-                    alert('Payment confirmed by local server! Perks successfully unlocked!');
-                    logMessage(`[Success] Server verified purchase for session ${sessionId}.`);
+                if (Object.keys(purchases).length > 0) {
+                    localStorage.setItem('ec_purchases', JSON.stringify(purchases));
+                    applyPurchasesToUI(purchases);
+                    alert('Purchases verified and restored by server!');
+                    logMessage(`[Success] Restored specific purchases for session ${sessionId}.`);
                 } else {
-                    alert('No completed payment found on the server for this session yet.');
-                    logMessage(`[Sync] Server checked session ${sessionId} - No payment recorded.`);
+                    alert('No completed purchases found on the server for this session yet.');
+                    logMessage(`[Sync] Server checked session ${sessionId} - No purchases recorded.`);
                 }
             } catch (err) {
                 console.error("Connection error:", err);
@@ -386,7 +401,10 @@
 
         window.onload = () => {
             initSessionAndLinks();
-            loadPurchases();
+            let saved = localStorage.getItem('ec_purchases');
+            if (saved) {
+                applyPurchasesToUI(JSON.parse(saved));
+            }
         };
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -828,7 +846,7 @@
             }, 1000);
         }
 
-        function openShop() { document.getElementById('modalShop').classList.remove('hidden'); }
+        function openShop() { document.getElementById('modalShop').classList.add('hidden') === false ? '' : document.getElementById('modalShop').classList.remove('hidden'); }
         function closeShop() { document.getElementById('modalShop').classList.add('hidden'); }
         function openRules() { document.getElementById('modalRules').classList.remove('hidden'); }
         function closeRules() { document.getElementById('modalRules').classList.add('hidden'); }
