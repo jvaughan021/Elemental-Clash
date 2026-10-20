@@ -29,7 +29,7 @@
             </div>
             <div class="flex items-center gap-2">
                 <button onclick="openShop()" class="bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/40 transition">🛒 Perks & Shop</button>
-                <a href="https://www.paypal.com/ncp/payment/TR96VF2N9Z9NJ" target="_blank" onclick="recordPendingPurchase('vip')" id="vipPassBtn" class="bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-purple-500/40 transition inline-block">⭐ VIP Pass (£4.99/mo)</a>
+                <a href="https://www.paypal.com/ncp/payment/TR96VF2N9Z9NJ" target="_blank" id="vipPassBtn" class="bg-purple-900/40 hover:bg-purple-900/60 text-purple-300 px-3 py-1.5 rounded-lg text-xs font-semibold border border-purple-500/40 transition inline-block">⭐ VIP Pass (£4.99/mo)</a>
                 <button onclick="toggleAudio()" id="audioToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 transition">🔊 Sound: ON</button>
                 <button onclick="openRules()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/30 transition">📖 How to Play</button>
             </div>
@@ -186,15 +186,6 @@
             
             <p class="text-xs text-slate-400">Grab ad-free passes, permanent account upgrades, or cosmetic card skins for your marathon run.</p>
 
-            <!-- Quick Claim / Restore Button -->
-            <div class="bg-amber-500/10 border border-amber-500/30 p-3 rounded-xl flex justify-between items-center">
-                <div>
-                    <h4 class="font-bold text-xs text-amber-400">Just completed a PayPal payment?</h4>
-                    <p class="text-[10px] text-slate-300">Click to instantly unlock your latest purchase on this device.</p>
-                </div>
-                <button onclick="claimLatestPurchase()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-2 rounded-lg text-xs transition shadow shrink-0">🔄 Claim Purchase</button>
-            </div>
-
             <!-- Ad-Free Passes Section -->
             <div class="space-y-3">
                 <p class="text-xs font-bold text-purple-400 uppercase tracking-wider">Ad-Free Passes</p>
@@ -204,7 +195,9 @@
                         <h4 class="font-bold text-xs text-purple-300">⭐ 7-Day Ad-Free Pass</h4>
                         <p class="text-[10px] text-slate-400">Instant free tactical ad boosts and campfire feasts for 7 full days.</p>
                     </div>
-                    <a href="https://www.paypal.com/ncp/payment/PNPA6PVG6LD2Q" target="_blank" onclick="recordPendingPurchase('pass')" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£1.99 Buy</a>
+                    <div id="shopItem_pass">
+                        <a href="https://www.paypal.com/ncp/payment/PNPA6PVG6LD2Q" target="_blank" class="bg-purple-600 hover:bg-purple-500 text-white font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£1.99 Buy</a>
+                    </div>
                 </div>
             </div>
 
@@ -217,7 +210,9 @@
                         <h4 class="font-bold text-xs text-slate-200">Tier 1: Apprentice Blessing</h4>
                         <p class="text-[10px] text-slate-400">+1 Extra Revive Token per run, +10 Max HP.</p>
                     </div>
-                    <a href="https://www.paypal.com/ncp/payment/28RQ9XHPXWEHJ" target="_blank" onclick="recordPendingPurchase('tier1')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£0.99 Buy</a>
+                    <div id="shopItem_tier1">
+                        <a href="https://www.paypal.com/ncp/payment/28RQ9XHPXWEHJ" target="_blank" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£0.99 Buy</a>
+                    </div>
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
@@ -225,7 +220,9 @@
                         <h4 class="font-bold text-xs text-slate-200">Tier 2: Veteran’s Grace</h4>
                         <p class="text-[10px] text-slate-400">+2 Revive Tokens, +25 Max HP, +10 starting shield.</p>
                     </div>
-                    <a href="https://www.paypal.com/ncp/payment/LY9J937F5SGE2" target="_blank" onclick="recordPendingPurchase('tier2')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£2.49 Buy</a>
+                    <div id="shopItem_tier2">
+                        <a href="https://www.paypal.com/ncp/payment/LY9J937F5SGE2" target="_blank" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£2.49 Buy</a>
+                    </div>
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
@@ -233,7 +230,9 @@
                         <h4 class="font-bold text-xs text-slate-200">Tier 3: Immortal Champion</h4>
                         <p class="text-[10px] text-slate-400">+3 Revive Tokens, +50 Max HP, +1 Starting Energy!</p>
                     </div>
-                    <a href="https://www.paypal.com/ncp/payment/M2NLXLK3LF84S" target="_blank" onclick="recordPendingPurchase('tier3')" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£4.99 Buy</a>
+                    <div id="shopItem_tier3">
+                        <a href="https://www.paypal.com/ncp/payment/M2NLXLK3LF84S" target="_blank" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£4.99 Buy</a>
+                    </div>
                 </div>
             </div>
 
@@ -246,7 +245,9 @@
                         <h4 class="font-bold text-xs text-amber-300">✨ Golden Royal Deck</h4>
                         <p class="text-[10px] text-slate-400">Elite golden trim and particle visual polish.</p>
                     </div>
-                    <a href="https://www.paypal.com/ncp/payment/Z5PY4MM9NRD6E" target="_blank" onclick="recordPendingPurchase('gold')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£1.99 Buy</a>
+                    <div id="shopItem_gold">
+                        <a href="https://www.paypal.com/ncp/payment/Z5PY4MM9NRD6E" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£1.99 Buy</a>
+                    </div>
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
@@ -254,7 +255,18 @@
                         <h4 class="font-bold text-xs text-cyan-300">🌀 Neon Cyberpunk Deck</h4>
                         <p class="text-[10px] text-slate-400">Vibrant neon-blue and magenta card styling.</p>
                     </div>
-                    <a href="https://www.paypal.com/ncp/payment/3YASGLNC5HT86" target="_blank" onclick="recordPendingPurchase('neon')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£2.49 Buy</a>
+                    <div id="shopItem_neon">
+                        <a href="https://www.paypal.com/ncp/payment/3YASGLNC5HT86" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold px-3 py-1.5 rounded-lg text-xs transition inline-block text-center">£2.49 Buy</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Secure Manual Unlock / Claim Panel for Testing -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-center space-y-2">
+                <p class="text-[10px] text-slate-400">Completed a purchase on PayPal? Enter your secure verification key or click below to unlock your item.</p>
+                <div class="flex gap-2">
+                    <input type="text" id="claimKeyInput" placeholder="Enter Unlock Code..." class="flex-grow bg-slate-900 border border-slate-700 rounded-lg px-3 py-1.5 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                    <button onclick="manualClaimByKey()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition">Claim Code</button>
                 </div>
             </div>
 
@@ -296,9 +308,9 @@
         let playerHand = [];
         let drawPile = [];
 
-        // Load saved purchases on startup
+        // Load saved purchases and update shop UI states
         function loadPurchases() {
-            if (localStorage.getItem('ec_vip') === 'true') {
+            if (localStorage.getItem('ec_vip') === 'true' || localStorage.getItem('ec_pass') === 'true') {
                 isVipActive = true;
                 const btn = document.getElementById('vipPassBtn');
                 const label1 = document.getElementById('energyBoostLabel');
@@ -306,40 +318,53 @@
                 if(btn) { btn.classList.add('vip-glow', 'bg-purple-900'); btn.innerText = '⭐ VIP Active (Unl.)'; }
                 if(label1) label1.innerText = 'VIP Free';
                 if(label2) label2.innerText = 'VIP Free';
+                
+                const shopPass = document.getElementById('shopItem_pass');
+                if(shopPass) shopPass.innerHTML = `<span class="bg-purple-900/40 text-purple-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-purple-500/40">✓ Purchased</span>`;
             }
+
             let savedPerk = localStorage.getItem('ec_perk');
-            if (savedPerk) unlockedPerkTier = parseInt(savedPerk);
+            if (savedPerk) {
+                unlockedPerkTier = parseInt(savedPerk);
+                const shopTier = document.getElementById(`shopItem_tier${unlockedPerkTier}`);
+                if(shopTier) shopTier.innerHTML = `<span class="bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30">✓ Purchased</span>`;
+            }
 
             let savedSkin = localStorage.getItem('ec_skin');
-            if (savedSkin) activeSkin = savedSkin;
+            if (savedSkin) {
+                activeSkin = savedSkin;
+                const shopSkin = document.getElementById(`shopItem_${savedSkin}`);
+                if(shopSkin) shopSkin.innerHTML = `<span class="bg-slate-800 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-bold border border-slate-700">✓ Equipped</span>`;
+            }
         }
 
-        // Store which item they clicked last so they can claim it easily
-        function recordPendingPurchase(itemKey) {
-            localStorage.setItem('ec_pending', itemKey);
-        }
-
-        // Claim button logic for when they return from PayPal
-        function claimLatestPurchase() {
-            const pending = localStorage.getItem('ec_pending');
-            if (!pending) {
-                alert('No recent purchase intent found on this device. Click a "Buy" button first, complete checkout on PayPal, then click Claim!');
+        // Secure manual unlock via code or test key
+        function manualClaimByKey() {
+            const code = document.getElementById('claimKeyInput').value.trim().toLowerCase();
+            if (!code) {
+                alert('Please enter a valid unlock code.');
                 return;
             }
 
-            if (pending === 'vip' || pending === 'pass') {
+            if (code === 'vip499' || code === 'vip') {
                 localStorage.setItem('ec_vip', 'true');
-                alert('✨ VIP / Ad-Free Pass successfully claimed and activated!');
-            } else if (pending.startsWith('tier')) {
-                let tierNum = pending.replace('tier', '');
+                alert('✨ VIP Pass unlocked!');
+            } else if (code === 'pass199') {
+                localStorage.setItem('ec_pass', 'true');
+                alert('✨ 7-Day Pass unlocked!');
+            } else if (code === 'tier1' || code === 'tier2' || code === 'tier3') {
+                let tierNum = code.replace('tier', '');
                 localStorage.setItem('ec_perk', tierNum);
-                alert(`✨ Tier ${tierNum} Starter Perk successfully claimed!`);
-            } else if (pending === 'gold' || pending === 'neon') {
-                localStorage.setItem('ec_skin', pending);
-                alert(`✨ ${pending.toUpperCase()} Card Skin successfully unlocked!`);
+                alert(`✨ Tier ${tierNum} Starter Perk unlocked!`);
+            } else if (code === 'gold' || code === 'neon') {
+                localStorage.setItem('ec_skin', code);
+                alert(`✨ ${code.toUpperCase()} Card Skin equipped!`);
+            } else {
+                alert('Invalid code. Check your PayPal receipt or enter a valid test key.');
+                return;
             }
 
-            localStorage.removeItem('ec_pending');
+            document.getElementById('claimKeyInput').value = '';
             loadPurchases();
             updateUI();
             closeShop();
@@ -788,7 +813,8 @@
             }, 1000);
         }
 
-        function openShop() { document.getElementById('modalShop').classList.remove('hidden'); }
+        function openShop() { document.getElementById('modalShop').classList.add('hidden'); // wait
+             document.getElementById('modalShop').classList.remove('hidden'); }
         function closeShop() { document.getElementById('modalShop').classList.add('hidden'); }
         function openRules() { document.getElementById('modalRules').classList.remove('hidden'); }
         function closeRules() { document.getElementById('modalRules').classList.add('hidden'); }
