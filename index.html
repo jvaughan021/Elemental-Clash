@@ -133,12 +133,16 @@
         </div>
     </div>
 
-    <!-- MODAL: Game Over / Permadeath -->
+    <!-- MODAL: Game Over / Permadeath with Smartlink Revive -->
     <div id="modalGameOver" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl">
-            <h3 class="font-cinzel text-2xl font-bold text-red-500 mb-2">Defeated in Battle!</h3>
-            <p class="text-sm text-slate-300 mb-4">Hardcore Permadeath: Your health reached 0. Your journey resets back to Level 1.</p>
-            <button onclick="resetGameRun()" class="w-full bg-red-600 hover:bg-red-500 text-white font-bold py-3 rounded-xl transition font-cinzel">Restart at Level 1</button>
+        <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl space-y-3">
+            <h3 class="font-cinzel text-2xl font-bold text-red-500 mb-1">Defeated in Battle!</h3>
+            <p class="text-xs text-slate-300">Hardcore Permadeath: Your health reached 0. Restart back at Level 1 or use a Revive Token!</p>
+            
+            <!-- Smartlink Revive Button -->
+            <a href="https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf" target="_blank" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (Use Token)</a>
+            
+            <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Restart at Level 1</button>
         </div>
     </div>
 
@@ -173,7 +177,7 @@
                     <p class="font-bold text-amber-400 mb-1">⚔️ Core Rules & Permadeath:</p>
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
                         <li><strong>20 Progressive Levels:</strong> Level 1 is very easy, scaling up to Level 20 (Apex Voidlord).</li>
-                        <li><strong>Hardcore Permadeath:</strong> If your HP drops to 0 on any level, you restart from Level 1!</li>
+                        <li><strong>Hardcore Permadeath:</strong> If your HP drops to 0, restart from Level 1 or use a Revive Token!</li>
                         <li><strong>Full Health Restore:</strong> Defeating a boss fully heals your HP to 100 for the next stage.</li>
                         <li><strong>Unique Hand:</strong> Your hand automatically ensures no duplicate cards appear simultaneously.</li>
                     </ul>
@@ -462,6 +466,16 @@
         function triggerGameOver() {
             playSound('attack');
             document.getElementById('modalGameOver').classList.remove('hidden');
+        }
+
+        function reviveHeroSmartlink() {
+            document.getElementById('modalGameOver').classList.add('hidden');
+            hero.hp = Math.round(hero.maxHp * 0.5); // Revive with 50% HP
+            hero.shield = 10; // Bonus protective shield
+            hero.energy = hero.maxEnergy;
+            drawNewHand(4);
+            updateUI();
+            logMessage(`[Smartlink] Revive Token used! Resurrected at Level ${currentLevel} with 50% HP!`);
         }
 
         function resetGameRun() {
