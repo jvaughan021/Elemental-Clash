@@ -38,7 +38,7 @@
         <!-- SCREEN 1: Name Entry -->
         <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
-            <p class="text-sm text-slate-400 mb-6">Survive Armory inflation and boss element retaliations across 50 brutal levels!</p>
+            <p class="text-sm text-slate-400 mb-6">Survive Armory inflation, master card fusing, and beat 50 punishing bosses!</p>
             <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
             <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
         </div>
@@ -74,7 +74,6 @@
                             <h3 class="font-cinzel font-bold text-base text-amber-400" id="heroNameDisplay">Hero</h3>
                             <span class="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">Player</span>
                         </div>
-                        <!-- Health Bar -->
                         <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2">
                             <div id="heroHpBar" class="bg-gradient-to-r from-emerald-500 to-green-400 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
                         </div>
@@ -94,7 +93,6 @@
                             <h3 class="font-cinzel font-bold text-base text-red-400" id="bossNameDisplay">Boss</h3>
                             <span class="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded border border-red-500/20" id="bossElementBadge">Fire</span>
                         </div>
-                        <!-- Health Bar -->
                         <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2">
                             <div id="bossHpBar" class="bg-gradient-to-r from-red-600 to-orange-500 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
                         </div>
@@ -109,10 +107,10 @@
 
             <!-- In-Battle Tactical Shop Bar -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs">
-                <span class="text-slate-400 font-semibold">Battle Shop (Pick 1 per level - <span id="battleShopCostText">50</span> BP):</span>
+                <span class="text-slate-400 font-semibold">Battle Shop (Pick 1 per level - 50 BP):</span>
                 <div class="flex gap-2 flex-wrap">
-                    <button id="btnEnergyBoost" onclick="buyPointEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +0.5 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300" id="battleShopEnergyCost">50 BP</span></button>
-                    <button id="btnRerollBoost" onclick="buyPointReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300" id="battleShopRerollCost">50 BP</span></button>
+                    <button id="btnEnergyBoost" onclick="buyPointEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +0.5 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">50 BP</span></button>
+                    <button id="btnRerollBoost" onclick="buyPointReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span></button>
                 </div>
             </div>
 
@@ -131,7 +129,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Armory inflation and boss counter-attacks active.</div>
+                <div>[System] Welcome to Elemental Clash! Inflation & Fusion Forge active.</div>
             </div>
 
             <!-- Player Hand -->
@@ -153,30 +151,38 @@
         Elemental Clash &bull; Created by Jack Vaughan
     </footer>
 
-    <!-- MODAL: Inflated Intermission Armory & Fusion Forge -->
+    <!-- MODAL: Intermission Armory & Fusion Forge -->
     <div id="modalVictory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-xl w-full text-center shadow-2xl card-glow space-y-3 max-h-[90vh] overflow-y-auto">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400">Stage Cleared!</h3>
             <p class="text-xs text-slate-300" id="victoryMsg">You defeated the boss! +50 BP earned.</p>
             
+            <!-- Explicit BP Display Header -->
+            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 flex justify-between items-center text-xs">
+                <span class="text-slate-300 font-medium">Your Available Spending Power:</span>
+                <span class="text-amber-400 font-bold text-sm">🪙 <span id="shopPlayerPointsDisplay">0</span> BP</span>
+            </div>
+
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-3">
                 <div class="flex justify-between items-center">
-                    <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Armory & Inflation Market:</p>
+                    <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Armory & Forge:</p>
                     <span class="text-[10px] text-red-400 font-mono" id="inflationBadge">Prices +0% (Lvl 1)</span>
                 </div>
                 
-                <!-- Card Fusion Section -->
+                <!-- Card Fusion Section Explained Clearly -->
                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs">
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-amber-400">🔥 Card Fusion Forge</span>
                         <span class="text-[10px] text-amber-300 font-mono" id="fusionCostText">Cost: 40 BP</span>
                     </div>
-                    <p class="text-[10px] text-slate-400">Select two identical cards to fuse into the next rarity tier.</p>
-                    <div class="flex gap-2 items-center">
+                    <p class="text-[10px] text-slate-400 leading-relaxed">
+                        <strong>How Fusing Works:</strong> When you have 2 identical cards in your deck (e.g., two Level 1 Sparks), you can sacrifice both of them here to upgrade into 1 powerful card of the next tier (Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary)!
+                    </p>
+                    <div class="flex gap-2 items-center pt-1">
                         <select id="fusionCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
                             <!-- Populated dynamically -->
                         </select>
-                        <button onclick="executeCardFusion()" class="bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs whitespace-nowrap transition">Fuse Cards</button>
+                        <button onclick="executeCardFusion()" class="bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs whitespace-nowrap transition">Fuse Pair</button>
                     </div>
                 </div>
 
@@ -260,12 +266,9 @@
             </div>
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">⚠️ Brutal New Mechanics:</p>
-                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li><strong>Armory Inflation:</strong> Shop prices increase progressively as you advance through levels!</li>
-                        <li><strong>Boss Retaliation:</strong> Hitting a boss with an element they counter will trigger an instant retaliatory strike against your hero!</li>
-                    </ul>
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <p class="font-bold text-amber-400">🔥 Card Fusing Explained:</p>
+                    <p class="text-slate-400 text-[11px]">If your deck contains 2 identical cards (same name & tier), go to the Intermission Forge after defeating a boss, select the pair, and fuse them to upgrade them into a higher rarity tier!</p>
                 </div>
             </div>
             <button onclick="closeRules()" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Got it, Let's Play!</button>
@@ -474,7 +477,6 @@
         let playerHand = [];
         let drawPile = [];
 
-        // Armory Inflation Multiplier (increases by 6% per level)
         function getInflationMultiplier() {
             return 1 + ((currentLevel - 1) * 0.06);
         }
@@ -605,7 +607,6 @@
                                    (card.element === 'spirit' && currentBoss.element === 'shadow') ||
                                    (card.element === 'shadow' && currentBoss.element === 'air');
 
-                // Boss Counter-Element Check (Does the boss counter YOU?)
                 let bossCountersPlayer = (currentBoss.element === 'fire' && card.element === 'earth') ||
                                          (currentBoss.element === 'earth' && card.element === 'water') ||
                                          (currentBoss.element === 'water' && card.element === 'fire') ||
@@ -617,10 +618,9 @@
                     dmg = Math.round(dmg * 1.4);
                     logMessage(`[🔥 Advantage!] Your ${card.element.toUpperCase()} beats ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
                 } else if (bossCountersPlayer) {
-                    dmg = Math.round(dmg * 0.7); // Reduced damage for playing into boss counter
+                    dmg = Math.round(dmg * 0.7);
                     logMessage(`[⚠️ Bad Matchup!] ${currentBoss.name} counters ${card.element.toUpperCase()}! Damage reduced to ${dmg}.`);
                     
-                    // Trigger Instant Boss Retaliation Counter-Attack!
                     let counterDmg = Math.round(10 + (currentLevel * 0.8));
                     hero.hp = Math.max(0, hero.hp - counterDmg);
                     showPopup('heroDamagePopup', `-${counterDmg}`, 'text-red-500');
@@ -753,16 +753,17 @@
             let fusionCost = Math.round(40 * getInflationMultiplier());
 
             if (validFusions.length === 0) {
-                select.innerHTML = `<option value="">No duplicate pairs available to fuse</option>`;
+                select.innerHTML = `<option value="">[Need 2 identical cards in deck to fuse]</option>`;
                 return;
             }
 
             validFusions.forEach(id => {
                 let sampleCard = playerDeck.find(c => c.id === id);
                 if (sampleCard && sampleCard.tier !== 'Legendary') {
+                    let totalCount = counts[id];
                     let opt = document.createElement('option');
                     opt.value = id;
-                    opt.innerText = `Fuse 2x [${sampleCard.tier}] ${sampleCard.name} (Cost: ${fusionCost} BP)`;
+                    opt.innerText = `Fuse 2x [${sampleCard.tier}] ${sampleCard.name} (${totalCount} owned) - Cost: ${fusionCost} BP`;
                     select.appendChild(opt);
                 }
             });
@@ -851,6 +852,8 @@
         function updateArmoryUI() {
             let mult = getInflationMultiplier();
             let inflationPercent = Math.round((mult - 1) * 100);
+            
+            document.getElementById('shopPlayerPointsDisplay').innerText = playerPoints;
             document.getElementById('inflationBadge').innerText = `Prices +${inflationPercent}% (Lvl ${currentLevel})`;
 
             document.getElementById('healCostText').innerText = Math.round(50 * mult);
