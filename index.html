@@ -25,6 +25,7 @@
                 <p class="text-xs text-slate-400">Created by <span class="text-amber-400 font-semibold">Jack Vaughan</span></p>
             </div>
             <div class="flex items-center gap-2">
+                <span class="bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30">🪙 <span id="playerPointsDisplay">0</span> BP</span>
                 <button onclick="toggleAudio()" id="audioToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 transition">🔊 Sound: ON</button>
                 <button onclick="openRules()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/30 transition">📖 How to Play</button>
             </div>
@@ -100,18 +101,18 @@
                 </div>
             </div>
 
-            <!-- Ad-Powered Tactical Power-Ups Bar -->
+            <!-- Point-Powered Tactical Power-Shop Bar (Pick One per Level - Both 50 BP) -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs">
-                <span class="text-slate-400 font-semibold">Tactical Boosts (1x Per Level):</span>
+                <span class="text-slate-400 font-semibold">Tactical Shop (Pick 1 per level - 50 BP each):</span>
                 <div class="flex gap-2 flex-wrap">
-                    <button id="btnEnergyBoost" onclick="useAdEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +1 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">Ad</span></button>
-                    <button id="btnRerollBoost" onclick="useAdReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">Ad</span></button>
+                    <button id="btnEnergyBoost" onclick="buyPointEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +1 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">50 BP</span></button>
+                    <button id="btnRerollBoost" onclick="buyPointReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span></button>
                 </div>
             </div>
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash 50-Level Marathon!</div>
+                <div>[System] Welcome to Elemental Clash 50-Level Marathon! Earn 50 BP by defeating bosses. Choose wisely in the shop.</div>
             </div>
 
             <!-- Player Hand -->
@@ -137,7 +138,7 @@
     <div id="modalVictory" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl card-glow">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2">Stage Cleared!</h3>
-            <p class="text-sm text-slate-300 mb-4" id="victoryMsg">You defeated the boss! Your health has been fully restored to 100 HP.</p>
+            <p class="text-sm text-slate-300 mb-4" id="victoryMsg">You defeated the boss! +50 BP earned. Health fully restored.</p>
             <button onclick="advanceToNextLevel()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel">Proceed to Next Level</button>
         </div>
     </div>
@@ -146,9 +147,9 @@
     <div id="modalGameOver" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl space-y-3">
             <h3 class="font-cinzel text-2xl font-bold text-red-500 mb-1">Defeated in Battle!</h3>
-            <p class="text-xs text-slate-300" id="gameOverDesc">Your health reached 0. Watch an ad to revive, or restart back at Level 1.</p>
+            <p class="text-xs text-slate-300" id="gameOverDesc">Your health reached 0. Watch a sponsor ad to revive, or restart back at Level 1.</p>
             
-            <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (5 Left)</button>
+            <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (5 Left - Ad)</button>
             
             <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Restart at Level 1</button>
         </div>
@@ -173,10 +174,11 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">🔥 Smart Boss AI & 50 Levels:</p>
+                    <p class="font-bold text-amber-400 mb-1">🪙 Battle Points (BP) & Revives:</p>
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li>Smart tactical AI: Bosses only heal when damaged and shield strategically!</li>
-                        <li>Watch ads to gain tactical energy, reroll your hand, or revive upon defeat!</li>
+                        <li>Earn exactly <strong>50 BP</strong> by defeating each boss to buy shop perks.</li>
+                        <li>You can only choose <strong>one</strong> shop perk per level (50 BP each).</li>
+                        <li>You have 5 total Ad-Powered Revives per run (1 max per level) if defeated!</li>
                     </ul>
                 </div>
             </div>
@@ -189,11 +191,11 @@
         const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
 
         let soundEnabled = true;
+        let playerPoints = 0;
         const MAX_REVIVES_PER_RUN = 5;
         let revivesUsedThisRun = 0;
         let usedReviveThisLevel = false;
-        let usedEnergyBoostThisBattle = false;
-        let usedRerollBoostThisBattle = false;
+        let shopUsedThisLevel = false;
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -263,7 +265,6 @@
             { id: 's1', name: 'Aegis Shield', type: 'shield', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
         ];
 
-        // 50 Unique Boss Roster
         const uniqueBosses = [
             { name: "Sparkling Sprite", element: "fire", theme: "The Outskirts" },
             { name: "Mossy Golem", element: "earth", theme: "Whispering Woods" },
@@ -332,6 +333,7 @@
             document.getElementById('screenBattle').classList.remove('hidden');
 
             currentLevel = 1;
+            playerPoints = 0;
             revivesUsedThisRun = 0;
             hero.hp = 100;
             initBattle();
@@ -353,9 +355,8 @@
             currentBoss.shield = 0;
 
             usedReviveThisLevel = false;
-            usedEnergyBoostThisBattle = false;
-            usedRerollBoostThisBattle = false;
-            resetBoostButtons();
+            shopUsedThisLevel = false;
+            resetShopButtons();
 
             document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 50`;
             document.getElementById('stageThemeBadge').innerText = `Stage: ${currentBoss.theme}`;
@@ -461,7 +462,6 @@
             bossTurn();
         }
 
-        // --- SMART TACTICAL AI ENGINE ---
         function bossTurn() {
             let bossPower = Math.round(12 + (currentLevel * 1.2));
             let bossActionType = 'attack';
@@ -469,22 +469,16 @@
             const bossHpPercent = currentBoss.currentHp / currentBoss.hp;
             const isDamaged = currentBoss.currentHp < currentBoss.hp;
 
-            // Decision Logic
             if (isDamaged && bossHpPercent <= 0.35) {
-                // Emergency Mode: Boss is heavily damaged (<35% HP)
                 bossActionType = (currentBoss.shield < 10) ? 'shield' : 'heal';
             } else if (isDamaged && Math.random() < 0.3) {
-                // Tactical Heal if wounded and not at 100% HP
                 bossActionType = 'heal';
             } else if (currentBoss.shield === 0 && Math.random() < 0.25) {
-                // Raise defensive shield if unshielded
                 bossActionType = 'shield';
             } else {
-                // Default: Aggressive attack
                 bossActionType = 'attack';
             }
 
-            // Execute AI Action
             if (bossActionType === 'attack') {
                 playSound('attack');
                 
@@ -533,11 +527,15 @@
 
         function triggerStageVictory() {
             playSound('win');
+            playerPoints += 50; // Exactly 50 BP per round victory
+            document.getElementById('victoryMsg').innerText = `You defeated ${currentBoss.name}! +50 BP earned. Health fully restored.`;
+            
             if (currentLevel >= 50) {
                 document.getElementById('modalGrandVictory').classList.remove('hidden');
             } else {
                 document.getElementById('modalVictory').classList.remove('hidden');
             }
+            updateUI();
         }
 
         function advanceToNextLevel() {
@@ -547,54 +545,38 @@
             initBattle();
         }
 
-        function useAdEnergyBoost() {
-            if (usedEnergyBoostThisBattle) return;
-            usedEnergyBoostThisBattle = true;
-            
-            window.open(ADSTERRA_SMARTLINK, '_blank');
+        function buyPointEnergyBoost() {
+            if (shopUsedThisLevel || playerPoints < 50) return;
+            playerPoints -= 50;
+            shopUsedThisLevel = true;
 
             hero.energy += 1;
             playSound('heal');
             
-            const btn = document.getElementById('btnEnergyBoost');
-            if (btn) {
-                btn.classList.add('opacity-40', 'pointer-events-none');
-                btn.innerHTML = `⚡ +1 Energy <span class="text-[10px] bg-slate-700 px-1 rounded text-slate-400">Used</span>`;
-            }
-            
             updateUI();
-            logMessage('[Tactical Boost] Ad opened! +1 Energy gained.');
+            logMessage('[Tactical Shop] Purchased +1 Energy for 50 BP.');
         }
 
-        function useAdReroll() {
-            if (usedRerollBoostThisBattle) return;
-            usedRerollBoostThisBattle = true;
-            
-            window.open(ADSTERRA_SMARTLINK, '_blank');
+        function buyPointReroll() {
+            if (shopUsedThisLevel || playerPoints < 50) return;
+            playerPoints -= 50;
+            shopUsedThisLevel = true;
 
             drawNewHand(4);
             playSound('card');
-            
-            const btn = document.getElementById('btnRerollBoost');
-            if (btn) {
-                btn.classList.add('opacity-40', 'pointer-events-none');
-                btn.innerHTML = `🔄 Reroll Hand <span class="text-[10px] bg-slate-700 px-1 rounded text-slate-400">Used</span>`;
-            }
 
             updateUI();
-            logMessage('[Tactical Boost] Ad opened! Hand rerolled.');
+            logMessage('[Tactical Shop] Purchased Hand Reroll for 50 BP.');
         }
 
-        function resetBoostButtons() {
+        function resetShopButtons() {
             const energyBtn = document.getElementById('btnEnergyBoost');
             const rerollBtn = document.getElementById('btnRerollBoost');
             if (energyBtn) {
-                energyBtn.classList.remove('opacity-40', 'pointer-events-none');
-                energyBtn.innerHTML = `⚡ +1 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">Ad</span>`;
+                energyBtn.innerHTML = `⚡ +1 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">50 BP</span>`;
             }
             if (rerollBtn) {
-                rerollBtn.classList.remove('opacity-40', 'pointer-events-none');
-                rerollBtn.innerHTML = `🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">Ad</span>`;
+                rerollBtn.innerHTML = `🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span>`;
             }
         }
 
@@ -605,13 +587,13 @@
 
             if (usedReviveThisLevel) {
                 reviveBtn.classList.add('opacity-40', 'pointer-events-none');
-                reviveBtn.innerText = `❌ Already Used on Level ${currentLevel}`;
+                reviveBtn.innerText = `❌ Revive Already Used on Level ${currentLevel}`;
             } else if (remaining <= 0) {
                 reviveBtn.classList.add('opacity-40', 'pointer-events-none');
                 reviveBtn.innerText = '❌ All Revives Used (0 Left)';
             } else {
                 reviveBtn.classList.remove('opacity-40', 'pointer-events-none');
-                reviveBtn.innerText = `✨ Revive Hero (${remaining} Left)`;
+                reviveBtn.innerText = `✨ Revive Hero (${remaining} Left - Sponsor Ad)`;
             }
             document.getElementById('modalGameOver').classList.remove('hidden');
         }
@@ -631,12 +613,14 @@
             hero.energy = hero.maxEnergy;
             drawNewHand(4);
             updateUI();
-            logMessage(`[Smartlink] Revive consumed! (${MAX_REVIVES_PER_RUN - revivesUsedThisRun} remaining). Resurrected at Level ${currentLevel} with 50% HP!`);
+            logMessage(`[Sponsor Revive] Revive consumed! (${MAX_REVIVES_PER_RUN - revivesUsedThisRun} remaining). Resurrected at Level ${currentLevel} with 50% HP!`);
         }
 
         function resetGameRun() {
+            playerPoints = 0;
             revivesUsedThisRun = 0;
             usedReviveThisLevel = false;
+            shopUsedThisLevel = false;
             document.getElementById('modalGameOver').classList.add('hidden');
             document.getElementById('modalGrandVictory').classList.add('hidden');
             currentLevel = 1;
@@ -645,6 +629,7 @@
         }
 
         function updateUI() {
+            document.getElementById('playerPointsDisplay').innerText = playerPoints;
             document.getElementById('heroHpText').innerText = hero.hp;
             document.getElementById('heroHpBar').style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
 
@@ -668,6 +653,23 @@
             }
 
             document.getElementById('playerEnergyDisplay').innerText = hero.energy;
+
+            // Update shop button states (Lock BOTH if one is chosen or player has < 50 BP)
+            const energyBtn = document.getElementById('btnEnergyBoost');
+            const rerollBtn = document.getElementById('btnRerollBoost');
+            
+            if (energyBtn && rerollBtn) {
+                if (shopUsedThisLevel) {
+                    energyBtn.classList.add('opacity-40', 'pointer-events-none');
+                    rerollBtn.classList.add('opacity-40', 'pointer-events-none');
+                } else if (playerPoints < 50) {
+                    energyBtn.classList.add('opacity-40', 'pointer-events-none');
+                    rerollBtn.classList.add('opacity-40', 'pointer-events-none');
+                } else {
+                    energyBtn.classList.remove('opacity-40', 'pointer-events-none');
+                    rerollBtn.classList.remove('opacity-40', 'pointer-events-none');
+                }
+            }
 
             const handContainer = document.getElementById('playerHandContainer');
             handContainer.innerHTML = '';
@@ -709,8 +711,8 @@
             }, 1000);
         }
 
-        function openRules() { document.getElementById('modalRules').classList.remove('hidden'); }
-        function closeRules() { document.getElementById('modalRules').classList.add('hidden'); }
+    function openRules() { document.getElementById('modalRules').classList.remove('hidden'); }
+    function closeRules() { document.getElementById('modalRules').classList.add('hidden'); }
     </script>
 </body>
 </html>
