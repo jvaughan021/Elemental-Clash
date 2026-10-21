@@ -686,10 +686,11 @@
 
                     container.innerHTML = `
                         <button onclick="loadGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-sm font-cinzel">Continue Journey (${levelLabel})</button>
-                        <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Start New Journey (Delete Save)</button>
+                        <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Start New Journey (Wipe Game & Trophies)</button>
                     `;
                 } catch(e) {
                     localStorage.removeItem(SAVE_KEY);
+                    localStorage.removeItem(SAVE_KEY + "_ach");
                     renderDefaultNewGameButton(container);
                     if (tutorialToggle) tutorialToggle.classList.remove('hidden');
                 }
@@ -721,7 +722,14 @@
         }
 
         function startNewGameFlow() {
+            // FULL WIPE: Remove both save data and achievements when starting fresh
             localStorage.removeItem(SAVE_KEY);
+            localStorage.removeItem(SAVE_KEY + "_ach");
+            
+            for (let key in achievements) {
+                achievements[key].unlocked = false;
+            }
+
             const nameInput = document.getElementById('heroNameInput').value.trim();
             if (nameInput) hero.name = nameInput;
 
@@ -789,6 +797,7 @@
                 launchBattleScreen();
             } catch(e) {
                 localStorage.removeItem(SAVE_KEY);
+                localStorage.removeItem(SAVE_KEY + "_ach");
                 startNewGameFlow();
             }
         }
@@ -1134,6 +1143,7 @@
             
             if (currentLevel >= 50) {
                 localStorage.removeItem(SAVE_KEY);
+                localStorage.removeItem(SAVE_KEY + "_ach");
                 checkAchievements();
                 document.getElementById('modalGrandVictory').classList.remove('hidden');
                 updateUI();
@@ -1470,6 +1480,8 @@
 
         function resetGameRun() {
             localStorage.removeItem(SAVE_KEY);
+            localStorage.removeItem(SAVE_KEY + "_ach");
+
             playerPoints = 0;
             revivesUsedThisRun = 0;
             usedReviveThisLevel = false;
@@ -1478,6 +1490,11 @@
             relics = { aegis: false, greed: false };
             hero.maxHp = 100;
             hero.maxEnergy = 3;
+
+            for (let key in achievements) {
+                achievements[key].unlocked = false;
+            }
+
             document.getElementById('modalGameOver').classList.add('hidden');
             document.getElementById('modalGrandVictory').classList.add('hidden');
             currentLevel = 0;
@@ -1495,7 +1512,7 @@
 
             document.getElementById('heroHpText').innerText = hero.hp;
             document.getElementById('heroMaxHpText').innerText = hero.maxHp;
-            document.getElementById('heroHpBar'].style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
+            document.getElementById('heroHpBar').style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
 
             const heroShieldEl = document.getElementById('heroShieldText');
             if (hero.shield > 0) {
@@ -1506,7 +1523,7 @@
             }
 
             document.getElementById('bossHpText').innerText = currentBoss.currentHp;
-            document.getElementById('bossHpBar'].style.width = `${Math.max(0, (currentBoss.currentHp / currentBoss.hp) * 100)}%`;
+            document.getElementById('bossHpBar').style.width = `${Math.max(0, (currentBoss.currentHp / currentBoss.hp) * 100)}%`;
 
             const bossShieldEl = document.getElementById('bossShieldText');
             if (currentBoss.shield > 0) {
