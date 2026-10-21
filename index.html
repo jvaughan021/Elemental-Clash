@@ -38,7 +38,7 @@
         <!-- SCREEN 1: Name Entry -->
         <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
-            <p class="text-sm text-slate-400 mb-6">Choose your hero name to embark on your 50-level tactical marathon across 6 Elements!</p>
+            <p class="text-sm text-slate-400 mb-6">Master 60 unique cards across 5 rarity tiers and expand your hand size up to 12 cards!</p>
             <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
             <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
         </div>
@@ -131,13 +131,13 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash 50-Level Marathon! 6 Elements unlocked.</div>
+                <div>[System] Welcome to Elemental Clash! Hand size upgrades available in Armory.</div>
             </div>
 
             <!-- Player Hand -->
             <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <span class="text-xs font-cinzel font-bold text-slate-300 tracking-wider">YOUR HAND</span>
+                    <span class="text-xs font-cinzel font-bold text-slate-300 tracking-wider">YOUR HAND (<span id="handCountDisplay">4</span> Cards)</span>
                     <span class="text-xs text-slate-400">Click a card to play</span>
                 </div>
                 <div id="playerHandContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -160,7 +160,7 @@
             <p class="text-xs text-slate-300" id="victoryMsg">You defeated the boss! +50 BP earned.</p>
             
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-2">
-                <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Upgrades (Spend BP):</p>
+                <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Armory (Spend BP):</p>
                 
                 <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
                     <div>
@@ -180,26 +180,34 @@
 
                 <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
                     <div>
-                        <p class="font-bold text-slate-200">🏺 Relic: Aegis Core</p>
-                        <p class="text-[10px] text-slate-400">Gain +8 Shield automatically at start of every combat turn.</p>
+                        <p class="font-bold text-slate-200" id="handUpgradeLabel">🃏 Expand Hand Size (4 ➔ 6)</p>
+                        <p class="text-[10px] text-slate-400">Draw more cards each turn during combat.</p>
+                    </div>
+                    <button id="btnHandUpgrade" onclick="buyHandSizeUpgrade()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="handUpgradeCost">100</span> BP</button>
+                </div>
+
+                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                    <div>
+                        <p class="font-bold text-slate-200">🎴 Draft Tier-Upgraded Card</p>
+                        <p class="text-[10px] text-slate-400">Draft a random Uncommon, Rare, Epic, or Legendary card.</p>
+                    </div>
+                    <button onclick="draftRandomCard()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">50 BP</button>
+                </div>
+
+                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                    <div>
+                        <p class="font-bold text-slate-200">🏺 Relic: Aegis Core (+8 Shield/turn)</p>
+                        <p class="text-[10px] text-slate-400">Gain permanent defensive automation.</p>
                     </div>
                     <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
                 </div>
 
                 <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
                     <div>
-                        <p class="font-bold text-slate-200">🏺 Relic: Greed Ring</p>
-                        <p class="text-[10px] text-slate-400">Earn +25 bonus BP on every stage victory.</p>
+                        <p class="font-bold text-slate-200">🏺 Relic: Greed Ring (+25 BP/win)</p>
+                        <p class="text-[10px] text-slate-400">Accelerate your deck progression.</p>
                     </div>
                     <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
-                </div>
-
-                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
-                    <div>
-                        <p class="font-bold text-slate-200">🎴 Draft High-Tier Elemental Card</p>
-                        <p class="text-[10px] text-slate-400">Add a powerful Air, Shadow, or Spirit card to deck.</p>
-                    </div>
-                    <button onclick="draftRareCard()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">50 BP</button>
                 </div>
             </div>
 
@@ -223,7 +231,7 @@
     <div id="modalGrandVictory" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-amber-500 rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl card-glow space-y-4">
             <h3 class="font-cinzel text-3xl font-bold text-amber-400">Realm Conquered!</h3>
-            <p class="text-sm text-slate-300">Incredible tactical mastery! You defeated all 50 bosses across 6 elements and conquered the Apex Voidlord!</p>
+            <p class="text-sm text-slate-300">Incredible tactical mastery! You defeated all 50 bosses and conquered the Apex Voidlord!</p>
             <button onclick="resetGameRun()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel">Play Again</button>
         </div>
     </div>
@@ -238,18 +246,8 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">🔥 6-Element System (+40% Damage):</p>
-                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li>🔥 Fire &gt; 🌿 Earth &gt; 💧 Water &gt; 🔥 Fire</li>
-                        <li>🌪️ Air &gt; 🌫️ Spirit &gt; 🌑 Shadow &gt; 🌪️ Air</li>
-                    </ul>
-                </div>
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">🪙 Battle Points (BP) & Intermission Shop:</p>
-                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li>Earn 50 BP per boss win. Spend it in the Intermission Shop on Max Energy, Relics, Cards, or Max HP!</li>
-                        <li>You have 5 total Ad-Powered Revives per run if defeated!</li>
-                    </ul>
+                    <p class="font-bold text-amber-400 mb-1">🃏 Hand Size Upgrades:</p>
+                    <p class="text-slate-400 text-[11px]">Expand your combat hand size from 4 up to 12 cards using expensive, high-scaling BP upgrades in the Intermission Armory!</p>
                 </div>
             </div>
             <button onclick="closeRules()" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Got it, Let's Play!</button>
@@ -267,6 +265,7 @@
         let usedReviveThisLevel = false;
         let shopUsedThisLevel = false;
 
+        let handSize = 4; // Starts at 4, upgradable to 6, 8, 10, 12
         let relics = { aegis: false, greed: false };
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -322,26 +321,82 @@
             document.getElementById('audioToggleBtn').innerText = soundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
         }
 
-        // Expanded 6-Element Master Deck
-        let playerDeck = [
-            { id: 'f1', name: 'Fireball', type: 'fire', cost: 1, power: 12, icon: '🔥', desc: 'Deals 12 Fire damage.' },
-            { id: 'w1', name: 'Aqua Bolt', type: 'water', cost: 1, power: 12, icon: '💧', desc: 'Deals 12 Water damage.' },
-            { id: 'e1', name: 'Rock Throw', type: 'earth', cost: 1, power: 12, icon: '🪨', desc: 'Deals 12 Earth damage.' },
-            { id: 'a1', name: 'Gale Slash', type: 'air', cost: 1, power: 13, icon: '🌪️', desc: 'Deals 13 Air damage.' },
-            { id: 'sh1', name: 'Shadow Strike', type: 'shadow', cost: 1, power: 14, icon: '🌑', desc: 'Deals 14 Shadow damage.' },
-            { id: 'sp1', name: 'Spirit Flare', type: 'spirit', cost: 1, power: 13, icon: '🌫️', desc: 'Deals 13 Spirit damage.' },
-            { id: 'h1', name: 'Healing Salve', type: 'heal', cost: 1, power: 14, icon: '❤️', desc: 'Restores 14 HP.' },
-            { id: 's1', name: 'Aegis Shield', type: 'shield', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
+        // Master 60-Card Database across 6 Elements and 5 Tiers
+        const masterCardDatabase = [
+            // FIRE (10 cards)
+            { id: 'f_c1', name: 'Spark', element: 'fire', tier: 'Common', cost: 1, power: 10, icon: '🔥', desc: 'Tier 1 Fire strike (10 dmg).' },
+            { id: 'f_c2', name: 'Flame Dart', element: 'fire', tier: 'Common', cost: 1, power: 12, icon: '🔥', desc: 'Tier 1 Fire strike (12 dmg).' },
+            { id: 'f_u1', name: 'Fireball', element: 'fire', tier: 'Uncommon', cost: 1, power: 16, icon: '💥', desc: 'Tier 2 Fire strike (16 dmg).' },
+            { id: 'f_u2', name: 'Magma Bolt', element: 'fire', tier: 'Uncommon', cost: 1, power: 18, icon: '💥', desc: 'Tier 2 Fire strike (18 dmg).' },
+            { id: 'f_r1', name: 'Flame Burst', element: 'fire', tier: 'Rare', cost: 2, power: 25, icon: '🌋', desc: 'Tier 3 Fire strike (25 dmg).' },
+            { id: 'f_r2', name: 'Cinder Strike', element: 'fire', tier: 'Rare', cost: 2, power: 28, icon: '🌋', desc: 'Tier 3 Fire strike (28 dmg).' },
+            { id: 'f_e1', name: 'Inferno Wave', element: 'fire', tier: 'Epic', cost: 2, power: 36, icon: '☄️', desc: 'Tier 4 Epic Fire wave (36 dmg).' },
+            { id: 'f_e2', name: 'Blazing Wrath', element: 'fire', tier: 'Epic', cost: 2, power: 40, icon: '☄️', desc: 'Tier 4 Epic Fire wave (40 dmg).' },
+            { id: 'f_l1', name: 'Supernova', element: 'fire', tier: 'Legendary', cost: 3, power: 55, icon: '🌟', desc: 'Tier 5 Legendary Fire cataclysm (55 dmg).' },
+            { id: 'f_l2', name: 'Solar Flare', element: 'fire', tier: 'Legendary', cost: 3, power: 60, icon: '🌟', desc: 'Tier 5 Legendary Solar strike (60 dmg).' },
+
+            // WATER (10 cards)
+            { id: 'w_c1', name: 'Water Droplet', element: 'water', tier: 'Common', cost: 1, power: 10, icon: '💧', desc: 'Tier 1 Water bolt (10 dmg).' },
+            { id: 'w_c2', name: 'Aqua Spray', element: 'water', tier: 'Common', cost: 1, power: 12, icon: '💧', desc: 'Tier 1 Water bolt (12 dmg).' },
+            { id: 'w_u1', name: 'Aqua Bolt', element: 'water', tier: 'Uncommon', cost: 1, power: 16, icon: '🌊', desc: 'Tier 2 Water bolt (16 dmg).' },
+            { id: 'w_u2', name: 'Frost Bite', element: 'water', tier: 'Uncommon', cost: 1, power: 18, icon: '🌊', desc: 'Tier 2 Water strike (18 dmg).' },
+            { id: 'w_r1', name: 'Tidal Splash', element: 'water', tier: 'Rare', cost: 2, power: 25, icon: '🌀', desc: 'Tier 3 Tidal strike (25 dmg).' },
+            { id: 'w_r2', name: 'Glacial Spike', element: 'water', tier: 'Rare', cost: 2, power: 28, icon: '🌀', desc: 'Tier 3 Ice strike (28 dmg).' },
+            { id: 'w_e1', name: 'Tsunami Surge', element: 'water', tier: 'Epic', cost: 2, power: 36, icon: '🌊', desc: 'Tier 4 Epic Tsunami (36 dmg).' },
+            { id: 'w_e2', name: 'Abyssal Torrent', element: 'water', tier: 'Epic', cost: 2, power: 40, icon: '🌊', desc: 'Tier 4 Epic Torrent (40 dmg).' },
+            { id: 'w_l1', name: 'Leviathan Wrath', element: 'water', tier: 'Legendary', cost: 3, power: 55, icon: '🌊', desc: 'Tier 5 Legendary Ocean cataclysm (55 dmg).' },
+            { id: 'w_l2', name: 'Wrath of the Deep', element: 'water', tier: 'Legendary', cost: 3, power: 60, icon: '🌊', desc: 'Tier 5 Legendary Abyssal strike (60 dmg).' },
+
+            // EARTH (10 cards)
+            { id: 'e_c1', name: 'Pebble Toss', element: 'earth', tier: 'Common', cost: 1, power: 10, icon: '🪨', desc: 'Tier 1 Earth strike (10 dmg).' },
+            { id: 'e_c2', name: 'Dirt Clod', element: 'earth', tier: 'Common', cost: 1, power: 12, icon: '🪨', desc: 'Tier 1 Earth strike (12 dmg).' },
+            { id: 'e_u1', name: 'Rock Throw', element: 'earth', tier: 'Uncommon', cost: 1, power: 16, icon: '⛰️', desc: 'Tier 2 Earth strike (16 dmg).' },
+            { id: 'e_u2', name: 'Vine Whip', element: 'earth', tier: 'Uncommon', cost: 1, power: 18, icon: '⛰️', desc: 'Tier 2 Nature strike (18 dmg).' },
+            { id: 'e_r1', name: 'Stone Armor', element: 'earth', tier: 'Rare', cost: 2, power: 25, icon: '🪵', desc: 'Tier 3 Earth strike (25 dmg).' },
+            { id: 'e_r2', name: 'Bramble Crush', element: 'earth', tier: 'Rare', cost: 2, power: 28, icon: '🪵', desc: 'Tier 3 Nature strike (28 dmg).' },
+            { id: 'e_e1', name: 'Earthquake', element: 'earth', tier: 'Epic', cost: 2, power: 36, icon: '⛰️', desc: 'Tier 4 Epic Tremor (36 dmg).' },
+            { id: 'e_e2', name: 'Gaia Slam', element: 'earth', tier: 'Epic', cost: 2, power: 40, icon: '⛰️', desc: 'Tier 4 Epic Slam (40 dmg).' },
+            { id: 'e_l1', name: 'World Shatter', element: 'earth', tier: 'Legendary', cost: 3, power: 55, icon: '🌍', desc: 'Tier 5 Legendary World cataclysm (55 dmg).' },
+            { id: 'e_l2', name: 'Continental Crush', element: 'earth', tier: 'Legendary', cost: 3, power: 60, icon: '🌍', desc: 'Tier 5 Legendary Tectonic strike (60 dmg).' },
+
+            // AIR (10 cards)
+            { id: 'a_c1', name: 'Breeze', element: 'air', tier: 'Common', cost: 1, power: 10, icon: '🌪️', desc: 'Tier 1 Air strike (10 dmg).' },
+            { id: 'a_c2', name: 'Zephyr Gust', element: 'air', tier: 'Common', cost: 1, power: 12, icon: '🌪️', desc: 'Tier 1 Air strike (12 dmg).' },
+            { id: 'a_u1', name: 'Gale Slash', element: 'air', tier: 'Uncommon', cost: 1, power: 16, icon: '💨', desc: 'Tier 2 Air strike (16 dmg).' },
+            { id: 'a_u2', name: 'Wind Blade', element: 'air', tier: 'Uncommon', cost: 1, power: 18, icon: '💨', desc: 'Tier 2 Air strike (18 dmg).' },
+            { id: 'a_r1', name: 'Cyclone Strike', element: 'air', tier: 'Rare', cost: 2, power: 25, icon: '🌪️', desc: 'Tier 3 Air strike (25 dmg).' },
+            { id: 'a_r2', name: 'Storm Slash', element: 'air', tier: 'Rare', cost: 2, power: 28, icon: '🌪️', desc: 'Tier 3 Air strike (28 dmg).' },
+            { id: 'a_e1', name: 'Tornado Blast', element: 'air', tier: 'Epic', cost: 2, power: 36, icon: '⚡', desc: 'Tier 4 Epic Tornado (36 dmg).' },
+            { id: 'a_e2', name: 'Hurricane Force', element: 'air', tier: 'Epic', cost: 2, power: 40, icon: '⚡', desc: 'Tier 4 Epic Hurricane (40 dmg).' },
+            { id: 'a_l1', name: 'Stratosphere Wrath', element: 'air', tier: 'Legendary', cost: 3, power: 55, icon: '⚡', desc: 'Tier 5 Legendary Sky cataclysm (55 dmg).' },
+            { id: 'a_l2', name: 'Aetherial Storm', element: 'air', tier: 'Legendary', cost: 3, power: 60, icon: '⚡', desc: 'Tier 5 Legendary Aether strike (60 dmg).' },
+
+            // SHADOW (10 cards)
+            { id: 'sh_c1', name: 'Dusk', element: 'shadow', tier: 'Common', cost: 1, power: 10, icon: '🌑', desc: 'Tier 1 Shadow strike (10 dmg).' },
+            { id: 'sh_c2', name: 'Dark Whispers', element: 'shadow', tier: 'Common', cost: 1, power: 12, icon: '🌑', desc: 'Tier 1 Shadow strike (12 dmg).' },
+            { id: 'sh_u1', name: 'Shadow Strike', element: 'shadow', tier: 'Uncommon', cost: 1, power: 16, icon: '👤', desc: 'Tier 2 Shadow strike (16 dmg).' },
+            { id: 'sh_u2', name: 'Gloom Dart', element: 'shadow', tier: 'Uncommon', cost: 1, power: 18, icon: '👤', desc: 'Tier 2 Shadow strike (18 dmg).' },
+            { id: 'sh_r1', name: 'Nightmare Slash', element: 'shadow', tier: 'Rare', cost: 2, power: 25, icon: '🌑', desc: 'Tier 3 Shadow strike (25 dmg).' },
+            { id: 'sh_r2', name: 'Eclipse Strike', element: 'shadow', tier: 'Rare', cost: 2, power: 28, icon: '🌑', desc: 'Tier 3 Shadow strike (28 dmg).' },
+            { id: 'sh_e1', name: 'Void Nova', element: 'shadow', tier: 'Epic', cost: 2, power: 36, icon: '🕳️', desc: 'Tier 4 Epic Void (36 dmg).' },
+            { id: 'sh_e2', name: 'Abyssal Grip', element: 'shadow', tier: 'Epic', cost: 2, power: 40, icon: '🕳️', desc: 'Tier 4 Epic Grip (40 dmg).' },
+            { id: 'sh_l1', name: 'Eclipse Cataclysm', element: 'shadow', tier: 'Legendary', cost: 3, power: 55, icon: '🕳️', desc: 'Tier 5 Legendary Void cataclysm (55 dmg).' },
+            { id: 'sh_l2', name: 'Realm of Darkness', element: 'shadow', tier: 'Legendary', cost: 3, power: 60, icon: '🕳️', desc: 'Tier 5 Legendary Dark abyss (60 dmg).' },
+
+            // SPIRIT (10 cards)
+            { id: 'sp_c1', name: 'Spark of Hope', element: 'spirit', tier: 'Common', cost: 1, power: 10, icon: '🌫️', desc: 'Tier 1 Spirit strike (10 dmg).' },
+            { id: 'sp_c2', name: 'Ethereal Touch', element: 'spirit', tier: 'Common', cost: 1, power: 12, icon: '🌫️', desc: 'Tier 1 Spirit strike (12 dmg).' },
+            { id: 'sp_u1', name: 'Spirit Flare', element: 'spirit', tier: 'Uncommon', cost: 1, power: 16, icon: '✨', desc: 'Tier 2 Spirit strike (16 dmg).' },
+            { id: 'sp_u2', name: 'Soul Bolt', element: 'spirit', tier: 'Uncommon', cost: 1, power: 18, icon: '✨', desc: 'Tier 2 Spirit strike (18 dmg).' },
+            { id: 'sp_r1', name: 'Astral Strike', element: 'spirit', tier: 'Rare', cost: 2, power: 25, icon: '👻', desc: 'Tier 3 Spirit strike (25 dmg).' },
+            { id: 'sp_r2', name: 'Phantom Wave', element: 'spirit', tier: 'Rare', cost: 2, power: 28, icon: '👻', desc: 'Tier 3 Spirit strike (28 dmg).' },
+            { id: 'sp_e1', name: 'Soul Wave', element: 'spirit', tier: 'Epic', cost: 2, power: 36, icon: '✨', desc: 'Tier 4 Epic Soul wave (36 dmg).' },
+            { id: 'sp_e2', name: 'Divinity Beam', element: 'spirit', tier: 'Epic', cost: 2, power: 40, icon: '✨', desc: 'Tier 4 Epic Beam (40 dmg).' },
+            { id: 'sp_l1', name: 'Celestial Judgment', element: 'spirit', tier: 'Legendary', cost: 3, power: 55, icon: '🌟', desc: 'Tier 5 Legendary Spirit cataclysm (55 dmg).' },
+            { id: 'sp_l2', name: 'Ascension', element: 'spirit', tier: 'Legendary', cost: 3, power: 60, icon: '🌟', desc: 'Tier 5 Legendary Ascendant strike (60 dmg).' }
         ];
 
-        const rareCardsPool = [
-            { id: 'a2', name: 'Tornado Blast', type: 'air', cost: 2, power: 26, icon: '🌪️', desc: 'Heavy Air surge (26 dmg).' },
-            { id: 'sh2', name: 'Void Nova', type: 'shadow', cost: 2, power: 28, icon: '🌑', desc: 'Heavy Shadow surge (28 dmg).' },
-            { id: 'sp2', name: 'Soul Wave', type: 'spirit', cost: 2, power: 27, icon: '🌫️', desc: 'Heavy Spirit wave (27 dmg).' },
-            { id: 'f2', name: 'Inferno Burst', type: 'fire', cost: 2, power: 28, icon: '🌋', desc: 'Heavy Fire strike (28 dmg).' }
-        ];
-
-        // 50 Unique Boss Roster across 6 elements
+        // 50 Unique Boss Roster
         const uniqueBosses = [
             { name: "Sparkling Sprite", element: "fire", theme: "The Outskirts" },
             { name: "Mossy Golem", element: "earth", theme: "Whispering Woods" },
@@ -395,6 +450,7 @@
             { name: "Apex Voidlord", element: "earth", theme: "The Void Apex" }
         ];
 
+        let playerDeck = [];
         let hero = { name: "Hero", hp: 100, maxHp: 100, shield: 0, energy: 3, maxEnergy: 3 };
         let currentLevel = 1;
         let currentBoss = {};
@@ -415,7 +471,19 @@
             hero.maxHp = 100;
             hero.hp = 100;
             hero.maxEnergy = 3;
+            handSize = 4;
             relics = { aegis: false, greed: false };
+
+            playerDeck = [
+                masterCardDatabase.find(c => c.id === 'f_c1'),
+                masterCardDatabase.find(c => c.id === 'w_c1'),
+                masterCardDatabase.find(c => c.id === 'e_c1'),
+                masterCardDatabase.find(c => c.id === 'a_c1'),
+                masterCardDatabase.find(c => c.id === 'sh_c1'),
+                masterCardDatabase.find(c => c.id === 'sp_c1'),
+                { id: 'h1', name: 'Healing Salve', element: 'heal', tier: 'Common', cost: 1, power: 14, icon: '❤️', desc: 'Restores 14 HP.' },
+                { id: 's1', name: 'Aegis Shield', element: 'shield', tier: 'Common', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
+            ];
 
             initBattle();
         }
@@ -439,7 +507,7 @@
             shopUsedThisLevel = false;
             resetShopButtons();
 
-            hero.shield = relics.aegis ? 8 : 0; // Aegis relic bonus
+            hero.shield = relics.aegis ? 8 : 0;
 
             document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 50`;
             document.getElementById('stageThemeBadge').innerText = `Stage: ${currentBoss.theme}`;
@@ -449,7 +517,7 @@
 
             hero.energy = hero.maxEnergy;
             resetDeck();
-            drawNewHand(4);
+            drawNewHand(handSize);
             updateUI();
             logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} [${currentBoss.element.toUpperCase()} element]!`);
         }
@@ -495,12 +563,12 @@
                 }
             }
 
-            if (card.type === 'heal') {
+            if (card.element === 'heal') {
                 playSound('heal');
                 hero.hp = Math.min(hero.maxHp, hero.hp + card.power);
                 showPopup('heroDamagePopup', `+${card.power}`, 'text-emerald-400');
                 logMessage(`[Action] You used ${card.name}, restoring ${card.power} HP.`);
-            } else if (card.type === 'shield') {
+            } else if (card.element === 'shield') {
                 playSound('card');
                 hero.shield += card.power;
                 logMessage(`[Action] You used ${card.name}, gaining ${card.power} shield.`);
@@ -508,17 +576,16 @@
                 playSound('attack');
                 let dmg = card.power;
                 
-                // 6-Element Advantage Calculation
-                let hasAdvantage = (card.type === 'fire' && currentBoss.element === 'earth') ||
-                                   (card.type === 'earth' && currentBoss.element === 'water') ||
-                                   (card.type === 'water' && currentBoss.element === 'fire') ||
-                                   (card.type === 'air' && currentBoss.element === 'spirit') ||
-                                   (card.type === 'spirit' && currentBoss.element === 'shadow') ||
-                                   (card.type === 'shadow' && currentBoss.element === 'air');
+                let hasAdvantage = (card.element === 'fire' && currentBoss.element === 'earth') ||
+                                   (card.element === 'earth' && currentBoss.element === 'water') ||
+                                   (card.element === 'water' && currentBoss.element === 'fire') ||
+                                   (card.element === 'air' && currentBoss.element === 'spirit') ||
+                                   (card.element === 'spirit' && currentBoss.element === 'shadow') ||
+                                   (card.element === 'shadow' && currentBoss.element === 'air');
 
                 if (hasAdvantage) {
                     dmg = Math.round(dmg * 1.4);
-                    logMessage(`[🔥 Advantage!] Your ${card.type.toUpperCase()} beats ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
+                    logMessage(`[🔥 Advantage!] Your ${card.element.toUpperCase()} beats ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
                 } else {
                     logMessage(`[Attack] You played ${card.name} for ${dmg} damage.`);
                 }
@@ -608,8 +675,8 @@
             }
 
             hero.energy = hero.maxEnergy;
-            if (relics.aegis) hero.shield += 8; // Aegis per-turn shield refresh
-            drawNewHand(4);
+            if (relics.aegis) hero.shield += 8;
+            drawNewHand(handSize);
             updateUI();
         }
 
@@ -619,6 +686,7 @@
             playerPoints += earned;
             document.getElementById('victoryMsg').innerText = `You defeated ${currentBoss.name}! +${earned} BP earned.`;
             
+            updateArmoryUI();
             if (currentLevel >= 50) {
                 document.getElementById('modalGrandVictory').classList.remove('hidden');
             } else {
@@ -634,6 +702,7 @@
             hero.hp = Math.min(hero.maxHp, hero.hp + 25);
             playSound('heal');
             updateUI();
+            updateArmoryUI();
             logMessage('[Shop] Upgraded Max HP & restored health.');
         }
 
@@ -643,7 +712,49 @@
             hero.maxEnergy += 1;
             playSound('win');
             updateUI();
+            updateArmoryUI();
             logMessage('[Shop] Permanently increased turn energy!');
+        }
+
+        function getHandUpgradeCost() {
+            if (handSize === 4) return 100;
+            if (handSize === 6) return 200;
+            if (handSize === 8) return 350;
+            if (handSize === 10) return 500;
+            return 999999;
+        }
+
+        function buyHandSizeUpgrade() {
+            let cost = getHandUpgradeCost();
+            if (handSize >= 12 || playerPoints < cost) return;
+            playerPoints -= cost;
+            handSize += 2;
+            playSound('win');
+            updateUI();
+            updateArmoryUI();
+            logMessage(`[Shop] Expanded combat hand size to ${handSize} cards!`);
+        }
+
+        function updateArmoryUI() {
+            const btn = document.getElementById('btnHandUpgrade');
+            const label = document.getElementById('handUpgradeLabel');
+            const costEl = document.getElementById('handUpgradeCost');
+
+            if (handSize >= 12) {
+                label.innerText = "🃏 Hand Size Maxed (12 Cards)";
+                btn.classList.add('opacity-40', 'pointer-events-none');
+                costEl.innerText = "MAX";
+            } else {
+                let nextSize = handSize + 2;
+                let cost = getHandUpgradeCost();
+                label.innerText = `🃏 Expand Hand Size (${handSize} ➔ ${nextSize})`;
+                costEl.innerText = cost;
+                if (playerPoints < cost) {
+                    btn.classList.add('opacity-40');
+                } else {
+                    btn.classList.remove('opacity-40');
+                }
+            }
         }
 
         function buyRelic(type) {
@@ -658,17 +769,27 @@
                 btn.innerText = 'Owned';
             }
             updateUI();
+            updateArmoryUI();
             logMessage(`[Shop] Acquired Relic: ${type.toUpperCase()}!`);
         }
 
-        function draftRareCard() {
-            if (playerPoints < 50 || rareCardsPool.length === 0) return;
+        function draftRandomCard() {
+            if (playerPoints < 50) return;
             playerPoints -= 50;
-            let card = rareCardsPool.pop();
-            playerDeck.push(card);
+
+            let allowedTiers = ['Uncommon'];
+            if (currentLevel >= 15) allowedTiers.push('Rare');
+            if (currentLevel >= 30) allowedTiers.push('Epic');
+            if (currentLevel >= 42) allowedTiers.push('Legendary');
+
+            let pool = masterCardDatabase.filter(c => allowedTiers.includes(c.tier));
+            let randomCard = pool[Math.floor(Math.random() * pool.length)];
+            
+            playerDeck.push(randomCard);
             playSound('card');
             updateUI();
-            logMessage(`[Shop] Drafted new card: ${card.name} [${card.type.toUpperCase()}]!`);
+            updateArmoryUI();
+            logMessage(`[Shop] Drafted [${randomCard.tier}] ${randomCard.name} [${randomCard.element.toUpperCase()}]!`);
         }
 
         function advanceToNextLevel() {
@@ -695,7 +816,7 @@
             playerPoints -= 50;
             shopUsedThisLevel = true;
 
-            drawNewHand(4);
+            drawNewHand(handSize);
             playSound('card');
 
             updateUI();
@@ -744,7 +865,7 @@
             hero.hp = Math.round(hero.maxHp * 0.5);
             hero.shield = 10;
             hero.energy = hero.maxEnergy;
-            drawNewHand(4);
+            drawNewHand(handSize);
             updateUI();
             logMessage(`[Sponsor Revive] Resurrected at Level ${currentLevel} with 50% HP!`);
         }
@@ -754,6 +875,7 @@
             revivesUsedThisRun = 0;
             usedReviveThisLevel = false;
             shopUsedThisLevel = false;
+            handSize = 4;
             relics = { aegis: false, greed: false };
             hero.maxHp = 100;
             hero.maxEnergy = 3;
@@ -761,7 +883,7 @@
             document.getElementById('modalGrandVictory').classList.add('hidden');
             currentLevel = 1;
             hero.hp = 100;
-            initBattle();
+            startGameFlow();
         }
 
         function updateUI() {
@@ -791,8 +913,8 @@
 
             document.getElementById('playerEnergyDisplay').innerText = hero.energy;
             document.getElementById('playerMaxEnergyDisplay').innerText = hero.maxEnergy;
+            document.getElementById('handCountDisplay').innerText = handSize;
 
-            // Relics bar update
             const relicsBar = document.getElementById('relicsBar');
             const relicsContainer = document.getElementById('relicsContainer');
             if (relics.aegis || relics.greed) {
@@ -819,15 +941,25 @@
             handContainer.innerHTML = '';
             playerHand.forEach((card, index) => {
                 const canAfford = hero.energy >= card.cost;
+                
+                let tierBorder = 'border-slate-700';
+                if (card.tier === 'Uncommon') tierBorder = 'border-emerald-500/50';
+                if (card.tier === 'Rare') tierBorder = 'border-blue-500/60';
+                if (card.tier === 'Epic') tierBorder = 'border-purple-500/70';
+                if (card.tier === 'Legendary') tierBorder = 'border-amber-400';
+
                 const cardEl = document.createElement('div');
-                cardEl.className = `bg-slate-950 border ${canAfford ? 'border-slate-700 hover:border-amber-500 cursor-pointer card-hover' : 'border-slate-900 opacity-50 cursor-not-allowed'} rounded-xl p-3 flex flex-col justify-between transition shadow`;
+                cardEl.className = `bg-slate-950 border ${canAfford ? tierBorder + ' hover:border-amber-400 cursor-pointer card-hover' : 'border-slate-900 opacity-50 cursor-not-allowed'} rounded-xl p-3 flex flex-col justify-between transition shadow`;
                 cardEl.innerHTML = `
                     <div class="flex justify-between items-start mb-1">
                         <span class="text-lg">${card.icon}</span>
                         <span class="bg-amber-500/20 text-amber-400 font-bold px-1.5 py-0.5 rounded text-xs border border-amber-500/30">${card.cost} ⚡</span>
                     </div>
                     <div>
-                        <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
+                        <div class="flex justify-between items-center">
+                            <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
+                            <span class="text-[9px] uppercase tracking-wider text-slate-400">${card.tier}</span>
+                        </div>
                         <p class="text-[10px] text-slate-400 leading-tight">${card.desc}</p>
                     </div>
                 `;
