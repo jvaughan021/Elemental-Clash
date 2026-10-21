@@ -244,7 +244,7 @@
                         <span class="text-[10px] text-amber-300 font-mono" id="trainingLvlBadge">Lvl 0 (Locked)</span>
                     </div>
                     <p class="text-[10px] text-slate-400 leading-relaxed">
-                        Slowly generates passive BP over time in the background. Upgrade to boost the payout rate!
+                        Slowly generates passive BP over time in the background (tab must be open). Upgrade to boost the payout rate!
                     </p>
                     <div class="flex justify-between items-center pt-1">
                         <span class="text-slate-300 text-[11px]">Yield: <strong id="trainingRateText" class="text-amber-400">0 BP / 10s</strong></span>
@@ -261,7 +261,7 @@
                         <span class="text-[10px] text-emerald-400 font-mono font-bold" id="vaultBalanceDisplay">Vault: 0 BP</span>
                     </div>
                     <p class="text-[10px] text-slate-400 leading-relaxed">
-                        Deposit BP into the Bank Vault to earn compounding interest! Upgrade interest rates and payout frequency (Daily ➔ Hourly ➔ Minutely ➔ Per Second). Works offline!
+                        Deposit BP to earn offline compounding interest! Upgrade interest rates and payout speed. <strong>Warning: Wiped on death!</strong>
                     </p>
                     
                     <div class="flex gap-2 items-center bg-slate-950 p-2 rounded-lg border border-slate-800">
@@ -360,7 +360,7 @@
     <div id="modalGameOver" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl space-y-3">
             <h3 class="font-cinzel text-2xl font-bold text-red-500 mb-1">Defeated in Battle!</h3>
-            <p class="text-xs text-slate-300" id="gameOverDesc">Your health reached 0. Watch a sponsor ad to revive, or restart back at Level 1.</p>
+            <p class="text-xs text-slate-300" id="gameOverDesc">Your health reached 0. Your run and Royal Vault have been wiped! Watch a sponsor ad to revive, or restart at Level 1.</p>
             <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (5 Left - Ad)</button>
             <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs shadow">Restart Journey</button>
         </div>
@@ -397,8 +397,8 @@
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
-                    <p class="font-bold text-amber-400">📈 The Fusion Ladder & Drafting:</p>
-                    <p class="text-slate-400 text-[11px]">Bosses offer Common cards. Collect 2 identical copies to fuse them in the <strong>Card Fusion Forge</strong> (Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary)!</p>
+                    <p class="font-bold text-amber-400">🏦 High-Stakes Royal Vault:</p>
+                    <p class="text-slate-400 text-[11px]">Deposit BP into the bank vault to earn offline compounding interest. <strong>Warning: Dying in combat wipes your vault balance and upgrades back to zero!</strong></p>
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
@@ -414,7 +414,7 @@
     <!-- Game Engine Script -->
     <script>
         const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
-        const SAVE_KEY = "elemental_clash_save_v3";
+        const SAVE_KEY = "elemental_clash_save_v4";
 
         let soundEnabled = true;
         let playerPoints = 0;
@@ -489,7 +489,6 @@
             let missedPayouts = Math.floor(elapsedSeconds / intervalSec);
 
             if (missedPayouts > 0) {
-                // Safety cap to prevent freezing if away for months/years
                 if (missedPayouts > 10000) missedPayouts = 10000;
 
                 let ratePercent = vaultRateLevel * 0.02;
@@ -1022,7 +1021,6 @@
                 vaultFreqLevel = data.vaultFreqLevel || 1;
                 lastVaultTickTime = data.lastVaultTickTime || Date.now();
 
-                // Calculate offline compound interest upon loading!
                 calculateOfflineVaultProgress(lastVaultTickTime);
 
                 playerDeck = [];
