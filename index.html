@@ -129,7 +129,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Draft common cards to build up your fusion ladder.</div>
+                <div>[System] Welcome to Elemental Clash! Spend BP wisely in the intermission forge and shop.</div>
             </div>
 
             <!-- Player Hand -->
@@ -151,7 +151,7 @@
         Elemental Clash &bull; Created by Jack Vaughan
     </footer>
 
-    <!-- MODAL: Card Draft Reward (Only Tier-1 Commons) -->
+    <!-- MODAL: Card Draft Reward -->
     <div id="modalDraft" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-5 md:p-6 max-w-xl w-full text-center shadow-2xl card-glow space-y-4">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400">Draft Common Card</h3>
@@ -754,7 +754,6 @@
             const container = document.getElementById('draftCardsContainer');
             container.innerHTML = '';
 
-            // Filter ONLY Tier-1 Common cards from master database
             let commonPool = masterCardDatabase.filter(c => c.tier === 'Common');
             let draftOptions = [];
             for (let i = 0; i < 3; i++) {
@@ -860,9 +859,11 @@
             playerDeck.push(upgradedCard);
             playerPoints -= fusionCost;
             playSound('win');
+            
             updateUI();
+            updateArmoryUI();
             populateFusionDropdown();
-            logMessage(`[Forge] Fused two cards into [${upgradedCard.tier}] ${upgradedCard.name}!`);
+            logMessage(`[Forge] Fused two cards into [${upgradedCard.tier}] ${upgradedCard.name}! Spent ${fusionCost} BP.`);
         }
 
         function buyIntermissionHeal() {
@@ -872,6 +873,7 @@
             hero.maxHp += 10;
             hero.hp = Math.min(hero.maxHp, hero.hp + 25);
             playSound('heal');
+            
             updateUI();
             updateArmoryUI();
             logMessage('[Shop] Upgraded Max HP & restored health.');
@@ -883,6 +885,7 @@
             playerPoints -= cost;
             hero.maxEnergy = Math.round((hero.maxEnergy + 0.5) * 10) / 10;
             playSound('win');
+            
             updateUI();
             updateArmoryUI();
             logMessage('[Shop] Permanently increased turn max energy by +0.5!');
@@ -903,6 +906,7 @@
             playerPoints -= cost;
             handSize += 2;
             playSound('win');
+            
             updateUI();
             updateArmoryUI();
             logMessage(`[Shop] Expanded combat hand size to ${handSize} cards!`);
@@ -1061,7 +1065,11 @@
         }
 
         function updateUI() {
+            // Update all BP displays across the game header and shop modals immediately
             document.getElementById('playerPointsDisplay').innerText = playerPoints;
+            const shopPointsEl = document.getElementById('shopPlayerPointsDisplay');
+            if (shopPointsEl) shopPointsEl.innerText = playerPoints;
+
             document.getElementById('heroHpText').innerText = hero.hp;
             document.getElementById('heroMaxHpText').innerText = hero.maxHp;
             document.getElementById('heroHpBar').style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
