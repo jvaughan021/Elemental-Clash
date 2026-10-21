@@ -40,6 +40,11 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
 
+    <!-- Background Music Audio Element -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="royaltyfreemusicstudio-medieval-fantasy-music-462199.mp3" type="audio/mpeg">
+    </audio>
+
     <!-- Header -->
     <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 py-3 px-4 shadow-xl sticky top-0 z-30">
         <div class="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-2">
@@ -444,7 +449,15 @@
 
         function toggleAudio() {
             soundEnabled = !soundEnabled;
-            document.getElementById('audioToggleBtn').innerText = soundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
+            const music = document.getElementById('bgMusic');
+            
+            if (soundEnabled) {
+                document.getElementById('audioToggleBtn').innerText = '🔊 Sound: ON';
+                if (music) music.play().catch(e => {});
+            } else {
+                document.getElementById('audioToggleBtn').innerText = '🔇 Sound: OFF';
+                if (music) music.pause();
+            }
         }
 
         const masterCardDatabase = [
@@ -760,6 +773,13 @@
                 saveAchievementsData();
             }
 
+            // Start background music on user interaction
+            const music = document.getElementById('bgMusic');
+            if (music && soundEnabled) {
+                music.volume = 0.4;
+                music.play().catch(e => {});
+            }
+
             saveGameProgress();
             launchBattleScreen();
         }
@@ -791,6 +811,13 @@
                 }
                 if (playerDeck.length === 0) {
                     playerDeck = [masterCardDatabase.find(c => c.id === 'f_c1')];
+                }
+
+                // Start background music on load interaction
+                const music = document.getElementById('bgMusic');
+                if (music && soundEnabled) {
+                    music.volume = 0.4;
+                    music.play().catch(e => {});
                 }
 
                 launchBattleScreen();
