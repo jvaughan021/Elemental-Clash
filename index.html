@@ -100,6 +100,15 @@
                 </div>
             </div>
 
+            <!-- Ad-Powered Tactical Power-Ups Bar (Once Per Battle Each) -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs">
+                <span class="text-slate-400 font-semibold">Tactical Boosts (1x Per Battle):</span>
+                <div class="flex gap-2 flex-wrap">
+                    <button id="btnEnergyBoost" onclick="useAdEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +1 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">Ad</span></button>
+                    <button id="btnRerollBoost" onclick="useAdReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">Ad</span></button>
+                </div>
+            </div>
+
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
                 <div>[System] Welcome to Elemental Clash! Defeat all 20 levels to conquer the realm.</div>
@@ -137,10 +146,9 @@
     <div id="modalGameOver" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl space-y-3">
             <h3 class="font-cinzel text-2xl font-bold text-red-500 mb-1">Defeated in Battle!</h3>
-            <p class="text-xs text-slate-300">Hardcore Permadeath: Your health reached 0. Restart back at Level 1 or use your one-time Revive Token!</p>
+            <p class="text-xs text-slate-300">Hardcore Permadeath: Your health reached 0. Restart back at Level 1 or watch an ad to use your Revive Token!</p>
             
-            <!-- Smartlink Revive Button -->
-            <a href="https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf" target="_blank" id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (One-Time Token)</a>
+            <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (Ad Token)</button>
             
             <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Restart at Level 1</button>
         </div>
@@ -174,10 +182,10 @@
                     </ul>
                 </div>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">⚔️ Core Rules & Permadeath:</p>
+                    <p class="font-bold text-amber-400 mb-1">⚔️ Tactical Boosts (1x Per Battle):</p>
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li><strong>20 Progressive Levels:</strong> Challenging early curve scaling up to Level 20 (Apex Voidlord).</li>
-                        <li><strong>Hardcore Permadeath:</strong> If your HP drops to 0, restart from Level 1 (Revive Token can only be used once per run!).</li>
+                        <li>Watch an ad during battle to gain <strong>+1 Energy</strong> or <strong>Reroll Hand</strong> (Limit 1 each per level).</li>
+                        <li>Watch an ad upon defeat to consume your <strong>Revive Token</strong> (Limit 1 per run).</li>
                     </ul>
                 </div>
             </div>
@@ -187,8 +195,13 @@
 
     <!-- Game Engine Script -->
     <script>
+        const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
+
         let soundEnabled = true;
         let hasRevived = false;
+        let usedEnergyBoostThisBattle = false;
+        let usedRerollBoostThisBattle = false;
+
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
         function playSound(type) {
@@ -257,7 +270,6 @@
             { id: 's1', name: 'Aegis Shield', type: 'shield', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
         ];
 
-        // Tougher progression curve starting at 75 HP instead of 40 HP
         const bossList = [
             { name: "Sparkling Sprite", hp: 75, element: "fire", theme: "The Outskirts", aiAggro: 0.65 },
             { name: "Mossy Golem", hp: 90, element: "earth", theme: "Whispering Woods", aiAggro: 0.68 },
@@ -305,6 +317,10 @@
             currentBoss = { ...bossList[currentLevel - 1] };
             currentBoss.currentHp = currentBoss.hp;
             currentBoss.shield = 0;
+
+            usedEnergyBoostThisBattle = false;
+            usedRerollBoostThisBattle = false;
+            resetBoostButtons();
 
             document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 20`;
             document.getElementById('stageThemeBadge').innerText = `Stage: ${currentBoss.theme}`;
@@ -475,6 +491,57 @@
             initBattle();
         }
 
+        function useAdEnergyBoost() {
+            if (usedEnergyBoostThisBattle) return;
+            usedEnergyBoostThisBattle = true;
+            
+            window.open(ADSTERRA_SMARTLINK, '_blank');
+
+            hero.energy += 1;
+            playSound('heal');
+            
+            const btn = document.getElementById('btnEnergyBoost');
+            if (btn) {
+                btn.classList.add('opacity-40', 'pointer-events-none');
+                btn.innerHTML = `⚡ +1 Energy <span class="text-[10px] bg-slate-700 px-1 rounded text-slate-400">Used</span>`;
+            }
+            
+            updateUI();
+            logMessage('[Tactical Boost] Ad opened! +1 Energy gained.');
+        }
+
+        function useAdReroll() {
+            if (usedRerollBoostThisBattle) return;
+            usedRerollBoostThisBattle = true;
+            
+            window.open(ADSTERRA_SMARTLINK, '_blank');
+
+            drawNewHand(4);
+            playSound('card');
+            
+            const btn = document.getElementById('btnRerollBoost');
+            if (btn) {
+                btn.classList.add('opacity-40', 'pointer-events-none');
+                btn.innerHTML = `🔄 Reroll Hand <span class="text-[10px] bg-slate-700 px-1 rounded text-slate-400">Used</span>`;
+            }
+
+            updateUI();
+            logMessage('[Tactical Boost] Ad opened! Hand rerolled.');
+        }
+
+        function resetBoostButtons() {
+            const energyBtn = document.getElementById('btnEnergyBoost');
+            const rerollBtn = document.getElementById('btnRerollBoost');
+            if (energyBtn) {
+                energyBtn.classList.remove('opacity-40', 'pointer-events-none');
+                energyBtn.innerHTML = `⚡ +1 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">Ad</span>`;
+            }
+            if (rerollBtn) {
+                rerollBtn.classList.remove('opacity-40', 'pointer-events-none');
+                rerollBtn.innerHTML = `🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">Ad</span>`;
+            }
+        }
+
         function triggerGameOver() {
             playSound('attack');
             const reviveBtn = document.getElementById('smartlinkReviveBtn');
@@ -488,6 +555,7 @@
 
         function reviveHeroSmartlink() {
             hasRevived = true;
+            window.open(ADSTERRA_SMARTLINK, '_blank');
             document.getElementById('modalGameOver').classList.add('hidden');
             hero.hp = Math.round(hero.maxHp * 0.5);
             hero.shield = 10;
@@ -563,11 +631,11 @@
         }
 
         function showPopup(elementId, text, colorClass) {
-            const popup = document.getElementById(elementId);
-            popup.innerText = text;
-            popup.className = `absolute top-4 right-4 font-bold text-xl pointer-events-none floating-popup ${colorClass}`;
+            const el = document.getElementById(elementId);
+            el.innerText = text;
+            el.className = `absolute top-4 right-4 font-bold text-xl pointer-events-none ${colorClass} floating-popup`;
             setTimeout(() => {
-                popup.classList.add('hidden');
+                el.classList.add('hidden');
             }, 1000);
         }
 
