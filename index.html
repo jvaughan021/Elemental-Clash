@@ -40,7 +40,6 @@
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
 
-    <!-- Background Music Audio Element -->
     <audio id="bgMusic" loop preload="auto">
         <source src="royaltyfreemusicstudio-medieval-fantasy-music-462199.mp3" type="audio/mpeg">
     </audio>
@@ -71,13 +70,11 @@
             
             <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 shadow-inner mb-2" value="Hero">
             
-            <!-- Skip Tutorial Checkbox Option -->
             <div id="tutorialToggleContainer" class="flex items-center justify-center gap-2 text-xs text-slate-300 pb-1">
                 <input type="checkbox" id="skipTutorialCheck" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
                 <label for="skipTutorialCheck" class="cursor-pointer select-none">Skip Training Tutorial (Jump straight to Level 1)</label>
             </div>
 
-            <!-- Dynamic Save Action Buttons -->
             <div id="saveMenuButtons" class="space-y-2 pt-1">
                 <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin Journey</button>
             </div>
@@ -86,7 +83,6 @@
         <!-- SCREEN 2: Battle Dashboard -->
         <div id="screenBattle" class="hidden flex flex-col gap-4">
             
-            <!-- Guided Tutorial Step-by-Step Banner -->
             <div id="tutorialBanner" class="bg-amber-500/10 border border-amber-500/40 rounded-xl p-3 flex justify-between items-center text-xs shadow-md hidden">
                 <div class="flex items-center gap-2.5">
                     <span class="text-base">💡</span>
@@ -190,15 +186,12 @@
                     <span class="text-xs font-cinzel font-bold text-slate-300 tracking-wider">YOUR HAND (<span id="handCountDisplay">4</span> Cards)</span>
                     <span class="text-xs text-slate-400">Click a card to play</span>
                 </div>
-                <div id="playerHandContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    <!-- Cards injected dynamically -->
-                </div>
+                <div id="playerHandContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
             </div>
         </div>
 
     </main>
 
-    <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 py-3 text-center text-xs text-slate-500">
         Elemental Clash &bull; Created by Jack Vaughan
     </footer>
@@ -208,10 +201,7 @@
         <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-5 md:p-6 max-w-xl w-full text-center shadow-2xl card-glow space-y-4">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400">Draft Common Card</h3>
             <p class="text-xs text-slate-300">Choose 1 Common card reward. Pick duplicates of cards you own to stack pairs for the Forge!</p>
-            
-            <div id="draftCardsContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                <!-- Draft options injected dynamically -->
-            </div>
+            <div id="draftCardsContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
         </div>
     </div>
 
@@ -221,7 +211,6 @@
             <h3 class="font-cinzel text-2xl font-bold text-amber-400">Stage Cleared!</h3>
             <p class="text-xs text-slate-300" id="victoryMsg">You defeated the boss! +50 BP earned.</p>
             
-            <!-- Explicit BP Display Header -->
             <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 flex justify-between items-center text-xs shadow-inner">
                 <span class="text-slate-300 font-medium">Your Available Spending Power:</span>
                 <span class="text-amber-400 font-bold text-sm">🪙 <span id="shopPlayerPointsDisplay">0</span> BP</span>
@@ -243,14 +232,12 @@
                         <strong>Fusion Ladder:</strong> When you have 2 identical cards in your deck, select them here to upgrade into the next tier (Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary)!
                     </p>
                     <div class="flex gap-2 items-center pt-1">
-                        <select id="fusionCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500 shadow-inner">
-                            <!-- Populated dynamically -->
-                        </select>
+                        <select id="fusionCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500 shadow-inner"></select>
                         <button onclick="executeCardFusion()" class="bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs whitespace-nowrap transition shadow">Fuse Pair</button>
                     </div>
                 </div>
 
-                <!-- AFK Sparring Grounds Upgrade Section -->
+                <!-- AFK Sparring Grounds Section -->
                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs shadow">
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-amber-400">⚔️ AFK Sparring Grounds</span>
@@ -267,7 +254,7 @@
                     </div>
                 </div>
 
-                <!-- NEW: BP Royal Vault & Compound Interest Section -->
+                <!-- BP Royal Vault Section -->
                 <div class="bg-slate-900 p-3 rounded-lg border border-amber-500/40 space-y-3 text-xs shadow">
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-amber-400">🏦 Royal BP Bank Vault</span>
@@ -277,20 +264,17 @@
                         Deposit BP into the Bank Vault to earn compounding interest! Upgrade interest rates and payout frequency (Daily ➔ Hourly ➔ Minutely ➔ Per Second).
                     </p>
                     
-                    <!-- Deposit / Withdraw Actions -->
                     <div class="flex gap-2 items-center bg-slate-950 p-2 rounded-lg border border-slate-800">
                         <input type="number" id="vaultAmountInput" min="1" placeholder="Amount BP..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-100 text-center focus:outline-none focus:border-amber-500">
                         <button onclick="depositToVault()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] whitespace-nowrap transition">Deposit</button>
                         <button onclick="withdrawFromVault()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] whitespace-nowrap transition">Withdraw</button>
                     </div>
 
-                    <!-- Interest Stats Banner -->
                     <div class="grid grid-cols-2 gap-2 bg-slate-950/70 p-2 rounded-lg border border-slate-800 text-[11px] text-slate-300">
                         <div>Rate: <strong id="vaultRateText" class="text-amber-400">2% / payout</strong></div>
                         <div>Frequency: <strong id="vaultFreqText" class="text-amber-400">Daily (24h)</strong></div>
                     </div>
 
-                    <!-- Dual Upgrade Path Buttons -->
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
                         <button id="btnUpgradeVaultRate" onclick="upgradeVaultRate()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-amber-500/30 font-semibold p-2 rounded-lg text-[11px] text-left transition flex justify-between items-center">
                             <div>
@@ -367,11 +351,7 @@
                 <h3 class="font-cinzel text-xl font-bold text-purple-400">🏆 Trophies & Achievements</h3>
                 <button onclick="closeAchievements()" class="text-slate-400 hover:text-slate-200 text-lg font-bold px-2">✕</button>
             </div>
-            
-            <div class="space-y-2 text-xs" id="achievementsListContainer">
-                <!-- Injected dynamically -->
-            </div>
-
+            <div class="space-y-2 text-xs" id="achievementsListContainer"></div>
             <button onclick="closeAchievements()" class="w-full bg-purple-600 hover:bg-purple-500 text-slate-950 font-bold py-2.5 rounded-xl transition text-xs font-cinzel shadow-lg">Close</button>
         </div>
     </div>
@@ -381,9 +361,7 @@
         <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl space-y-3">
             <h3 class="font-cinzel text-2xl font-bold text-red-500 mb-1">Defeated in Battle!</h3>
             <p class="text-xs text-slate-300" id="gameOverDesc">Your health reached 0. Watch a sponsor ad to revive, or restart back at Level 1.</p>
-            
             <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (5 Left - Ad)</button>
-            
             <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs shadow">Restart Journey</button>
         </div>
     </div>
@@ -410,22 +388,22 @@
                 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">⚡ Core Combat & Energy:</p>
-                    <p class="text-slate-400 text-[11px]">Each turn you have limited Energy to spend playing cards from your hand. Click cards to play them, then click "End Turn" when you are out of moves or want to pass to the boss.</p>
+                    <p class="text-slate-400 text-[11px]">Each turn you have limited Energy to spend playing cards from your hand. Click cards to play them, then click "End Turn" when you are out of moves or pass to the boss.</p>
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">🔥 Elemental Advantage & Boss Counter-Attacks:</p>
-                    <p class="text-slate-400 text-[11px]">Pay close attention to elements! If your card has an elemental advantage over the boss, your attack deals <strong>+40% bonus damage</strong>. However, if you play a card whose element the boss <strong>counters</strong>, your damage is reduced to 70% and the boss will <strong>immediately retaliate and strike you back</strong> right on your turn!</p>
+                    <p class="text-slate-400 text-[11px]">Pay close attention to elements! Advantage deals <strong>+40% bonus damage</strong>. If the boss counters your element, damage drops to 70% and the boss <strong>immediately retaliates</strong>!</p>
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">📈 The Fusion Ladder & Drafting:</p>
-                    <p class="text-slate-400 text-[11px]">Bosses only offer Tier-1 Common cards when you defeat them. To get stronger cards, collect 2 identical copies of a card in your deck and take them to the <strong>Card Fusion Forge</strong> during the intermission shop to upgrade them through the tiers: Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary!</p>
+                    <p class="text-slate-400 text-[11px]">Bosses offer Common cards. Collect 2 identical copies to fuse them in the <strong>Card Fusion Forge</strong> (Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary)!</p>
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">💾 Saving Progress:</p>
-                    <p class="text-slate-400 text-[11px]">Your run automatically saves after every victory, draft, or shop purchase. You can safely close your browser and resume right where you left off anytime!</p>
+                    <p class="text-slate-400 text-[11px]">Your run automatically saves after every victory, draft, or shop purchase. You can resume right where you left off anytime!</p>
                 </div>
             </div>
 
@@ -448,14 +426,12 @@
         let handSize = 4;
         let relics = { aegis: false, greed: false };
         let tutorialStep = 1;
-        let trainingLevel = 0; // AFK Sparring Grounds Level
+        let trainingLevel = 0;
 
-        // Vault & Interest State Variables
         let vaultBalance = 0;
-        let vaultRateLevel = 1; // Level 1 = 2% interest per payout
-        let vaultFreqLevel = 1; // 1 = Daily, 2 = Hourly, 3 = Minutely, 4 = Per Second
+        let vaultRateLevel = 1;
+        let vaultFreqLevel = 1;
 
-        // Achievements system
         let achievements = {
             tutorial: { title: "First Steps", desc: "Complete the training tutorial.", unlocked: false },
             level10: { title: "Apprentice Mage", desc: "Reach Level 10.", unlocked: false },
@@ -467,7 +443,7 @@
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        // Slow passive trickle loop for AFK Sparring Grounds (Ticks every 10 seconds)
+        // Passive Sparring Grounds loop (Ticks every 10 seconds)
         setInterval(() => {
             if (trainingLevel > 0) {
                 let earnedBp = trainingLevel >= 4 ? trainingLevel + 1 : trainingLevel; 
@@ -478,7 +454,7 @@
             }
         }, 10000);
 
-        // Vault Compound Interest Loop (Ticks every 1 second, checks exact timeframes)
+        // Vault Compound Interest loop
         let vaultTimerSeconds = 0;
         setInterval(() => {
             if (vaultBalance > 0) {
@@ -486,7 +462,7 @@
                 let targetSeconds = getVaultIntervalSeconds();
                 if (vaultTimerSeconds >= targetSeconds) {
                     vaultTimerSeconds = 0;
-                    let ratePercent = vaultRateLevel * 0.02; // 2% per rate level
+                    let ratePercent = vaultRateLevel * 0.02;
                     let interestEarned = Math.max(1, Math.floor(vaultBalance * ratePercent));
                     vaultBalance += interestEarned;
                     logMessage(`[🏦 Royal Vault] Compounded +${interestEarned} BP in interest! (New Balance: ${vaultBalance} BP)`);
@@ -497,10 +473,10 @@
         }, 1000);
 
         function getVaultIntervalSeconds() {
-            if (vaultFreqLevel === 1) return 86400; // Daily (24 Hours)
-            if (vaultFreqLevel === 2) return 3600;  // Hourly (1 Hour)
-            if (vaultFreqLevel === 3) return 60;    // Minutely (1 Minute)
-            if (vaultFreqLevel >= 4) return 1;     // Per Second (Every 1 Second)
+            if (vaultFreqLevel === 1) return 86400; // Daily
+            if (vaultFreqLevel === 2) return 3600;  // Hourly
+            if (vaultFreqLevel === 3) return 60;    // Minutely
+            if (vaultFreqLevel >= 4) return 1;     // Per Second
             return 86400;
         }
 
@@ -517,14 +493,15 @@
         }
 
         function getVaultFreqUpgradeCost() {
-            if (vaultFreqLevel === 1) return 500;   // Daily -> Hourly
-            if (vaultFreqLevel === 2) return 2500;  // Hourly -> Minutely
-            if (vaultFreqLevel === 3) return 10000; // Minutely -> Per Second
+            if (vaultFreqLevel === 1) return 500;
+            if (vaultFreqLevel === 2) return 2500;
+            if (vaultFreqLevel === 3) return 10000;
             return 999999;
         }
 
         function depositToVault() {
             let input = document.getElementById('vaultAmountInput');
+            if (!input) return;
             let amount = parseInt(input.value);
             if (isNaN(amount) || amount <= 0) return;
 
@@ -544,6 +521,7 @@
 
         function withdrawFromVault() {
             let input = document.getElementById('vaultAmountInput');
+            if (!input) return;
             let amount = parseInt(input.value);
             if (isNaN(amount) || amount <= 0) return;
 
@@ -768,7 +746,6 @@
             { id: 's_l1', name: 'Impenetrable Wall', element: 'shield', tier: 'Legendary', cost: 2, power: 80, icon: '🛡️', desc: 'Tier 5 Legendary Shield (80 Shield).' }
         ];
 
-        // Randomized Boss Pool for Endless Variety
         const bossArchetypePool = [
             { name: "Sprite", theme: "The Outskirts" },
             { name: "Golem", theme: "Whispering Woods" },
@@ -797,7 +774,7 @@
 
         let playerDeck = [];
         let hero = { name: "Hero", hp: 100, maxHp: 100, shield: 0, energy: 3, maxEnergy: 3 };
-        let currentLevel = 0; // 0 = Tutorial, 1-50 = Main Bosses
+        let currentLevel = 0;
         let currentBoss = {};
         let playerHand = [];
         let drawPile = [];
@@ -853,6 +830,7 @@
 
         function openAchievements() {
             const container = document.getElementById('achievementsListContainer');
+            if (!container) return;
             container.innerHTML = '';
 
             for (let key in achievements) {
@@ -880,6 +858,7 @@
             const saved = localStorage.getItem(SAVE_KEY);
             const container = document.getElementById('saveMenuButtons');
             const tutorialToggle = document.getElementById('tutorialToggleContainer');
+            if (!container) return;
             container.innerHTML = '';
 
             if (saved) {
@@ -1402,6 +1381,7 @@
 
         function openDraftModal() {
             const container = document.getElementById('draftCardsContainer');
+            if (!container) return;
             container.innerHTML = '';
 
             let commonPool = masterCardDatabase.filter(c => c.tier === 'Common');
@@ -1587,16 +1567,23 @@
             let mult = getInflationMultiplier();
             let inflationPercent = Math.round((mult - 1) * 100);
             
-            document.getElementById('shopPlayerPointsDisplay').innerText = playerPoints;
-            document.getElementById('inflationBadge').innerText = `Prices +${inflationPercent}% (Lvl ${currentLevel})`;
+            const shopPointsEl = document.getElementById('shopPlayerPointsDisplay');
+            if (shopPointsEl) shopPointsEl.innerText = playerPoints;
+            const inflationBadge = document.getElementById('inflationBadge');
+            if (inflationBadge) inflationBadge.innerText = `Prices +${inflationPercent}% (Lvl ${currentLevel})`;
 
-            document.getElementById('healCostText').innerText = Math.round(50 * mult);
-            document.getElementById('energyCapCostText').innerText = Math.round(75 * mult);
-            document.getElementById('relicAegisCost').innerText = Math.round(75 * mult);
-            document.getElementById('relicGreedCost').innerText = Math.round(75 * mult);
-            document.getElementById('fusionCostText').innerText = `Cost: ${Math.round(40 * mult)} BP`;
+            const healCostEl = document.getElementById('healCostText');
+            if (healCostEl) healCostEl.innerText = Math.round(50 * mult);
+            const energyCapCostEl = document.getElementById('energyCapCostText');
+            if (energyCapCostEl) energyCapCostEl.innerText = Math.round(75 * mult);
+            const aegisCostEl = document.getElementById('relicAegisCost');
+            if (aegisCostEl) aegisCostEl.innerText = Math.round(75 * mult);
+            const greedCostEl = document.getElementById('relicGreedCost');
+            if (greedCostEl) greedCostEl.innerText = Math.round(75 * mult);
+            const fusionCostEl = document.getElementById('fusionCostText');
+            if (fusionCostEl) fusionCostEl.innerText = `Cost: ${Math.round(40 * mult)} BP`;
 
-            // AFK Training Grounds UI Sync
+            // Sparring Grounds UI
             const trainingBadge = document.getElementById('trainingLvlBadge');
             const trainingRate = document.getElementById('trainingRateText');
             const trainingCostBtn = document.getElementById('btnUpgradeTraining');
@@ -1606,81 +1593,90 @@
                 let currentTrainingCost = getTrainingUpgradeCost();
                 if (trainingLevel === 0) {
                     trainingBadge.innerText = "Lvl 0 (Locked)";
-                    trainingRate.innerText = "0 BP / 10s";
-                    trainingCostText.innerText = currentTrainingCost;
-                    trainingCostBtn.innerHTML = `Unlock (<span>${currentTrainingCost}</span> BP)`;
+                    if (trainingRate) trainingRate.innerText = "0 BP / 10s";
+                    if (trainingCostText) trainingCostText.innerText = currentTrainingCost;
+                    if (trainingCostBtn) trainingCostBtn.innerHTML = `Unlock (<span>${currentTrainingCost}</span> BP)`;
                 } else {
                     let yieldRate = trainingLevel >= 4 ? trainingLevel + 1 : trainingLevel;
                     trainingBadge.innerText = `Lvl ${trainingLevel} (Active)`;
-                    trainingRate.innerText = `${yieldRate} BP / 10s`;
-                    trainingCostText.innerText = currentTrainingCost;
-                    trainingCostBtn.innerHTML = `Upgrade (<span>${currentTrainingCost}</span> BP)`;
+                    if (trainingRate) trainingRate.innerText = `${yieldRate} BP / 10s`;
+                    if (trainingCostText) trainingCostText.innerText = currentTrainingCost;
+                    if (trainingCostBtn) trainingCostBtn.innerHTML = `Upgrade (<span>${currentTrainingCost}</span> BP)`;
                 }
 
-                if (playerPoints < currentTrainingCost) {
-                    trainingCostBtn.classList.add('opacity-40');
-                } else {
-                    trainingCostBtn.classList.remove('opacity-40');
+                if (trainingCostBtn) {
+                    if (playerPoints < currentTrainingCost) trainingCostBtn.classList.add('opacity-40');
+                    else trainingCostBtn.classList.remove('opacity-40');
                 }
             }
 
-            // Vault UI Sync
-            document.getElementById('vaultBalanceDisplay').innerText = `Vault: ${vaultBalance} BP`;
-            document.getElementById('vaultRateText').innerText = `${vaultRateLevel * 2}% / payout`;
-            document.getElementById('vaultFreqText').innerText = getVaultFreqLabel();
+            // Vault UI
+            const vBal = document.getElementById('vaultBalanceDisplay');
+            if (vBal) vBal.innerText = `Vault: ${vaultBalance} BP`;
+            const vRate = document.getElementById('vaultRateText');
+            if (vRate) vRate.innerText = `${vaultRateLevel * 2}% / payout`;
+            const vFreq = document.getElementById('vaultFreqText');
+            if (vFreq) vFreq.innerText = getVaultFreqLabel();
             
-            document.getElementById('vaultRateLvlText').innerText = vaultRateLevel;
+            const vRateLvl = document.getElementById('vaultRateLvlText');
+            if (vRateLvl) vRateLvl.innerText = vaultRateLevel;
             const rateCost = getVaultRateUpgradeCost();
-            document.getElementById('vaultRateCostText').innerText = `${rateCost} BP`;
+            const vRateCost = document.getElementById('vaultRateCostText');
+            if (vRateCost) vRateCost.innerText = `${rateCost} BP`;
             const btnRate = document.getElementById('btnUpgradeVaultRate');
-            if (playerPoints < rateCost) btnRate.classList.add('opacity-40');
-            else btnRate.classList.remove('opacity-40');
+            if (btnRate) {
+                if (playerPoints < rateCost) btnRate.classList.add('opacity-40');
+                else btnRate.classList.remove('opacity-40');
+            }
 
-            document.getElementById('vaultFreqLvlText').innerText = vaultFreqLevel;
+            const vFreqLvl = document.getElementById('vaultFreqLvlText');
+            if (vFreqLvl) vFreqLvl.innerText = vaultFreqLevel;
             const freqCost = getVaultFreqUpgradeCost();
             const btnFreq = document.getElementById('btnUpgradeVaultFreq');
             const subtext = document.getElementById('vaultFreqSubtext');
+            const vFreqCost = document.getElementById('vaultFreqCostText');
 
-            if (vaultFreqLevel >= 4) {
-                document.getElementById('vaultFreqCostText').innerText = `MAX`;
-                subtext.innerText = `Compounding: Per Second`;
-                btnFreq.classList.add('opacity-40', 'pointer-events-none');
-            } else {
-                document.getElementById('vaultFreqCostText').innerText = `${freqCost} BP`;
-                let nextLabel = vaultFreqLevel === 1 ? "Hourly" : vaultFreqLevel === 2 ? "Minutely" : "Per Second";
-                subtext.innerText = `Next: ${nextLabel}`;
-                if (playerPoints < freqCost) btnFreq.classList.add('opacity-40');
-                else btnFreq.classList.remove('opacity-40');
+            if (btnFreq) {
+                if (vaultFreqLevel >= 4) {
+                    if (vFreqCost) vFreqCost.innerText = `MAX`;
+                    if (subtext) subtext.innerText = `Compounding: Per Second`;
+                    btnFreq.classList.add('opacity-40', 'pointer-events-none');
+                } else {
+                    if (vFreqCost) vFreqCost.innerText = `${freqCost} BP`;
+                    let nextLabel = vaultFreqLevel === 1 ? "Hourly" : vaultFreqLevel === 2 ? "Minutely" : "Per Second";
+                    if (subtext) subtext.innerText = `Next: ${nextLabel}`;
+                    if (playerPoints < freqCost) btnFreq.classList.add('opacity-40');
+                    else btnFreq.classList.remove('opacity-40');
+                }
             }
 
             const btn = document.getElementById('btnHandUpgrade');
             const label = document.getElementById('handUpgradeLabel');
             const costEl = document.getElementById('handUpgradeCost');
 
-            if (handSize >= 12) {
-                label.innerText = "🃏 Hand Size Maxed (12 Cards)";
-                btn.classList.add('opacity-40', 'pointer-events-none');
-                costEl.innerText = "MAX";
-            } else {
-                let nextSize = handSize + 2;
-                let cost = getHandUpgradeCost();
-                label.innerText = `🃏 Expand Hand Size (${handSize} ➔ ${nextSize})`;
-                costEl.innerText = cost;
-                if (playerPoints < cost) {
-                    btn.classList.add('opacity-40');
+            if (btn && label && costEl) {
+                if (handSize >= 12) {
+                    label.innerText = "🃏 Hand Size Maxed (12 Cards)";
+                    btn.classList.add('opacity-40', 'pointer-events-none');
+                    costEl.innerText = "MAX";
                 } else {
-                    btn.classList.remove('opacity-40');
+                    let nextSize = handSize + 2;
+                    let cost = getHandUpgradeCost();
+                    label.innerText = `🃏 Expand Hand Size (${handSize} ➔ ${nextSize})`;
+                    costEl.innerText = cost;
+                    if (playerPoints < cost) btn.classList.add('opacity-40');
+                    else btn.classList.remove('opacity-40');
                 }
             }
 
             const aegisBtn = document.getElementById('btnRelicAegis');
-            if (relics.aegis) {
+            if (aegisBtn && relics.aegis) {
                 aegisBtn.classList.add('opacity-40', 'pointer-events-none');
                 aegisBtn.innerText = 'Owned';
             }
 
             const greedBtn = document.getElementById('btnRelicGreed');
-            if (relics.greed) {
+            if (greedBtn && relics.greed) {
                 greedBtn.classList.add('opacity-40', 'pointer-events-none');
                 greedBtn.innerText = 'Owned';
             }
@@ -1750,15 +1746,17 @@
             const reviveBtn = document.getElementById('smartlinkReviveBtn');
             const remaining = MAX_REVIVES_PER_RUN - revivesUsedThisRun;
 
-            if (usedReviveThisLevel) {
-                reviveBtn.classList.add('opacity-40', 'pointer-events-none');
-                reviveBtn.innerText = `❌ Revive Already Used on Level ${currentLevel}`;
-            } else if (remaining <= 0) {
-                reviveBtn.classList.add('opacity-40', 'pointer-events-none');
-                reviveBtn.innerText = '❌ All Revives Used (0 Left)';
-            } else {
-                reviveBtn.classList.remove('opacity-40', 'pointer-events-none');
-                reviveBtn.innerText = `✨ Revive Hero (${remaining} Left - Sponsor Ad)`;
+            if (reviveBtn) {
+                if (usedReviveThisLevel) {
+                    reviveBtn.classList.add('opacity-40', 'pointer-events-none');
+                    reviveBtn.innerText = `❌ Revive Already Used on Level ${currentLevel}`;
+                } else if (remaining <= 0) {
+                    reviveBtn.classList.add('opacity-40', 'pointer-events-none');
+                    reviveBtn.innerText = '❌ All Revives Used (0 Left)';
+                } else {
+                    reviveBtn.classList.remove('opacity-40', 'pointer-events-none');
+                    reviveBtn.innerText = `✨ Revive Hero (${remaining} Left - Ad)`;
+                }
             }
             document.getElementById('modalGameOver').classList.remove('hidden');
         }
@@ -1814,44 +1812,59 @@
         }
 
         function updateUI() {
-            document.getElementById('playerPointsDisplay').innerText = playerPoints;
+            const ptsEl = document.getElementById('playerPointsDisplay');
+            if (ptsEl) ptsEl.innerText = playerPoints;
             const shopPointsEl = document.getElementById('shopPlayerPointsDisplay');
             if (shopPointsEl) shopPointsEl.innerText = playerPoints;
 
-            document.getElementById('heroHpText').innerText = hero.hp;
-            document.getElementById('heroMaxHpText').innerText = hero.maxHp;
-            document.getElementById('heroHpBar').style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
+            const hText = document.getElementById('heroHpText');
+            if (hText) hText.innerText = hero.hp;
+            const hMax = document.getElementById('heroMaxHpText');
+            if (hMax) hMax.innerText = hero.maxHp;
+            const hBar = document.getElementById('heroHpBar');
+            if (hBar) hBar.style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
 
             const heroShieldEl = document.getElementById('heroShieldText');
-            if (hero.shield > 0) {
-                heroShieldEl.innerText = `Shield: ${hero.shield}`;
-                heroShieldEl.classList.remove('hidden');
-            } else {
-                heroShieldEl.classList.add('hidden');
+            if (heroShieldEl) {
+                if (hero.shield > 0) {
+                    heroShieldEl.innerText = `Shield: ${hero.shield}`;
+                    heroShieldEl.classList.remove('hidden');
+                } else {
+                    heroShieldEl.classList.add('hidden');
+                }
             }
 
-            document.getElementById('bossHpText').innerText = currentBoss.currentHp;
-            document.getElementById('bossHpBar').style.width = `${Math.max(0, (currentBoss.currentHp / currentBoss.hp) * 100)}%`;
+            const bText = document.getElementById('bossHpText');
+            if (bText) bText.innerText = currentBoss.currentHp;
+            const bBar = document.getElementById('bossHpBar');
+            if (bBar) bBar.style.width = `${Math.max(0, (currentBoss.currentHp / currentBoss.hp) * 100)}%`;
 
             const bossShieldEl = document.getElementById('bossShieldText');
-            if (currentBoss.shield > 0) {
-                bossShieldEl.innerText = `Shield: ${currentBoss.shield}`;
-                bossShieldEl.classList.remove('hidden');
-            } else {
-                bossShieldEl.classList.add('hidden');
+            if (bossShieldEl) {
+                if (currentBoss.shield > 0) {
+                    bossShieldEl.innerText = `Shield: ${currentBoss.shield}`;
+                    bossShieldEl.classList.remove('hidden');
+                } else {
+                    bossShieldEl.classList.add('hidden');
+                }
             }
 
-            document.getElementById('playerEnergyDisplay').innerText = hero.energy;
-            document.getElementById('playerMaxEnergyDisplay').innerText = hero.maxEnergy;
-            document.getElementById('handCountDisplay').innerText = handSize;
+            const pEng = document.getElementById('playerEnergyDisplay');
+            if (pEng) pEng.innerText = hero.energy;
+            const pMaxEng = document.getElementById('playerMaxEnergyDisplay');
+            if (pMaxEng) pMaxEng.innerText = hero.maxEnergy;
+            const hCnt = document.getElementById('handCountDisplay');
+            if (hCnt) hCnt.innerText = handSize;
 
             const relicsBar = document.getElementById('relicsBar');
             const relicsContainer = document.getElementById('relicsContainer');
-            if (relics.aegis || relics.greed) {
-                relicsBar.classList.remove('hidden');
-                relicsContainer.innerHTML = '';
-                if (relics.aegis) relicsContainer.innerHTML += `<span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">🏺 Aegis Core (+8 Shield/turn)</span>`;
-                if (relics.greed) relicsContainer.innerHTML += `<span class="bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">🏺 Greed Ring (+25 BP/win)</span>`;
+            if (relicsBar && relicsContainer) {
+                if (relics.aegis || relics.greed) {
+                    relicsBar.classList.remove('hidden');
+                    relicsContainer.innerHTML = '';
+                    if (relics.aegis) relicsContainer.innerHTML += `<span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">🏺 Aegis Core (+8 Shield/turn)</span>`;
+                    if (relics.greed) relicsContainer.innerHTML += `<span class="bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">🏺 Greed Ring (+25 BP/win)</span>`;
+                }
             }
 
             const energyBtn = document.getElementById('btnEnergyBoost');
@@ -1868,41 +1881,44 @@
             }
 
             const handContainer = document.getElementById('playerHandContainer');
-            handContainer.innerHTML = '';
-            playerHand.forEach((card, index) => {
-                const canAfford = hero.energy >= card.cost;
-                
-                let tierClass = 'border-slate-700 bg-slate-950';
-                if (card.tier === 'Uncommon') tierClass = 'border-emerald-500/60 bg-slate-900/90';
-                if (card.tier === 'Rare') tierClass = 'border-blue-500/70 bg-slate-900/90';
-                if (card.tier === 'Epic') tierClass = 'card-epic bg-slate-900/95';
-                if (card.tier === 'Legendary') tierClass = 'card-legendary bg-slate-900/95';
+            if (handContainer) {
+                handContainer.innerHTML = '';
+                playerHand.forEach((card, index) => {
+                    const canAfford = hero.energy >= card.cost;
+                    
+                    let tierClass = 'border-slate-700 bg-slate-950';
+                    if (card.tier === 'Uncommon') tierClass = 'border-emerald-500/60 bg-slate-900/90';
+                    if (card.tier === 'Rare') tierClass = 'border-blue-500/70 bg-slate-900/90';
+                    if (card.tier === 'Epic') tierClass = 'card-epic bg-slate-900/95';
+                    if (card.tier === 'Legendary') tierClass = 'card-legendary bg-slate-900/95';
 
-                const cardEl = document.createElement('div');
-                cardEl.className = `border ${canAfford ? tierClass + ' hover:border-amber-400 cursor-pointer card-hover' : 'border-slate-900 bg-slate-950 opacity-50 cursor-not-allowed'} rounded-xl p-3 flex flex-col justify-between transition shadow-lg`;
-                cardEl.innerHTML = `
-                    <div class="flex justify-between items-start mb-1">
-                        <span class="text-xl">${card.icon}</span>
-                        <span class="bg-amber-500/20 text-amber-400 font-bold px-1.5 py-0.5 rounded text-xs border border-amber-500/30">${card.cost} ⚡</span>
-                    </div>
-                    <div>
-                        <div class="flex justify-between items-center">
-                            <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
-                            <span class="text-[9px] uppercase tracking-wider text-slate-400 font-mono">${card.tier}</span>
+                    const cardEl = document.createElement('div');
+                    cardEl.className = `border ${canAfford ? tierClass + ' hover:border-amber-400 cursor-pointer card-hover' : 'border-slate-900 bg-slate-950 opacity-50 cursor-not-allowed'} rounded-xl p-3 flex flex-col justify-between transition shadow-lg`;
+                    cardEl.innerHTML = `
+                        <div class="flex justify-between items-start mb-1">
+                            <span class="text-xl">${card.icon}</span>
+                            <span class="bg-amber-500/20 text-amber-400 font-bold px-1.5 py-0.5 rounded text-xs border border-amber-500/30">${card.cost} ⚡</span>
                         </div>
-                        <p class="text-[10px] text-slate-400 leading-tight">${card.desc}</p>
-                    </div>
-                `;
-                if (canAfford) {
-                    cardEl.onclick = () => playCard(index);
-                }
-                handContainer.appendChild(cardEl);
-            });
+                        <div>
+                            <div class="flex justify-between items-center">
+                                <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
+                                <span class="text-[9px] uppercase tracking-wider text-slate-400 font-mono">${card.tier}</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 leading-tight">${card.desc}</p>
+                        </div>
+                    `;
+                    if (canAfford) {
+                        cardEl.onclick = () => playCard(index);
+                    }
+                    handContainer.appendChild(cardEl);
+                });
+            }
             updateArmoryUI();
         }
 
         function logMessage(msg) {
             const log = document.getElementById('combatLog');
+            if (!log) return;
             const div = document.createElement('div');
             div.innerText = msg;
             log.appendChild(div);
@@ -1911,6 +1927,7 @@
 
         function showPopup(elementId, text, colorClass) {
             const el = document.getElementById(elementId);
+            if (!el) return;
             el.innerText = text;
             el.className = `absolute top-4 right-4 font-bold text-xl pointer-events-none ${colorClass} floating-popup z-20`;
             setTimeout(() => {
