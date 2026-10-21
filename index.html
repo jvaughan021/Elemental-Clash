@@ -274,7 +274,7 @@
         </div>
     </div>
 
-    <!-- MODAL: How to Play / Rules (COMPLETELY EXPANDED) -->
+    <!-- MODAL: How to Play / Rules -->
     <div id="modalRules" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[85vh] overflow-y-auto space-y-4 text-left">
             <div class="flex justify-between items-center mb-2">
@@ -920,6 +920,7 @@
 
         function populateFusionDropdown() {
             const select = document.getElementById('fusionCardSelect');
+            if (!select) return;
             select.innerHTML = '';
             
             let counts = {};
@@ -949,6 +950,7 @@
 
         function executeCardFusion() {
             const select = document.getElementById('fusionCardSelect');
+            if (!select) return;
             const cardId = select.value;
             let fusionCost = Math.round(40 * getInflationMultiplier());
             if (!cardId || playerPoints < fusionCost) return;
@@ -1080,6 +1082,7 @@
                 greedBtn.classList.add('opacity-40', 'pointer-events-none');
                 greedBtn.innerText = 'Owned';
             }
+            populateFusionDropdown();
         }
 
         function buyRelic(type) {
@@ -1272,7 +1275,7 @@
                     <div>
                         <div class="flex justify-between items-center">
                             <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
-                            <span class="test-[9px] uppercase tracking-wider text-slate-400">${card.tier}</span>
+                            <span class="text-[9px] uppercase tracking-wider text-slate-400">${card.tier}</span>
                         </div>
                         <p class="text-[10px] text-slate-400 leading-tight">${card.desc}</p>
                     </div>
@@ -1282,6 +1285,7 @@
                 }
                 handContainer.appendChild(cardEl);
             });
+            updateArmoryUI();
         }
 
         function logMessage(msg) {
