@@ -50,6 +50,7 @@
             <div class="flex items-center gap-2">
                 <span class="bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30 shadow-inner">🪙 <span id="playerPointsDisplay">0</span> BP</span>
                 <button onclick="toggleAudio()" id="audioToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 transition shadow">🔊 Sound: ON</button>
+                <button onclick="openAchievements()" class="bg-purple-500/10 hover:bg-purple-500/20 text-purple-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-purple-500/30 transition shadow">🏆 Trophies</button>
                 <button onclick="openRules()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/30 transition shadow">📖 How to Play</button>
             </div>
         </div>
@@ -61,24 +62,42 @@
         <!-- SCREEN 1: Name Entry & Save Loader -->
         <div id="screenName" class="bg-gradient-to-b from-slate-900/95 to-slate-950/95 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow space-y-4 backdrop-blur-md">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-1">Enter the Arena</h2>
-            <p class="text-xs text-slate-400 mb-4">Draft common cards, climb the fusion ladder, and conquer 50 punishing bosses!</p>
+            <p class="text-xs text-slate-400 mb-3">Draft common cards, climb the fusion ladder, and conquer 50 punishing bosses!</p>
             
-            <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 shadow-inner" value="Hero">
+            <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 shadow-inner mb-2" value="Hero">
             
+            <!-- Skip Tutorial Checkbox Option -->
+            <div id="tutorialToggleContainer" class="flex items-center justify-center gap-2 text-xs text-slate-300 pb-1">
+                <input type="checkbox" id="skipTutorialCheck" class="w-4 h-4 accent-amber-500 rounded cursor-pointer">
+                <label for="skipTutorialCheck" class="cursor-pointer select-none">Skip Training Tutorial (Jump straight to Level 1)</label>
+            </div>
+
             <!-- Dynamic Save Action Buttons -->
-            <div id="saveMenuButtons" class="space-y-2 pt-2">
-                <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
+            <div id="saveMenuButtons" class="space-y-2 pt-1">
+                <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin Journey</button>
             </div>
         </div>
 
         <!-- SCREEN 2: Battle Dashboard -->
         <div id="screenBattle" class="hidden flex flex-col gap-4">
             
+            <!-- Guided Tutorial Step-by-Step Banner -->
+            <div id="tutorialBanner" class="bg-amber-500/10 border border-amber-500/40 rounded-xl p-3 flex justify-between items-center text-xs shadow-md hidden">
+                <div class="flex items-center gap-2.5">
+                    <span class="text-base">💡</span>
+                    <div>
+                        <strong class="text-amber-400 font-cinzel text-sm" id="tutorialStepTitle">Tutorial Step 1</strong>
+                        <p class="text-slate-300 text-[11px]" id="tutorialStepDesc">Welcome! Check your Energy in the top right. Cards cost energy to play.</p>
+                    </div>
+                </div>
+                <button onclick="nextTutorialStep()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-lg text-xs transition">Got it ➔</button>
+            </div>
+
             <!-- Level & Status Banner -->
             <div id="battleArenaHeader" class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex justify-between items-center text-xs md:text-sm shadow-md transition-all duration-500">
                 <div class="flex items-center gap-2">
-                    <span class="bg-amber-500/20 text-amber-400 font-bold px-2.5 py-1 rounded-lg border border-amber-500/30" id="currentLevelBadge">Level 1 / 50</span>
-                    <span class="text-slate-400 hidden sm:inline" id="stageThemeBadge">Stage: The Outskirts</span>
+                    <span class="bg-amber-500/20 text-amber-400 font-bold px-2.5 py-1 rounded-lg border border-amber-500/30" id="currentLevelBadge">Tutorial</span>
+                    <span class="text-slate-400 hidden sm:inline" id="stageThemeBadge">Stage: Training Grounds</span>
                 </div>
                 <div class="flex items-center gap-3">
                     <span class="text-slate-300">Energy: <strong class="text-amber-400 text-base" id="playerEnergyDisplay">3</strong>/<span id="playerMaxEnergyDisplay">3</span></span>
@@ -118,18 +137,18 @@
                     <div id="bossDamagePopup" class="absolute top-4 right-4 font-bold text-xl pointer-events-none hidden z-20"></div>
                     <div>
                         <div class="flex justify-between items-center mb-2">
-                            <h3 class="font-cinzel font-bold text-base text-red-400" id="bossNameDisplay">Boss</h3>
-                            <span class="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded border border-red-500/20" id="bossElementBadge">Fire</span>
+                            <h3 class="font-cinzel font-bold text-base text-red-400" id="bossNameDisplay">Training Dummy</h3>
+                            <span class="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700" id="bossElementBadge">Neutral</span>
                         </div>
                         <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2 shadow-inner">
                             <div id="bossHpBar" class="bg-gradient-to-r from-red-600 to-orange-500 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
                         </div>
                         <div class="flex justify-between text-xs text-slate-400">
-                            <span>HP: <strong id="bossHpText" class="text-slate-200">75</strong>/<span id="bossMaxHpText">75</span></span>
+                            <span>HP: <strong id="bossHpText" class="text-slate-200">40</strong>/<span id="bossMaxHpText">40</span></span>
                             <span id="bossShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
                         </div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-red-300/80 text-center italic" id="bossIntentText">Boss will counter bad elements!</div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-300 text-center italic" id="bossIntentText">Practice your cards here! No BP rewarded.</div>
                 </div>
             </div>
 
@@ -157,7 +176,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1 shadow-inner" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Open How to Play for full tactical rules.</div>
+                <div>[System] Welcome to Elemental Clash! Defeat the Training Dummy to begin your journey.</div>
             </div>
 
             <!-- Player Hand -->
@@ -276,6 +295,22 @@
         </div>
     </div>
 
+    <!-- MODAL: Achievements / Trophies -->
+    <div id="modalAchievements" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-slate-900 border border-purple-500/40 rounded-2xl p-6 max-w-md w-full shadow-2xl max-h-[85vh] overflow-y-auto space-y-4 text-left">
+            <div class="flex justify-between items-center mb-2">
+                <h3 class="font-cinzel text-xl font-bold text-purple-400">🏆 Trophies & Achievements</h3>
+                <button onclick="closeAchievements()" class="text-slate-400 hover:text-slate-200 text-lg font-bold px-2">✕</button>
+            </div>
+            
+            <div class="space-y-2 text-xs" id="achievementsListContainer">
+                <!-- Injected dynamically -->
+            </div>
+
+            <button onclick="closeAchievements()" class="w-full bg-purple-600 hover:bg-purple-500 text-slate-950 font-bold py-2.5 rounded-xl transition text-xs font-cinzel shadow-lg">Close</button>
+        </div>
+    </div>
+
     <!-- MODAL: Game Over / Permadeath with Smartlink Revive -->
     <div id="modalGameOver" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl space-y-3">
@@ -284,7 +319,7 @@
             
             <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (5 Left - Ad)</button>
             
-            <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs shadow">Restart at Level 1</button>
+            <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs shadow">Restart Journey</button>
         </div>
     </div>
 
@@ -306,7 +341,7 @@
             </div>
             
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
-                <p><strong>Elemental Clash</strong> is a tactical 1v1 roguelike card battle game created by <strong>Jack Vaughan</strong>. Conquer 50 increasingly difficult bosses to win!</p>
+                <p><strong>Elemental Clash</strong> is a tactical 1v1 roguelike card battle game created by <strong>Jack Vaughan</strong>. Conquer the Tutorial and 50 increasingly difficult bosses to win!</p>
                 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">⚡ Core Combat & Energy:</p>
@@ -336,7 +371,7 @@
     <!-- Game Engine Script -->
     <script>
         const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
-        const SAVE_KEY = "elemental_clash_save_v1";
+        const SAVE_KEY = "elemental_clash_save_v2";
 
         let soundEnabled = true;
         let playerPoints = 0;
@@ -347,6 +382,17 @@
 
         let handSize = 4;
         let relics = { aegis: false, greed: false };
+        let tutorialStep = 1;
+
+        // Achievements system
+        let achievements = {
+            tutorial: { title: "First Steps", desc: "Complete the training tutorial.", unlocked: false },
+            level10: { title: "Apprentice Mage", desc: "Reach Level 10.", unlocked: false },
+            level25: { title: "Battle Veteran", desc: "Reach Level 25.", unlocked: false },
+            firstFuse: { title: "Alchemist", desc: "Perform your first Card Fusion.", unlocked: false },
+            legendaryCard: { title: "Ascendance", desc: "Obtain a Tier-5 Legendary card.", unlocked: false },
+            victory50: { title: "Realm Conqueror", desc: "Defeat all 50 bosses and win the game.", unlocked: false }
+        };
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -545,41 +591,117 @@
 
         let playerDeck = [];
         let hero = { name: "Hero", hp: 100, maxHp: 100, shield: 0, energy: 3, maxEnergy: 3 };
-        let currentLevel = 1;
+        let currentLevel = 0; // 0 = Tutorial, 1-50 = Main Bosses
         let currentBoss = {};
         let playerHand = [];
         let drawPile = [];
 
         window.onload = function() {
+            loadAchievementsData();
             checkSaveData();
         };
+
+        function loadAchievementsData() {
+            const savedAch = localStorage.getItem(SAVE_KEY + "_ach");
+            if (savedAch) {
+                try {
+                    let parsed = JSON.parse(savedAch);
+                    for (let key in parsed) {
+                        if (achievements[key]) achievements[key].unlocked = parsed[key];
+                    }
+                } catch(e) {}
+            }
+        }
+
+        function saveAchievementsData() {
+            let data = {};
+            for (let key in achievements) {
+                data[key] = achievements[key].unlocked;
+            }
+            localStorage.setItem(SAVE_KEY + "_ach", JSON.stringify(data));
+        }
+
+        function checkAchievements() {
+            if (currentLevel === 0 && !achievements.tutorial.unlocked) {
+                achievements.tutorial.unlocked = true;
+                logMessage("🏆 [Trophy Unlocked] First Steps: Complete the training tutorial!");
+            }
+            if (currentLevel >= 10 && !achievements.level10.unlocked) {
+                achievements.level10.unlocked = true;
+                logMessage("🏆 [Trophy Unlocked] Apprentice Mage: Reach Level 10!");
+            }
+            if (currentLevel >= 25 && !achievements.level25.unlocked) {
+                achievements.level25.unlocked = true;
+                logMessage("🏆 [Trophy Unlocked] Battle Veteran: Reach Level 25!");
+            }
+            if (currentLevel >= 50 && !achievements.victory50.unlocked) {
+                achievements.victory50.unlocked = true;
+                logMessage("🏆 [Trophy Unlocked] Realm Conqueror: Defeat all 50 bosses!");
+            }
+            if (playerDeck.some(c => c.tier === 'Legendary') && !achievements.legendaryCard.unlocked) {
+                achievements.legendaryCard.unlocked = true;
+                logMessage("🏆 [Trophy Unlocked] Ascendance: Obtain a Tier-5 Legendary card!");
+            }
+            saveAchievementsData();
+        }
+
+        function openAchievements() {
+            const container = document.getElementById('achievementsListContainer');
+            container.innerHTML = '';
+
+            for (let key in achievements) {
+                let ach = achievements[key];
+                let item = document.createElement('div');
+                item.className = `p-2.5 rounded-xl border flex items-center justify-between ${ach.unlocked ? 'bg-purple-500/10 border-purple-500/40 text-slate-200' : 'bg-slate-950 border-slate-800 text-slate-500'}`;
+                item.innerHTML = `
+                    <div>
+                        <p class="font-bold ${ach.unlocked ? 'text-purple-300' : 'text-slate-400'}">${ach.unlocked ? '🏆' : '🔒'} ${ach.title}</p>
+                        <p class="text-[10px] text-slate-400">${ach.desc}</p>
+                    </div>
+                    <span class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded ${ach.unlocked ? 'bg-purple-500/20 text-purple-300 border border-purple-500/30' : 'bg-slate-900 text-slate-600'}">${ach.unlocked ? 'Unlocked' : 'Locked'}</span>
+                `;
+                container.appendChild(item);
+            }
+
+            document.getElementById('modalAchievements').classList.remove('hidden');
+        }
+
+        function closeAchievements() {
+            document.getElementById('modalAchievements').classList.add('hidden');
+        }
 
         function checkSaveData() {
             const saved = localStorage.getItem(SAVE_KEY);
             const container = document.getElementById('saveMenuButtons');
+            const tutorialToggle = document.getElementById('tutorialToggleContainer');
             container.innerHTML = '';
 
             if (saved) {
                 try {
                     let data = JSON.parse(saved);
                     document.getElementById('heroNameInput').value = data.heroName || "Hero";
+                    let levelLabel = data.currentLevel === 0 ? "Tutorial" : `Level ${data.currentLevel}/50`;
+
+                    if (tutorialToggle) tutorialToggle.classList.add('hidden');
 
                     container.innerHTML = `
-                        <button onclick="loadGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-sm font-cinzel">Continue Journey (Level ${data.currentLevel}/50)</button>
-                        <button onclick="startNewGameFlow()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Start New Journey (Delete Save)</button>
+                        <button onclick="loadGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-sm font-cinzel">Continue Journey (${levelLabel})</button>
+                        <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Start New Journey (Delete Save)</button>
                     `;
                 } catch(e) {
                     localStorage.removeItem(SAVE_KEY);
                     renderDefaultNewGameButton(container);
+                    if (tutorialToggle) tutorialToggle.classList.remove('hidden');
                 }
             } else {
                 renderDefaultNewGameButton(container);
+                if (tutorialToggle) tutorialToggle.classList.remove('hidden');
             }
         }
 
         function renderDefaultNewGameButton(container) {
             container.innerHTML = `
-                <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
+                <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin Journey</button>
             `;
         }
 
@@ -603,7 +725,9 @@
             const nameInput = document.getElementById('heroNameInput').value.trim();
             if (nameInput) hero.name = nameInput;
 
-            currentLevel = 1;
+            const skipTutorial = document.getElementById('skipTutorialCheck').checked;
+
+            currentLevel = skipTutorial ? 1 : 0;
             playerPoints = 0;
             revivesUsedThisRun = 0;
             hero.maxHp = 100;
@@ -611,6 +735,7 @@
             hero.maxEnergy = 3;
             handSize = 4;
             relics = { aegis: false, greed: false };
+            tutorialStep = 1;
 
             playerDeck = [
                 masterCardDatabase.find(c => c.id === 'f_c1'),
@@ -622,6 +747,11 @@
                 masterCardDatabase.find(c => c.id === 'h_c1'),
                 masterCardDatabase.find(c => c.id === 's_c1')
             ];
+
+            if (skipTutorial) {
+                achievements.tutorial.unlocked = true;
+                saveAchievementsData();
+            }
 
             saveGameProgress();
             launchBattleScreen();
@@ -637,7 +767,7 @@
             try {
                 let data = JSON.parse(saved);
                 hero.name = data.heroName || "Hero";
-                currentLevel = data.currentLevel || 1;
+                currentLevel = data.currentLevel !== undefined ? data.currentLevel : 0;
                 playerPoints = data.playerPoints || 0;
                 hero.maxHp = data.heroMaxHp || 100;
                 hero.hp = data.heroHp || hero.maxHp;
@@ -671,35 +801,58 @@
         }
 
         function getInflationMultiplier() {
+            if (currentLevel === 0) return 1;
             return 1 + ((currentLevel - 1) * 0.06);
         }
 
         function initBattle() {
-            const template = uniqueBosses[currentLevel - 1];
-            let calculatedHp = Math.round((70 + (currentLevel * 14)) / 5) * 5;
-            if (currentLevel === 50) calculatedHp = 800;
-
-            currentBoss = {
-                name: template.name,
-                hp: calculatedHp,
-                element: template.element,
-                theme: template.theme
-            };
-
-            currentBoss.currentHp = currentBoss.hp;
-            currentBoss.shield = 0;
-
             usedReviveThisLevel = false;
             shopUsedThisLevel = false;
             resetShopButtons();
-
             hero.shield = relics.aegis ? 8 : 0;
 
-            document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 50`;
-            document.getElementById('stageThemeBadge').innerText = `Stage: ${currentBoss.theme}`;
-            document.getElementById('bossNameDisplay').innerText = currentBoss.name;
-            document.getElementById('bossElementBadge').innerText = currentBoss.element.toUpperCase();
-            document.getElementById('bossMaxHpText').innerText = currentBoss.hp;
+            const banner = document.getElementById('tutorialBanner');
+
+            if (currentLevel === 0) {
+                currentBoss = {
+                    name: "Training Dummy",
+                    hp: 40,
+                    currentHp: 40,
+                    element: "neutral",
+                    theme: "Training Grounds",
+                    shield: 0
+                };
+                document.getElementById('currentLevelBadge').innerText = "Tutorial";
+                document.getElementById('stageThemeBadge').innerText = "Stage: Training Grounds";
+                document.getElementById('bossNameDisplay').innerText = "Training Dummy";
+                document.getElementById('bossElementBadge').innerText = "Neutral";
+                document.getElementById('bossMaxHpText').innerText = 40;
+                document.getElementById('bossIntentText').innerText = "Practice your cards here! No BP rewarded.";
+
+                banner.classList.remove('hidden');
+                updateTutorialBannerText();
+            } else {
+                banner.classList.add('hidden');
+                const template = uniqueBosses[currentLevel - 1];
+                let calculatedHp = Math.round((70 + (currentLevel * 14)) / 5) * 5;
+                if (currentLevel === 50) calculatedHp = 800;
+
+                currentBoss = {
+                    name: template.name,
+                    hp: calculatedHp,
+                    currentHp: calculatedHp,
+                    element: template.element,
+                    theme: template.theme,
+                    shield: 0
+                };
+
+                document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 50`;
+                document.getElementById('stageThemeBadge').innerText = `Stage: ${currentBoss.theme}`;
+                document.getElementById('bossNameDisplay').innerText = currentBoss.name;
+                document.getElementById('bossElementBadge').innerText = currentBoss.element.toUpperCase();
+                document.getElementById('bossMaxHpText').innerText = currentBoss.hp;
+                document.getElementById('bossIntentText').innerText = "Boss will counter bad elements!";
+            }
 
             updateBossAmbiance();
 
@@ -707,7 +860,38 @@
             resetDeck();
             drawNewHand(handSize);
             updateUI();
-            logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} [${currentBoss.element.toUpperCase()} element]!`);
+            
+            if (currentLevel === 0) {
+                logMessage(`[Tutorial] Facing the Training Dummy! Follow the guidance steps above.`);
+            } else {
+                logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} [${currentBoss.element.toUpperCase()} element]!`);
+            }
+            checkAchievements();
+        }
+
+        function updateTutorialBannerText() {
+            const titleEl = document.getElementById('tutorialStepTitle');
+            const descEl = document.getElementById('tutorialStepDesc');
+
+            if (tutorialStep === 1) {
+                titleEl.innerText = "Tutorial Step 1 of 3: Energy & Costs";
+                descEl.innerText = "Each card costs ⚡ Energy (shown in the top-right corner). Check your available energy at the top right!";
+            } else if (tutorialStep === 2) {
+                titleEl.innerText = "Tutorial Step 2 of 3: Playing Cards";
+                descEl.innerText = "Click any card in your hand below to play it and deal damage or heal/shield yourself.";
+            } else if (tutorialStep === 3) {
+                titleEl.innerText = "Tutorial Step 3 of 3: Ending Turns";
+                descEl.innerText = "When you are out of moves or energy, click the 'End Turn' button to pass the turn to the enemy.";
+            }
+        }
+
+        function nextTutorialStep() {
+            tutorialStep++;
+            if (tutorialStep > 3) {
+                document.getElementById('tutorialBanner').classList.add('hidden');
+            } else {
+                updateTutorialBannerText();
+            }
         }
 
         function updateBossAmbiance() {
@@ -791,19 +975,21 @@
 
                 let dmg = card.power;
                 
-                let hasAdvantage = (card.element === 'fire' && currentBoss.element === 'earth') ||
+                let hasAdvantage = currentBoss.element !== 'neutral' && (
+                                   (card.element === 'fire' && currentBoss.element === 'earth') ||
                                    (card.element === 'earth' && currentBoss.element === 'water') ||
                                    (card.element === 'water' && currentBoss.element === 'fire') ||
                                    (card.element === 'air' && currentBoss.element === 'spirit') ||
                                    (card.element === 'spirit' && currentBoss.element === 'shadow') ||
-                                   (card.element === 'shadow' && currentBoss.element === 'air');
+                                   (card.element === 'shadow' && currentBoss.element === 'air'));
 
-                let bossCountersPlayer = (currentBoss.element === 'fire' && card.element === 'earth') ||
+                let bossCountersPlayer = currentBoss.element !== 'neutral' && (
+                                         (currentBoss.element === 'fire' && card.element === 'earth') ||
                                          (currentBoss.element === 'earth' && card.element === 'water') ||
                                          (currentBoss.element === 'water' && card.element === 'fire') ||
                                          (currentBoss.element === 'air' && card.element === 'shadow') ||
                                          (currentBoss.element === 'spirit' && card.element === 'air') ||
-                                         (currentBoss.element === 'shadow' && card.element === 'spirit');
+                                         (currentBoss.element === 'shadow' && card.element === 'spirit'));
 
                 if (hasAdvantage) {
                     dmg = Math.round(dmg * 1.4);
@@ -852,6 +1038,20 @@
         }
 
         function bossTurn() {
+            if (currentLevel === 0) {
+                playSound('attack');
+                let dummyDmg = 5;
+                hero.hp = Math.max(0, hero.hp - dummyDmg);
+                showPopup('heroDamagePopup', `-${dummyDmg}`, 'text-red-500');
+                logMessage(`[Training Dummy] Dummy strikes you gently for ${dummyDmg} damage.`);
+                
+                hero.energy = hero.maxEnergy;
+                if (relics.aegis) hero.shield += 8;
+                drawNewHand(handSize);
+                updateUI();
+                return;
+            }
+
             let bossPower = Math.round(12 + (currentLevel * 1.25));
             let bossActionType = 'attack';
 
@@ -918,12 +1118,22 @@
 
         function triggerStageVictory() {
             playSound('win');
+            
+            if (currentLevel === 0) {
+                logMessage(`[Tutorial] Training Dummy defeated! Advancing straight to Level 1.`);
+                currentLevel = 1;
+                saveGameProgress();
+                initBattle();
+                return;
+            }
+
             let earned = 50 + (relics.greed ? 25 : 0);
             playerPoints += earned;
             document.getElementById('victoryMsg').innerText = `You defeated ${currentBoss.name}! +${earned} BP earned.`;
             
             if (currentLevel >= 50) {
                 localStorage.removeItem(SAVE_KEY);
+                checkAchievements();
                 document.getElementById('modalGrandVictory').classList.remove('hidden');
                 updateUI();
             } else {
@@ -1056,6 +1266,9 @@
             playerPoints -= fusionCost;
             playSound('win');
             
+            if (!achievements.firstFuse.unlocked) achievements.firstFuse.unlocked = true;
+            checkAchievements();
+
             saveGameProgress();
             updateUI();
             updateArmoryUI();
@@ -1251,7 +1464,7 @@
             drawNewHand(handSize);
             saveGameProgress();
             updateUI();
-            logMessage(`[Sponsor Revive] Resurrected at Level ${currentLevel} with 50% HP!`);
+            logMessage(`[Sponsor Revive] Resurrected with 50% HP!`);
         }
 
         function resetGameRun() {
@@ -1266,7 +1479,7 @@
             hero.maxEnergy = 3;
             document.getElementById('modalGameOver').classList.add('hidden');
             document.getElementById('modalGrandVictory').classList.add('hidden');
-            currentLevel = 1;
+            currentLevel = 0;
             hero.hp = 100;
 
             document.getElementById('screenBattle').classList.add('hidden');
