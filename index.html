@@ -44,7 +44,7 @@
             
             <!-- Dynamic Save Action Buttons -->
             <div id="saveMenuButtons" class="space-y-2 pt-2">
-                <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-sm font-cinzel">Begin New 50-Level Journey</button>
+                <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
             </div>
         </div>
 
@@ -134,7 +134,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Progress is automatically saved after every victory.</div>
+                <div>[System] Welcome to Elemental Clash! Open How to Play for full tactical rules.</div>
             </div>
 
             <!-- Player Hand -->
@@ -274,21 +274,39 @@
         </div>
     </div>
 
-    <!-- MODAL: How to Play / Rules -->
+    <!-- MODAL: How to Play / Rules (COMPLETELY EXPANDED) -->
     <div id="modalRules" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[85vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-lg w-full shadow-2xl max-h-[85vh] overflow-y-auto space-y-4 text-left">
+            <div class="flex justify-between items-center mb-2">
                 <h3 class="font-cinzel text-xl font-bold text-amber-400">How to Play & Rules</h3>
                 <button onclick="closeRules()" class="text-slate-400 hover:text-slate-200 text-lg font-bold px-2">✕</button>
             </div>
+            
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
-                <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
+                <p><strong>Elemental Clash</strong> is a tactical 1v1 roguelike card battle game created by <strong>Jack Vaughan</strong>. Conquer 50 increasingly difficult bosses to win!</p>
+                
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                    <p class="font-bold text-amber-400">🔥 Saving & Progression:</p>
-                    <p class="text-slate-400 text-[11px]">Your run automatically saves after every victory and shop upgrade. You can close your browser anytime and resume right where you left off!</p>
+                    <p class="font-bold text-amber-400">⚡ Core Combat & Energy:</p>
+                    <p class="text-slate-400 text-[11px]">Each turn you have limited Energy to spend playing cards from your hand. Click cards to play them, then click "End Turn" when you are out of moves or want to pass to the boss.</p>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <p class="font-bold text-amber-400">🔥 Elemental Advantage & Boss Counter-Attacks:</p>
+                    <p class="text-slate-400 text-[11px]">Pay close attention to elements! If your card has an elemental advantage over the boss, your attack deals <strong>+40% bonus damage</strong>. However, if you play a card whose element the boss <strong>counters</strong>, your damage is reduced to 70% and the boss will <strong>immediately retaliate and strike you back</strong> right on your turn!</p>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <p class="font-bold text-amber-400">📈 The Fusion Ladder & Drafting:</p>
+                    <p class="text-slate-400 text-[11px]">Bosses only offer Tier-1 Common cards when you defeat them. To get stronger cards, collect 2 identical copies of a card in your deck and take them to the <strong>Card Fusion Forge</strong> during the intermission shop to upgrade them through the tiers: Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary!</p>
+                </div>
+
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <p class="font-bold text-amber-400">💾 Saving Progress:</p>
+                    <p class="text-slate-400 text-[11px]">Your run automatically saves after every victory, draft, or shop purchase. You can safely close your browser and resume right where you left off anytime!</p>
                 </div>
             </div>
-            <button onclick="closeRules()" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Got it, Let's Play!</button>
+
+            <button onclick="closeRules()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl transition text-xs font-cinzel">Got it, Let's Play!</button>
         </div>
     </div>
 
@@ -499,7 +517,6 @@
         let playerHand = [];
         let drawPile = [];
 
-        // Check for existing save on page load
         window.onload = function() {
             checkSaveData();
         };
@@ -1255,7 +1272,7 @@
                     <div>
                         <div class="flex justify-between items-center">
                             <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
-                            <span class="text-[9px] uppercase tracking-wider text-slate-400">${card.tier}</span>
+                            <span class="test-[9px] uppercase tracking-wider text-slate-400">${card.tier}</span>
                         </div>
                         <p class="text-[10px] text-slate-400 leading-tight">${card.desc}</p>
                     </div>
