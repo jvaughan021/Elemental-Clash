@@ -9,25 +9,48 @@
         @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; }
         .font-cinzel { font-family: 'Cinzel', serif; }
-        .card-hover:hover { transform: translateY(-6px); }
-        .card-glow { box-shadow: 0 0 15px rgba(234, 179, 8, 0.2); }
-        @keyframes float-up { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(-40px); opacity: 0; } }
-        .floating-popup { animation: float-up 1s ease-out forwards; }
+        .card-hover:hover { transform: translateY(-8px) scale(1.02); }
+        .card-glow { box-shadow: 0 0 25px rgba(234, 179, 8, 0.25); }
+        
+        @keyframes float-up { 
+            0% { transform: translateY(0) scale(0.9); opacity: 1; } 
+            100% { transform: translateY(-50px) scale(1.1); opacity: 0; } 
+        }
+        .floating-popup { animation: float-up 1s cubic-bezier(0.25, 1, 0.5, 1) forwards; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-6px); }
+            40%, 80% { transform: translateX(6px); }
+        }
+        .screen-shake { animation: shake 0.4s ease-in-out; }
+
+        @keyframes legendary-glow {
+            0%, 100% { border-color: rgba(251, 191, 36, 0.8); box-shadow: 0 0 15px rgba(251, 191, 36, 0.4); }
+            50% { border-color: rgba(245, 158, 11, 1); box-shadow: 0 0 25px rgba(245, 158, 11, 0.7); }
+        }
+        .card-legendary { animation: legendary-glow 2.5s infinite; }
+
+        @keyframes epic-pulse {
+            0%, 100% { border-color: rgba(168, 85, 247, 0.6); }
+            50% { border-color: rgba(192, 132, 252, 1); box-shadow: 0 0 15px rgba(168, 85, 247, 0.4); }
+        }
+        .card-epic { animation: epic-pulse 3s infinite; }
     </style>
 </head>
 <body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col justify-between selection:bg-amber-500 selection:text-black">
 
     <!-- Header -->
-    <header class="bg-slate-900 border-b border-slate-800 py-3 px-4 shadow-md sticky top-0 z-30">
+    <header class="bg-slate-900/90 backdrop-blur-md border-b border-slate-800 py-3 px-4 shadow-xl sticky top-0 z-30">
         <div class="max-w-4xl mx-auto flex flex-wrap justify-between items-center gap-2">
             <div>
                 <h1 class="font-cinzel text-xl md:text-2xl font-bold bg-gradient-to-r from-amber-400 via-orange-500 to-red-500 bg-clip-text text-transparent">Elemental Clash</h1>
                 <p class="text-xs text-slate-400">Created by <span class="text-amber-400 font-semibold">Jack Vaughan</span></p>
             </div>
             <div class="flex items-center gap-2">
-                <span class="bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30">🪙 <span id="playerPointsDisplay">0</span> BP</span>
-                <button onclick="toggleAudio()" id="audioToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 transition">🔊 Sound: ON</button>
-                <button onclick="openRules()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/30 transition">📖 How to Play</button>
+                <span class="bg-amber-500/10 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-bold border border-amber-500/30 shadow-inner">🪙 <span id="playerPointsDisplay">0</span> BP</span>
+                <button onclick="toggleAudio()" id="audioToggleBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg text-xs font-medium border border-slate-700 transition shadow">🔊 Sound: ON</button>
+                <button onclick="openRules()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg text-xs font-semibold border border-amber-500/30 transition shadow">📖 How to Play</button>
             </div>
         </div>
     </header>
@@ -36,11 +59,11 @@
     <main class="flex-grow max-w-4xl w-full mx-auto p-3 md:p-6 flex flex-col justify-center">
 
         <!-- SCREEN 1: Name Entry & Save Loader -->
-        <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow space-y-4">
+        <div id="screenName" class="bg-gradient-to-b from-slate-900/95 to-slate-950/95 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow space-y-4 backdrop-blur-md">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-1">Enter the Arena</h2>
             <p class="text-xs text-slate-400 mb-4">Draft common cards, climb the fusion ladder, and conquer 50 punishing bosses!</p>
             
-            <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500" value="Hero">
+            <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 shadow-inner" value="Hero">
             
             <!-- Dynamic Save Action Buttons -->
             <div id="saveMenuButtons" class="space-y-2 pt-2">
@@ -52,19 +75,19 @@
         <div id="screenBattle" class="hidden flex flex-col gap-4">
             
             <!-- Level & Status Banner -->
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex justify-between items-center text-xs md:text-sm">
+            <div id="battleArenaHeader" class="bg-slate-900/90 border border-slate-800 rounded-xl p-3 flex justify-between items-center text-xs md:text-sm shadow-md transition-all duration-500">
                 <div class="flex items-center gap-2">
                     <span class="bg-amber-500/20 text-amber-400 font-bold px-2.5 py-1 rounded-lg border border-amber-500/30" id="currentLevelBadge">Level 1 / 50</span>
                     <span class="text-slate-400 hidden sm:inline" id="stageThemeBadge">Stage: The Outskirts</span>
                 </div>
                 <div class="flex items-center gap-3">
                     <span class="text-slate-300">Energy: <strong class="text-amber-400 text-base" id="playerEnergyDisplay">3</strong>/<span id="playerMaxEnergyDisplay">3</span></span>
-                    <button onclick="endTurn()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow">End Turn</button>
+                    <button onclick="endTurn()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-md font-cinzel">End Turn</button>
                 </div>
             </div>
 
             <!-- Active Relics Bar -->
-            <div id="relicsBar" class="bg-slate-900/60 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-400 flex items-center gap-2 overflow-x-auto hidden">
+            <div id="relicsBar" class="bg-slate-900/70 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-400 flex items-center gap-2 overflow-x-auto hidden shadow">
                 <span class="text-amber-400 font-bold">Relics:</span>
                 <div id="relicsContainer" class="flex gap-2"></div>
             </div>
@@ -72,14 +95,14 @@
             <!-- Combat Arena Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <!-- Hero Panel -->
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden">
-                    <div id="heroDamagePopup" class="absolute top-4 right-4 text-red-500 font-bold text-xl pointer-events-none hidden"></div>
+                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shadow-xl">
+                    <div id="heroDamagePopup" class="absolute top-4 right-4 font-bold text-xl pointer-events-none hidden z-20"></div>
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <h3 class="font-cinzel font-bold text-base text-amber-400" id="heroNameDisplay">Hero</h3>
                             <span class="text-xs bg-slate-800 text-slate-300 px-2 py-0.5 rounded border border-slate-700">Player</span>
                         </div>
-                        <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2">
+                        <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2 shadow-inner">
                             <div id="heroHpBar" class="bg-gradient-to-r from-emerald-500 to-green-400 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
                         </div>
                         <div class="flex justify-between text-xs text-slate-400">
@@ -91,14 +114,14 @@
                 </div>
 
                 <!-- Boss Panel -->
-                <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden">
-                    <div id="bossDamagePopup" class="absolute top-4 right-4 text-amber-400 font-bold text-xl pointer-events-none hidden"></div>
+                <div id="bossPanelCard" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shadow-xl transition-all duration-500">
+                    <div id="bossDamagePopup" class="absolute top-4 right-4 font-bold text-xl pointer-events-none hidden z-20"></div>
                     <div>
                         <div class="flex justify-between items-center mb-2">
                             <h3 class="font-cinzel font-bold text-base text-red-400" id="bossNameDisplay">Boss</h3>
                             <span class="text-xs bg-red-500/10 text-red-400 px-2 py-0.5 rounded border border-red-500/20" id="bossElementBadge">Fire</span>
                         </div>
-                        <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2">
+                        <div class="w-full bg-slate-950 rounded-full h-3.5 p-0.5 border border-slate-800 mb-2 shadow-inner">
                             <div id="bossHpBar" class="bg-gradient-to-r from-red-600 to-orange-500 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
                         </div>
                         <div class="flex justify-between text-xs text-slate-400">
@@ -111,16 +134,16 @@
             </div>
 
             <!-- In-Battle Tactical Shop Bar -->
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs shadow">
                 <span class="text-slate-400 font-semibold">Battle Shop (Pick 1 per level - 50 BP):</span>
                 <div class="flex gap-2 flex-wrap">
-                    <button id="btnEnergyBoost" onclick="buyPointEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +0.5 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">50 BP</span></button>
-                    <button id="btnRerollBoost" onclick="buyPointReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span></button>
+                    <button id="btnEnergyBoost" onclick="buyPointEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium shadow-sm">⚡ +0.5 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">50 BP</span></button>
+                    <button id="btnRerollBoost" onclick="buyPointReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium shadow-sm">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span></button>
                 </div>
             </div>
 
             <!-- 6-Element Advantage Chart -->
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 space-y-1">
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 space-y-1 shadow">
                 <div class="font-bold text-amber-400">🔥 6-Element Advantage (+40% DMG / Retaliation Risk):</div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 font-mono text-[11px] text-slate-400">
                     <span>🔥 Fire &gt; 🌿 Earth</span>
@@ -133,12 +156,12 @@
             </div>
 
             <!-- Combat Log -->
-            <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
+            <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1 shadow-inner" id="combatLog">
                 <div>[System] Welcome to Elemental Clash! Open How to Play for full tactical rules.</div>
             </div>
 
             <!-- Player Hand -->
-            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
+            <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4 shadow-xl">
                 <div class="flex justify-between items-center mb-3">
                     <span class="text-xs font-cinzel font-bold text-slate-300 tracking-wider">YOUR HAND (<span id="handCountDisplay">4</span> Cards)</span>
                     <span class="text-xs text-slate-400">Click a card to play</span>
@@ -175,19 +198,19 @@
             <p class="text-xs text-slate-300" id="victoryMsg">You defeated the boss! +50 BP earned.</p>
             
             <!-- Explicit BP Display Header -->
-            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 flex justify-between items-center text-xs">
+            <div class="bg-amber-500/10 border border-amber-500/30 rounded-xl p-2.5 flex justify-between items-center text-xs shadow-inner">
                 <span class="text-slate-300 font-medium">Your Available Spending Power:</span>
                 <span class="text-amber-400 font-bold text-sm">🪙 <span id="shopPlayerPointsDisplay">0</span> BP</span>
             </div>
 
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-3">
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-3 shadow-inner">
                 <div class="flex justify-between items-center">
                     <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Armory & Forge:</p>
                     <span class="text-[10px] text-red-400 font-mono" id="inflationBadge">Prices +0% (Lvl 1)</span>
                 </div>
                 
                 <!-- Card Fusion Section -->
-                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs">
+                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs shadow">
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-amber-400">🔥 Card Fusion Forge</span>
                         <span class="text-[10px] text-amber-300 font-mono" id="fusionCostText">Cost: 40 BP</span>
@@ -196,60 +219,60 @@
                         <strong>Fusion Ladder:</strong> When you have 2 identical cards in your deck, select them here to upgrade into the next tier (Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary)!
                     </p>
                     <div class="flex gap-2 items-center pt-1">
-                        <select id="fusionCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
+                        <select id="fusionCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500 shadow-inner">
                             <!-- Populated dynamically -->
                         </select>
-                        <button onclick="executeCardFusion()" class="bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs whitespace-nowrap transition">Fuse Pair</button>
+                        <button onclick="executeCardFusion()" class="bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs whitespace-nowrap transition shadow">Fuse Pair</button>
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 shadow">
                         <div>
                             <p class="font-bold text-slate-200">❤️ Max HP Up</p>
                             <p class="text-[10px] text-slate-400">+25 HP & +10 Max HP</p>
                         </div>
-                        <button onclick="buyIntermissionHeal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="healCostText">50</span> BP</button>
+                        <button onclick="buyIntermissionHeal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="healCostText">50</span> BP</button>
                     </div>
 
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 shadow">
                         <div>
                             <p class="font-bold text-slate-200">⚡ +0.5 Max Energy</p>
                             <p class="text-[10px] text-slate-400">Increase turn energy</p>
                         </div>
-                        <button onclick="buyIntermissionEnergyCap()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="energyCapCostText">75</span> BP</button>
+                        <button onclick="buyIntermissionEnergyCap()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="energyCapCostText">75</span> BP</button>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs shadow">
                     <div>
                         <p class="font-bold text-slate-200" id="handUpgradeLabel">🃏 Expand Hand Size</p>
                         <p class="text-[10px] text-slate-400">Draw more cards each turn</p>
                     </div>
-                    <button id="btnHandUpgrade" onclick="buyHandSizeUpgrade()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="handUpgradeCost">100</span> BP</button>
+                    <button id="btnHandUpgrade" onclick="buyHandSizeUpgrade()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="handUpgradeCost">100</span> BP</button>
                 </div>
 
                 <!-- Relics Grid -->
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 shadow">
                         <div>
                             <p class="font-bold text-slate-200">🏺 Aegis Core</p>
                             <p class="text-[10px] text-slate-400">+8 Shield/turn</p>
                         </div>
-                        <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="relicAegisCost">75</span> BP</button>
+                        <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="relicAegisCost">75</span> BP</button>
                     </div>
 
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 shadow">
                         <div>
                             <p class="font-bold text-slate-200">🏺 Greed Ring</p>
                             <p class="text-[10px] text-slate-400">+25 BP per win</p>
                         </div>
-                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="relicGreedCost">75</span> BP</button>
+                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="relicGreedCost">75</span> BP</button>
                     </div>
                 </div>
             </div>
 
-            <button onclick="advanceToNextLevel()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">Enter Next Stage ➔</button>
+            <button onclick="advanceToNextLevel()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-xl">Enter Next Stage ➔</button>
         </div>
     </div>
 
@@ -261,7 +284,7 @@
             
             <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (5 Left - Ad)</button>
             
-            <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Restart at Level 1</button>
+            <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs shadow">Restart at Level 1</button>
         </div>
     </div>
 
@@ -270,7 +293,7 @@
         <div class="bg-slate-900 border border-amber-500 rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl card-glow space-y-4">
             <h3 class="font-cinzel text-3xl font-bold text-amber-400">Realm Conquered!</h3>
             <p class="text-sm text-slate-300">Incredible tactical mastery! You defeated all 50 bosses and conquered the Apex Voidlord!</p>
-            <button onclick="resetGameRun()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel">Play Again</button>
+            <button onclick="resetGameRun()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel shadow-lg">Play Again</button>
         </div>
     </div>
 
@@ -285,28 +308,28 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 roguelike card battle game created by <strong>Jack Vaughan</strong>. Conquer 50 increasingly difficult bosses to win!</p>
                 
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">⚡ Core Combat & Energy:</p>
                     <p class="text-slate-400 text-[11px]">Each turn you have limited Energy to spend playing cards from your hand. Click cards to play them, then click "End Turn" when you are out of moves or want to pass to the boss.</p>
                 </div>
 
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">🔥 Elemental Advantage & Boss Counter-Attacks:</p>
                     <p class="text-slate-400 text-[11px]">Pay close attention to elements! If your card has an elemental advantage over the boss, your attack deals <strong>+40% bonus damage</strong>. However, if you play a card whose element the boss <strong>counters</strong>, your damage is reduced to 70% and the boss will <strong>immediately retaliate and strike you back</strong> right on your turn!</p>
                 </div>
 
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">📈 The Fusion Ladder & Drafting:</p>
                     <p class="text-slate-400 text-[11px]">Bosses only offer Tier-1 Common cards when you defeat them. To get stronger cards, collect 2 identical copies of a card in your deck and take them to the <strong>Card Fusion Forge</strong> during the intermission shop to upgrade them through the tiers: Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary!</p>
                 </div>
 
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
                     <p class="font-bold text-amber-400">💾 Saving Progress:</p>
                     <p class="text-slate-400 text-[11px]">Your run automatically saves after every victory, draft, or shop purchase. You can safely close your browser and resume right where you left off anytime!</p>
                 </div>
             </div>
 
-            <button onclick="closeRules()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl transition text-xs font-cinzel">Got it, Let's Play!</button>
+            <button onclick="closeRules()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl transition text-xs font-cinzel shadow-lg">Got it, Let's Play!</button>
         </div>
     </div>
 
@@ -678,11 +701,32 @@
             document.getElementById('bossElementBadge').innerText = currentBoss.element.toUpperCase();
             document.getElementById('bossMaxHpText').innerText = currentBoss.hp;
 
+            updateBossAmbiance();
+
             hero.energy = hero.maxEnergy;
             resetDeck();
             drawNewHand(handSize);
             updateUI();
             logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} [${currentBoss.element.toUpperCase()} element]!`);
+        }
+
+        function updateBossAmbiance() {
+            const panel = document.getElementById('bossPanelCard');
+            const header = document.getElementById('battleArenaHeader');
+            
+            panel.className = "bg-slate-900/90 border rounded-2xl p-4 flex flex-col justify-between relative overflow-hidden shadow-xl transition-all duration-500";
+            header.className = "bg-slate-900/90 border rounded-xl p-3 flex justify-between items-center text-xs md:text-sm shadow-md transition-all duration-500";
+
+            let borderCol = "border-slate-800";
+            if (currentBoss.element === 'fire') borderCol = "border-red-500/50 shadow-red-950/40";
+            else if (currentBoss.element === 'water') borderCol = "border-blue-500/50 shadow-blue-950/40";
+            else if (currentBoss.element === 'earth') borderCol = "border-emerald-500/50 shadow-emerald-950/40";
+            else if (currentBoss.element === 'air') borderCol = "border-cyan-500/50 shadow-cyan-950/40";
+            else if (currentBoss.element === 'shadow') borderCol = "border-purple-600/50 shadow-purple-950/40";
+            else if (currentBoss.element === 'spirit') borderCol = "border-amber-400/50 shadow-amber-950/40";
+
+            panel.classList.add(...borderCol.split(' '));
+            header.classList.add(...borderCol.split(' '));
         }
 
         function resetDeck() {
@@ -701,6 +745,12 @@
                 }
                 playerHand.push(card);
             }
+        }
+
+        function triggerScreenShake() {
+            const screen = document.getElementById('screenBattle');
+            screen.classList.add('screen-shake');
+            setTimeout(() => screen.classList.remove('screen-shake'), 400);
         }
 
         function playCard(index) {
@@ -737,6 +787,8 @@
                 logMessage(`[Action] You used ${card.name}, gaining ${card.power} shield.`);
             } else {
                 playSound('attack');
+                if (card.power >= 40) triggerScreenShake();
+
                 let dmg = card.power;
                 
                 let hasAdvantage = (card.element === 'fire' && currentBoss.element === 'earth') ||
@@ -818,6 +870,7 @@
 
             if (bossActionType === 'attack') {
                 playSound('attack');
+                if (bossPower > 25) triggerScreenShake();
                 
                 let bossHasAdvantage = Math.random() < Math.min(0.7, 0.25 + (currentLevel * 0.01));
                 if (bossHasAdvantage) {
@@ -1280,14 +1333,14 @@
             playerHand.forEach((card, index) => {
                 const canAfford = hero.energy >= card.cost;
                 
-                let tierBorder = 'border-slate-700';
-                if (card.tier === 'Uncommon') tierBorder = 'border-emerald-500/50';
-                if (card.tier === 'Rare') tierBorder = 'border-blue-500/60';
-                if (card.tier === 'Epic') tierBorder = 'border-purple-500/70';
-                if (card.tier === 'Legendary') tierBorder = 'border-amber-400';
+                let tierClass = 'border-slate-700 bg-slate-950';
+                if (card.tier === 'Uncommon') tierClass = 'border-emerald-500/60 bg-slate-900/90';
+                if (card.tier === 'Rare') tierClass = 'border-blue-500/70 bg-slate-900/90';
+                if (card.tier === 'Epic') tierClass = 'card-epic bg-slate-900/95';
+                if (card.tier === 'Legendary') tierClass = 'card-legendary bg-slate-900/95';
 
                 const cardEl = document.createElement('div');
-                cardEl.className = `bg-slate-950 border ${canAfford ? tierBorder + ' hover:border-amber-400 cursor-pointer card-hover' : 'border-slate-900 opacity-50 cursor-not-allowed'} rounded-xl p-3 flex flex-col justify-between transition shadow`;
+                cardEl.className = `border ${canAfford ? tierClass + ' hover:border-amber-400 cursor-pointer card-hover' : 'border-slate-900 bg-slate-950 opacity-50 cursor-not-allowed'} rounded-xl p-3 flex flex-col justify-between transition shadow-lg`;
                 cardEl.innerHTML = `
                     <div class="flex justify-between items-start mb-1">
                         <span class="text-lg">${card.icon}</span>
@@ -1296,7 +1349,7 @@
                     <div>
                         <div class="flex justify-between items-center">
                             <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
-                            <span class="text-[9px] uppercase tracking-wider text-slate-400">${card.tier}</span>
+                            <span class="text-[9px] uppercase tracking-wider text-slate-400 font-mono">${card.tier}</span>
                         </div>
                         <p class="text-[10px] text-slate-400 leading-tight">${card.desc}</p>
                     </div>
@@ -1320,7 +1373,7 @@
         function showPopup(elementId, text, colorClass) {
             const el = document.getElementById(elementId);
             el.innerText = text;
-            el.className = `absolute top-4 right-4 font-bold text-xl pointer-events-none ${colorClass} floating-popup`;
+            el.className = `absolute top-4 right-4 font-bold text-xl pointer-events-none ${colorClass} floating-popup z-20`;
             setTimeout(() => {
                 el.classList.add('hidden');
             }, 1000);
