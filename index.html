@@ -35,12 +35,17 @@
     <!-- Main Container -->
     <main class="flex-grow max-w-4xl w-full mx-auto p-3 md:p-6 flex flex-col justify-center">
 
-        <!-- SCREEN 1: Name Entry -->
-        <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
-            <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
-            <p class="text-sm text-slate-400 mb-6">Draft common cards, climb the fusion ladder, and conquer 50 punishing bosses!</p>
-            <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
-            <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
+        <!-- SCREEN 1: Name Entry & Save Loader -->
+        <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow space-y-4">
+            <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-1">Enter the Arena</h2>
+            <p class="text-xs text-slate-400 mb-4">Draft common cards, climb the fusion ladder, and conquer 50 punishing bosses!</p>
+            
+            <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500" value="Hero">
+            
+            <!-- Dynamic Save Action Buttons -->
+            <div id="saveMenuButtons" class="space-y-2 pt-2">
+                <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-sm font-cinzel">Begin New 50-Level Journey</button>
+            </div>
         </div>
 
         <!-- SCREEN 2: Battle Dashboard -->
@@ -129,7 +134,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Spend BP wisely in the intermission forge and shop.</div>
+                <div>[System] Welcome to Elemental Clash! Progress is automatically saved after every victory.</div>
             </div>
 
             <!-- Player Hand -->
@@ -279,8 +284,8 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                    <p class="font-bold text-amber-400">🔥 Drafting & The Fusion Ladder:</p>
-                    <p class="text-slate-400 text-[11px]">Bosses only offer Tier-1 Common cards as draft rewards. Collect duplicate common cards, then combine them in the Forge to climb from Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary!</p>
+                    <p class="font-bold text-amber-400">🔥 Saving & Progression:</p>
+                    <p class="text-slate-400 text-[11px]">Your run automatically saves after every victory and shop upgrade. You can close your browser anytime and resume right where you left off!</p>
                 </div>
             </div>
             <button onclick="closeRules()" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Got it, Let's Play!</button>
@@ -290,6 +295,7 @@
     <!-- Game Engine Script -->
     <script>
         const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
+        const SAVE_KEY = "elemental_clash_save_v1";
 
         let soundEnabled = true;
         let playerPoints = 0;
@@ -425,7 +431,11 @@
             { id: 'sp_e1', name: 'Soul Wave', element: 'spirit', tier: 'Epic', cost: 2.5, power: 42, icon: '✨', desc: 'Tier 4 Epic Soul (42 dmg).' },
             { id: 'sp_e2', name: 'Divinity Beam', element: 'spirit', tier: 'Epic', cost: 2, power: 36, icon: '✨', desc: 'Tier 4 Epic Beam (36 dmg).' },
             { id: 'sp_l1', name: 'Celestial Judgment', element: 'spirit', tier: 'Legendary', cost: 3, power: 60, icon: '🌟', desc: 'Tier 5 Legendary Spirit (60 dmg).' },
-            { id: 'sp_l2', name: 'Ascension', element: 'spirit', tier: 'Legendary', cost: 2.5, power: 52, icon: '🌟', desc: 'Tier 5 Legendary Ascendant (52 dmg).' }
+            { id: 'sp_l2', name: 'Ascension', element: 'spirit', tier: 'Legendary', cost: 2.5, power: 52, icon: '🌟', desc: 'Tier 5 Legendary Ascendant (52 dmg).' },
+
+            // UTILITY CARDS
+            { id: 'h1', name: 'Healing Salve', element: 'heal', tier: 'Common', cost: 1, power: 14, icon: '❤️', desc: 'Restores 14 HP.' },
+            { id: 's1', name: 'Aegis Shield', element: 'shield', tier: 'Common', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
         ];
 
         // 50 Unique Boss Roster
@@ -489,17 +499,59 @@
         let playerHand = [];
         let drawPile = [];
 
-        function getInflationMultiplier() {
-            return 1 + ((currentLevel - 1) * 0.06);
+        // Check for existing save on page load
+        window.onload = function() {
+            checkSaveData();
+        };
+
+        function checkSaveData() {
+            const saved = localStorage.getItem(SAVE_KEY);
+            const container = document.getElementById('saveMenuButtons');
+            container.innerHTML = '';
+
+            if (saved) {
+                try {
+                    let data = JSON.parse(saved);
+                    document.getElementById('heroNameInput').value = data.heroName || "Hero";
+
+                    container.innerHTML = `
+                        <button onclick="loadGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-sm font-cinzel">Continue Journey (Level ${data.currentLevel}/50)</button>
+                        <button onclick="startNewGameFlow()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Start New Journey (Delete Save)</button>
+                    `;
+                } catch(e) {
+                    localStorage.removeItem(SAVE_KEY);
+                    renderDefaultNewGameButton(container);
+                }
+            } else {
+                renderDefaultNewGameButton(container);
+            }
         }
 
-        function startGameFlow() {
+        function renderDefaultNewGameButton(container) {
+            container.innerHTML = `
+                <button onclick="startNewGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
+            `;
+        }
+
+        function saveGameProgress() {
+            let saveData = {
+                heroName: hero.name,
+                currentLevel: currentLevel,
+                playerPoints: playerPoints,
+                heroHp: hero.hp,
+                heroMaxHp: hero.maxHp,
+                heroMaxEnergy: hero.maxEnergy,
+                handSize: handSize,
+                relics: relics,
+                deckIds: playerDeck.map(c => c.id)
+            };
+            localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
+        }
+
+        function startNewGameFlow() {
+            localStorage.removeItem(SAVE_KEY);
             const nameInput = document.getElementById('heroNameInput').value.trim();
             if (nameInput) hero.name = nameInput;
-            document.getElementById('heroNameDisplay').innerText = hero.name;
-            
-            document.getElementById('screenName').classList.add('hidden');
-            document.getElementById('screenBattle').classList.remove('hidden');
 
             currentLevel = 1;
             playerPoints = 0;
@@ -517,11 +569,59 @@
                 masterCardDatabase.find(c => c.id === 'a_c1'),
                 masterCardDatabase.find(c => c.id === 'sh_c1'),
                 masterCardDatabase.find(c => c.id === 'sp_c1'),
-                { id: 'h1', name: 'Healing Salve', element: 'heal', tier: 'Common', cost: 1, power: 14, icon: '❤️', desc: 'Restores 14 HP.' },
-                { id: 's1', name: 'Aegis Shield', element: 'shield', tier: 'Common', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
+                masterCardDatabase.find(c => c.id === 'h1'),
+                masterCardDatabase.find(c => c.id === 's1')
             ];
 
+            saveGameProgress();
+            launchBattleScreen();
+        }
+
+        function loadGameFlow() {
+            const saved = localStorage.getItem(SAVE_KEY);
+            if (!saved) {
+                startNewGameFlow();
+                return;
+            }
+
+            try {
+                let data = JSON.parse(saved);
+                hero.name = data.heroName || "Hero";
+                currentLevel = data.currentLevel || 1;
+                playerPoints = data.playerPoints || 0;
+                hero.maxHp = data.heroMaxHp || 100;
+                hero.hp = data.heroHp || hero.maxHp;
+                hero.maxEnergy = data.heroMaxEnergy || 3;
+                handSize = data.handSize || 4;
+                relics = data.relics || { aegis: false, greed: false };
+
+                playerDeck = [];
+                if (data.deckIds && Array.isArray(data.deckIds)) {
+                    data.deckIds.forEach(id => {
+                        let card = masterCardDatabase.find(c => c.id === id);
+                        if (card) playerDeck.push({...card});
+                    });
+                }
+                if (playerDeck.length === 0) {
+                    playerDeck = [masterCardDatabase.find(c => c.id === 'f_c1')];
+                }
+
+                launchBattleScreen();
+            } catch(e) {
+                localStorage.removeItem(SAVE_KEY);
+                startNewGameFlow();
+            }
+        }
+
+        function launchBattleScreen() {
+            document.getElementById('screenName').classList.add('hidden');
+            document.getElementById('screenBattle').classList.remove('hidden');
+            document.getElementById('heroNameDisplay').innerText = hero.name;
             initBattle();
+        }
+
+        function getInflationMultiplier() {
+            return 1 + ((currentLevel - 1) * 0.06);
         }
 
         function initBattle() {
@@ -743,9 +843,11 @@
             document.getElementById('victoryMsg').innerText = `You defeated ${currentBoss.name}! +${earned} BP earned.`;
             
             if (currentLevel >= 50) {
+                localStorage.removeItem(SAVE_KEY);
                 document.getElementById('modalGrandVictory').classList.remove('hidden');
                 updateUI();
             } else {
+                saveGameProgress();
                 openDraftModal();
             }
         }
@@ -792,6 +894,7 @@
             
             document.getElementById('modalDraft').classList.add('hidden');
             
+            saveGameProgress();
             populateFusionDropdown();
             updateArmoryUI();
             document.getElementById('modalVictory').classList.remove('hidden');
@@ -860,6 +963,7 @@
             playerPoints -= fusionCost;
             playSound('win');
             
+            saveGameProgress();
             updateUI();
             updateArmoryUI();
             populateFusionDropdown();
@@ -874,6 +978,7 @@
             hero.hp = Math.min(hero.maxHp, hero.hp + 25);
             playSound('heal');
             
+            saveGameProgress();
             updateUI();
             updateArmoryUI();
             logMessage('[Shop] Upgraded Max HP & restored health.');
@@ -886,6 +991,7 @@
             hero.maxEnergy = Math.round((hero.maxEnergy + 0.5) * 10) / 10;
             playSound('win');
             
+            saveGameProgress();
             updateUI();
             updateArmoryUI();
             logMessage('[Shop] Permanently increased turn max energy by +0.5!');
@@ -907,6 +1013,7 @@
             handSize += 2;
             playSound('win');
             
+            saveGameProgress();
             updateUI();
             updateArmoryUI();
             logMessage(`[Shop] Expanded combat hand size to ${handSize} cards!`);
@@ -965,6 +1072,7 @@
             relics[type] = true;
             playSound('win');
 
+            saveGameProgress();
             updateUI();
             updateArmoryUI();
             logMessage(`[Shop] Acquired Relic: ${type.toUpperCase()}!`);
@@ -974,6 +1082,7 @@
             document.getElementById('modalVictory').classList.add('hidden');
             currentLevel++;
             hero.hp = Math.min(hero.maxHp, hero.hp + 30);
+            saveGameProgress();
             initBattle();
         }
 
@@ -985,6 +1094,7 @@
             hero.energy = Math.round((hero.energy + 0.5) * 10) / 10;
             playSound('heal');
             
+            saveGameProgress();
             updateUI();
             logMessage('[Battle Shop] Purchased +0.5 Energy for 50 BP.');
         }
@@ -997,6 +1107,7 @@
             drawNewHand(handSize);
             playSound('card');
 
+            saveGameProgress();
             updateUI();
             logMessage('[Battle Shop] Purchased Hand Reroll for 50 BP.');
         }
@@ -1044,11 +1155,13 @@
             hero.shield = 10;
             hero.energy = hero.maxEnergy;
             drawNewHand(handSize);
+            saveGameProgress();
             updateUI();
             logMessage(`[Sponsor Revive] Resurrected at Level ${currentLevel} with 50% HP!`);
         }
 
         function resetGameRun() {
+            localStorage.removeItem(SAVE_KEY);
             playerPoints = 0;
             revivesUsedThisRun = 0;
             usedReviveThisLevel = false;
@@ -1061,11 +1174,13 @@
             document.getElementById('modalGrandVictory').classList.add('hidden');
             currentLevel = 1;
             hero.hp = 100;
-            startGameFlow();
+
+            document.getElementById('screenBattle').classList.add('hidden');
+            document.getElementById('screenName').classList.remove('hidden');
+            checkSaveData();
         }
 
         function updateUI() {
-            // Update all BP displays across the game header and shop modals immediately
             document.getElementById('playerPointsDisplay').innerText = playerPoints;
             const shopPointsEl = document.getElementById('shopPlayerPointsDisplay');
             if (shopPointsEl) shopPointsEl.innerText = playerPoints;
