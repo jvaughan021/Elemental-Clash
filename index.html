@@ -173,9 +173,9 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">🔥 50 Unique Bosses:</p>
+                    <p class="font-bold text-amber-400 mb-1">🔥 Smart Boss AI & 50 Levels:</p>
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li>Battle through 50 uniquely named bosses with elemental stats ending in 0 or 5.</li>
+                        <li>Smart tactical AI: Bosses only heal when damaged and shield strategically!</li>
                         <li>Watch ads to gain tactical energy, reroll your hand, or revive upon defeat!</li>
                     </ul>
                 </div>
@@ -263,7 +263,7 @@
             { id: 's1', name: 'Aegis Shield', type: 'shield', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
         ];
 
-        // 50 Unique Boss Roster with specific themes and elements
+        // 50 Unique Boss Roster
         const uniqueBosses = [
             { name: "Sparkling Sprite", element: "fire", theme: "The Outskirts" },
             { name: "Mossy Golem", element: "earth", theme: "Whispering Woods" },
@@ -339,23 +339,19 @@
 
         function initBattle() {
             const template = uniqueBosses[currentLevel - 1];
-            
-            // Calculate HP scaling that mathematically ALWAYS ends in 0 or 5
             let calculatedHp = Math.round((70 + (currentLevel * 14)) / 5) * 5;
-            if (currentLevel === 50) calculatedHp = 750; // Guaranteed ending in 0
+            if (currentLevel === 50) calculatedHp = 750;
 
             currentBoss = {
                 name: template.name,
                 hp: calculatedHp,
                 element: template.element,
-                theme: template.theme,
-                aiAggro: Math.min(1.0, 0.6 + (currentLevel * 0.008))
+                theme: template.theme
             };
 
             currentBoss.currentHp = currentBoss.hp;
             currentBoss.shield = 0;
 
-            // Reset per-level boost usages
             usedReviveThisLevel = false;
             usedEnergyBoostThisBattle = false;
             usedRerollBoostThisBattle = false;
@@ -461,21 +457,41 @@
         }
 
         function endTurn() {
-            logMessage(`[Turn] You ended your turn. ${currentBoss.name} prepares to strike...`);
+            logMessage(`[Turn] You ended your turn. ${currentBoss.name} evaluates the battlefield...`);
             bossTurn();
         }
 
+        // --- SMART TACTICAL AI ENGINE ---
         function bossTurn() {
-            let bossActionType = Math.random() < currentBoss.aiAggro ? 'attack' : (Math.random() < 0.5 ? 'shield' : 'heal');
             let bossPower = Math.round(12 + (currentLevel * 1.2));
+            let bossActionType = 'attack';
 
+            const bossHpPercent = currentBoss.currentHp / currentBoss.hp;
+            const isDamaged = currentBoss.currentHp < currentBoss.hp;
+
+            // Decision Logic
+            if (isDamaged && bossHpPercent <= 0.35) {
+                // Emergency Mode: Boss is heavily damaged (<35% HP)
+                bossActionType = (currentBoss.shield < 10) ? 'shield' : 'heal';
+            } else if (isDamaged && Math.random() < 0.3) {
+                // Tactical Heal if wounded and not at 100% HP
+                bossActionType = 'heal';
+            } else if (currentBoss.shield === 0 && Math.random() < 0.25) {
+                // Raise defensive shield if unshielded
+                bossActionType = 'shield';
+            } else {
+                // Default: Aggressive attack
+                bossActionType = 'attack';
+            }
+
+            // Execute AI Action
             if (bossActionType === 'attack') {
                 playSound('attack');
                 
-                let bossHasAdvantage = Math.random() < 0.4;
+                let bossHasAdvantage = Math.random() < Math.min(0.7, 0.25 + (currentLevel * 0.01));
                 if (bossHasAdvantage) {
                     bossPower = Math.round(bossPower * 1.3);
-                    logMessage(`[⚠️ Boss Advantage!] ${currentBoss.name} unleashes an elemental surge! Attack boosted to ${bossPower}!`);
+                    logMessage(`[⚠️ Boss Surge!] ${currentBoss.name} unearths an elemental strike! Attack boosted to ${bossPower}!`);
                 }
 
                 let netDmg = bossPower;
@@ -491,17 +507,18 @@
                 hero.hp = Math.max(0, hero.hp - netDmg);
                 showPopup('heroDamagePopup', `-${netDmg}`, 'text-red-500');
                 if (!bossHasAdvantage) {
-                    logMessage(`[Boss] ${currentBoss.name} attacks for ${netDmg} damage.`);
+                    logMessage(`[Boss] ${currentBoss.name} strikes for ${netDmg} damage.`);
                 }
             } else if (bossActionType === 'shield') {
                 playSound('card');
                 currentBoss.shield += bossPower;
-                logMessage(`[Boss] ${currentBoss.name} raises a defensive shield of ${bossPower}!`);
-            } else {
+                logMessage(`[Boss] ${currentBoss.name} strategically raises a ${bossPower} shield!`);
+            } else if (bossActionType === 'heal') {
                 playSound('heal');
-                currentBoss.currentHp = Math.min(currentBoss.hp, currentBoss.currentHp + bossPower);
-                showPopup('bossDamagePopup', `+${bossPower}`, 'text-emerald-400');
-                logMessage(`[Boss] ${currentBoss.name} heals for ${bossPower} HP!`);
+                let actualHeal = Math.min(currentBoss.hp - currentBoss.currentHp, bossPower);
+                currentBoss.currentHp += actualHeal;
+                showPopup('bossDamagePopup', `+${actualHeal}`, 'text-emerald-400');
+                logMessage(`[Boss] ${currentBoss.name} recovers ${actualHeal} HP!`);
             }
 
             if (hero.hp <= 0) {
