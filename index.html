@@ -38,7 +38,7 @@
         <!-- SCREEN 1: Name Entry -->
         <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
-            <p class="text-sm text-slate-400 mb-6">Master fractional .5 energy costs and fuse duplicate cards in the Armory forge!</p>
+            <p class="text-sm text-slate-400 mb-6">Master fractional .5 energy costs, fuse cards, and collect powerful relics!</p>
             <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
             <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
         </div>
@@ -131,7 +131,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Fractional energy (.5) and Card Fusion enabled.</div>
+                <div>[System] Welcome to Elemental Clash! Relics, Fusion Forge, and Fractional Energy active.</div>
             </div>
 
             <!-- Player Hand -->
@@ -203,12 +203,23 @@
                     <button id="btnHandUpgrade" onclick="buyHandSizeUpgrade()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="handUpgradeCost">100</span> BP</button>
                 </div>
 
-                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
-                    <div>
-                        <p class="font-bold text-slate-200">🏺 Relic: Aegis Core (+8 Shield/turn)</p>
-                        <p class="text-[10px] text-slate-400">Permanent defensive automation.</p>
+                <!-- Relics Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                        <div>
+                            <p class="font-bold text-slate-200">🏺 Aegis Core</p>
+                            <p class="text-[10px] text-slate-400">+8 Shield/turn</p>
+                        </div>
+                        <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
                     </div>
-                    <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
+
+                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
+                        <div>
+                            <p class="font-bold text-slate-200">🏺 Greed Ring</p>
+                            <p class="text-[10px] text-slate-400">+25 BP per win</p>
+                        </div>
+                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
+                    </div>
                 </div>
             </div>
 
@@ -247,8 +258,8 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">⚡ Fractional Energy & Card Fusion:</p>
-                    <p class="text-slate-400 text-[11px]">Energy costs include .5 increments for precise tactical management. Visit the Fusion Forge between levels to combine two identical cards into a higher rarity tier!</p>
+                    <p class="font-bold text-amber-400 mb-1">🏺 Relics & Armory:</p>
+                    <p class="text-slate-400 text-[11px]">Collect powerful relics like the Greed Ring (+25 BP per win) and Aegis Core (+8 shield per turn) in the Intermission Armory!</p>
                 </div>
             </div>
             <button onclick="closeRules()" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Got it, Let's Play!</button>
@@ -697,12 +708,10 @@
             updateUI();
         }
 
-        // Card Fusion Forge Logic
         function populateFusionDropdown() {
             const select = document.getElementById('fusionCardSelect');
             select.innerHTML = '';
             
-            // Count frequencies of cards in playerDeck by id
             let counts = {};
             playerDeck.forEach(c => {
                 counts[c.id] = (counts[c.id] || 0) + 1;
@@ -741,12 +750,10 @@
             else if (sampleCard.tier === 'Epic') nextTierName = 'Legendary';
             else return;
 
-            // Find next tier card of same element
             let pool = masterCardDatabase.filter(c => c.element === sampleCard.element && c.tier === nextTierName);
             if (pool.length === 0) return;
             let upgradedCard = pool[Math.floor(Math.random() * pool.length)];
 
-            // Remove 2 of the old cards and add 1 upgraded card
             let removedCount = 0;
             playerDeck = playerDeck.filter(c => {
                 if (c.id === cardId && removedCount < 2) {
@@ -824,6 +831,19 @@
                     btn.classList.remove('opacity-40');
                 }
             }
+
+            // Update relic buttons
+            const aegisBtn = document.getElementById('btnRelicAegis');
+            if (relics.aegis) {
+                aegisBtn.classList.add('opacity-40', 'pointer-events-none');
+                aegisBtn.innerText = 'Owned';
+            }
+
+            const greedBtn = document.getElementById('btnRelicGreed');
+            if (relics.greed) {
+                greedBtn.classList.add('opacity-40', 'pointer-events-none');
+                greedBtn.innerText = 'Owned';
+            }
         }
 
         function buyRelic(type) {
@@ -832,11 +852,6 @@
             relics[type] = true;
             playSound('win');
 
-            const btn = document.getElementById('btnRelicAegis');
-            if (btn) {
-                btn.classList.add('opacity-40', 'pointer-events-none');
-                btn.innerText = 'Owned';
-            }
             updateUI();
             updateArmoryUI();
             logMessage(`[Shop] Acquired Relic: ${type.toUpperCase()}!`);
