@@ -550,11 +550,11 @@
 
         // Randomized Boss Pool for Endless Variety
         const bossArchetypePool = [
-            { name: "Roaming Sprite", theme: "The Outskirts" },
-            { name: "Wandering Golem", theme: "Whispering Woods" },
+            { name: "Sprite", theme: "The Outskirts" },
+            { name: "Golem", theme: "Whispering Woods" },
             { name: "River Lurker", theme: "Crystal River" },
             { name: "Sky Falcon", theme: "Sky Plateau" },
-            { name: "Gloom Specter", theme: "Forgotten Graveyard" },
+            { name: "Specter", theme: "Forgotten Graveyard" },
             { name: "Astral Wisp", theme: "Ethereal Sanctum" },
             { name: "Magma Brute", theme: "Volcanic Vent" },
             { name: "Stone Guardian", theme: "Ancient Ruins" },
@@ -573,6 +573,7 @@
         ];
 
         const possibleElements = ['fire', 'water', 'earth', 'air', 'shadow', 'spirit'];
+        const bossPrefixes = ["Wild", "Ancient", "Feral", "Shadow", "Raging", "Fierce", "Primal", "Dread", "Corrupted", "Unbound"];
 
         let playerDeck = [];
         let hero = { name: "Hero", hp: 100, maxHp: 100, shield: 0, energy: 3, maxEnergy: 3 };
@@ -855,7 +856,9 @@
                 } else {
                     const randomArchetype = bossArchetypePool[Math.floor(Math.random() * bossArchetypePool.length)];
                     const randomElement = possibleElements[Math.floor(Math.random() * possibleElements.length)];
-                    bossName = `Corrupted ${randomArchetype.name}`;
+                    const randomPrefix = bossPrefixes[Math.floor(Math.random() * bossPrefixes.length)];
+                    
+                    bossName = `${randomPrefix} ${randomArchetype.name}`;
                     bossElement = randomElement;
                     bossTheme = randomArchetype.theme;
                 }
