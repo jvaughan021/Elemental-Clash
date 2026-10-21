@@ -38,7 +38,7 @@
         <!-- SCREEN 1: Name Entry -->
         <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
-            <p class="text-sm text-slate-400 mb-6">Draft duplicate cards, fuse them in the forge, and conquer 50 punishing bosses!</p>
+            <p class="text-sm text-slate-400 mb-6">Draft common cards, climb the fusion ladder, and conquer 50 punishing bosses!</p>
             <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
             <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
         </div>
@@ -129,7 +129,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Draft cards to build duplicate pairs.</div>
+                <div>[System] Welcome to Elemental Clash! Draft common cards to build up your fusion ladder.</div>
             </div>
 
             <!-- Player Hand -->
@@ -151,11 +151,11 @@
         Elemental Clash &bull; Created by Jack Vaughan
     </footer>
 
-    <!-- MODAL: Card Draft Reward (Step 1 after victory) -->
+    <!-- MODAL: Card Draft Reward (Only Tier-1 Commons) -->
     <div id="modalDraft" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-amber-500/50 rounded-2xl p-5 md:p-6 max-w-xl w-full text-center shadow-2xl card-glow space-y-4">
-            <h3 class="font-cinzel text-2xl font-bold text-amber-400">Draft Card Reward</h3>
-            <p class="text-xs text-slate-300">Choose 1 card to add to your deck. Pick a card you already own to get a duplicate for fusing!</p>
+            <h3 class="font-cinzel text-2xl font-bold text-amber-400">Draft Common Card</h3>
+            <p class="text-xs text-slate-300">Choose 1 Common card reward. Pick duplicates of cards you own to stack pairs for the Forge!</p>
             
             <div id="draftCardsContainer" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <!-- Draft options injected dynamically -->
@@ -163,7 +163,7 @@
         </div>
     </div>
 
-    <!-- MODAL: Intermission Armory & Fusion Forge (Step 2 after draft) -->
+    <!-- MODAL: Intermission Armory & Fusion Forge -->
     <div id="modalVictory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-xl w-full text-center shadow-2xl card-glow space-y-3 max-h-[90vh] overflow-y-auto">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400">Stage Cleared!</h3>
@@ -188,7 +188,7 @@
                         <span class="text-[10px] text-amber-300 font-mono" id="fusionCostText">Cost: 40 BP</span>
                     </div>
                     <p class="text-[10px] text-slate-400 leading-relaxed">
-                        <strong>How Fusing Works:</strong> Draft duplicate cards during your run. When you have 2 identical cards in your deck, select them here to upgrade into 1 powerful card of the next tier!
+                        <strong>Fusion Ladder:</strong> When you have 2 identical cards in your deck, select them here to upgrade into the next tier (Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary)!
                     </p>
                     <div class="flex gap-2 items-center pt-1">
                         <select id="fusionCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
@@ -279,8 +279,8 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
-                    <p class="font-bold text-amber-400">🔥 Drafting & Fusing:</p>
-                    <p class="text-slate-400 text-[11px]">After defeating each boss, you draft 1 card reward. Pick cards you already own to create duplicate pairs, then head to the Intermission Forge to fuse them into higher tiers!</p>
+                    <p class="font-bold text-amber-400">🔥 Drafting & The Fusion Ladder:</p>
+                    <p class="text-slate-400 text-[11px]">Bosses only offer Tier-1 Common cards as draft rewards. Collect duplicate common cards, then combine them in the Forge to climb from Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary!</p>
                 </div>
             </div>
             <button onclick="closeRules()" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Got it, Let's Play!</button>
@@ -754,12 +754,12 @@
             const container = document.getElementById('draftCardsContainer');
             container.innerHTML = '';
 
-            // Pick 3 random cards from master database
+            // Filter ONLY Tier-1 Common cards from master database
+            let commonPool = masterCardDatabase.filter(c => c.tier === 'Common');
             let draftOptions = [];
-            let pool = [...masterCardDatabase];
             for (let i = 0; i < 3; i++) {
-                let randIndex = Math.floor(Math.random() * pool.length);
-                draftOptions.push(pool.splice(randIndex, 1)[0]);
+                let randIndex = Math.floor(Math.random() * commonPool.length);
+                draftOptions.push(commonPool.splice(randIndex, 1)[0]);
             }
 
             draftOptions.forEach(card => {
@@ -793,7 +793,6 @@
             
             document.getElementById('modalDraft').classList.add('hidden');
             
-            // Open Intermission Shop & Forge
             populateFusionDropdown();
             updateArmoryUI();
             document.getElementById('modalVictory').classList.remove('hidden');
