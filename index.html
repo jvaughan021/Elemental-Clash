@@ -37,9 +37,9 @@
         <!-- SCREEN 1: Name Entry -->
         <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
-            <p class="text-sm text-slate-400 mb-6">Choose your hero name to embark on your 20-level tactical journey.</p>
+            <p class="text-sm text-slate-400 mb-6">Choose your hero name to embark on your 50-level tactical marathon!</p>
             <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
-            <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin Journey</button>
+            <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
         </div>
 
         <!-- SCREEN 2: Battle Dashboard -->
@@ -48,7 +48,7 @@
             <!-- Level & Status Banner -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-3 flex justify-between items-center text-xs md:text-sm">
                 <div class="flex items-center gap-2">
-                    <span class="bg-amber-500/20 text-amber-400 font-bold px-2.5 py-1 rounded-lg border border-amber-500/30" id="currentLevelBadge">Level 1 / 20</span>
+                    <span class="bg-amber-500/20 text-amber-400 font-bold px-2.5 py-1 rounded-lg border border-amber-500/30" id="currentLevelBadge">Level 1 / 50</span>
                     <span class="text-slate-400 hidden sm:inline" id="stageThemeBadge">Stage: The Outskirts</span>
                 </div>
                 <div class="flex items-center gap-3">
@@ -100,9 +100,9 @@
                 </div>
             </div>
 
-            <!-- Ad-Powered Tactical Power-Ups Bar (Once Per Battle Each) -->
+            <!-- Ad-Powered Tactical Power-Ups Bar -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs">
-                <span class="text-slate-400 font-semibold">Tactical Boosts (1x Per Battle):</span>
+                <span class="text-slate-400 font-semibold">Tactical Boosts (1x Per Level):</span>
                 <div class="flex gap-2 flex-wrap">
                     <button id="btnEnergyBoost" onclick="useAdEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +1 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">Ad</span></button>
                     <button id="btnRerollBoost" onclick="useAdReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">Ad</span></button>
@@ -111,7 +111,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Defeat all 20 levels to conquer the realm.</div>
+                <div>[System] Welcome to Elemental Clash 50-Level Marathon!</div>
             </div>
 
             <!-- Player Hand -->
@@ -130,7 +130,7 @@
 
     <!-- Footer -->
     <footer class="bg-slate-900 border-t border-slate-800 py-3 text-center text-xs text-slate-500">
-        Elemental Clash &bull; Tactical Card Battle Game
+        Elemental Clash &bull; Created by Jack Vaughan
     </footer>
 
     <!-- MODAL: Stage Victory -->
@@ -146,19 +146,19 @@
     <div id="modalGameOver" class="fixed inset-0 bg-slate-950/90 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-red-500/30 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl space-y-3">
             <h3 class="font-cinzel text-2xl font-bold text-red-500 mb-1">Defeated in Battle!</h3>
-            <p class="text-xs text-slate-300">Hardcore Permadeath: Your health reached 0. Restart back at Level 1 or watch an ad to use your Revive Token!</p>
+            <p class="text-xs text-slate-300" id="gameOverDesc">Your health reached 0. Watch an ad to revive, or restart back at Level 1.</p>
             
-            <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (Ad Token)</button>
+            <button id="smartlinkReviveBtn" onclick="reviveHeroSmartlink()" class="block w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">✨ Revive Hero (5 Left)</button>
             
             <button onclick="resetGameRun()" class="w-full bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold py-2.5 rounded-xl transition text-xs">Restart at Level 1</button>
         </div>
     </div>
 
-    <!-- MODAL: Grand Victory (Level 20 Win) -->
+    <!-- MODAL: Grand Victory (Level 50 Win) -->
     <div id="modalGrandVictory" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-amber-500 rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl card-glow">
-            <h3 class="font-cinzel text-3xl font-bold text-amber-400 mb-2">Realm Conquered!</h3>
-            <p class="text-sm text-slate-300 mb-6">Incredible tactical mastery! You defeated all 20 bosses and saved the realm!</p>
+        <div class="bg-slate-900 border border-amber-500 rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl card-glow space-y-4">
+            <h3 class="font-cinzel text-3xl font-bold text-amber-400">Realm Conquered!</h3>
+            <p class="text-sm text-slate-300">Incredible tactical mastery! You defeated all 50 bosses and conquered the Apex Voidlord!</p>
             <button onclick="resetGameRun()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel">Play Again</button>
         </div>
     </div>
@@ -173,19 +173,10 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">🔥 Elemental Rock-Paper-Scissors:</p>
+                    <p class="font-bold text-amber-400 mb-1">🔥 50 Unique Bosses:</p>
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li><strong>Fire</strong> beats Earth (deals 1.4x damage).</li>
-                        <li><strong>Earth</strong> beats Water (deals 1.4x damage).</li>
-                        <li><strong>Water</strong> beats Fire (deals 1.4x damage).</li>
-                        <li>Bosses also gain elemental surges in combat!</li>
-                    </ul>
-                </div>
-                <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">⚔️ Tactical Boosts (1x Per Battle):</p>
-                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li>Watch an ad during battle to gain <strong>+1 Energy</strong> or <strong>Reroll Hand</strong> (Limit 1 each per level).</li>
-                        <li>Watch an ad upon defeat to consume your <strong>Revive Token</strong> (Limit 1 per run).</li>
+                        <li>Battle through 50 uniquely named bosses with elemental stats ending in 0 or 5.</li>
+                        <li>Watch ads to gain tactical energy, reroll your hand, or revive upon defeat!</li>
                     </ul>
                 </div>
             </div>
@@ -198,7 +189,9 @@
         const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
 
         let soundEnabled = true;
-        let hasRevived = false;
+        const MAX_REVIVES_PER_RUN = 5;
+        let revivesUsedThisRun = 0;
+        let usedReviveThisLevel = false;
         let usedEnergyBoostThisBattle = false;
         let usedRerollBoostThisBattle = false;
 
@@ -270,27 +263,58 @@
             { id: 's1', name: 'Aegis Shield', type: 'shield', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
         ];
 
-        const bossList = [
-            { name: "Sparkling Sprite", hp: 75, element: "fire", theme: "The Outskirts", aiAggro: 0.65 },
-            { name: "Mossy Golem", hp: 90, element: "earth", theme: "Whispering Woods", aiAggro: 0.68 },
-            { name: "River Lurker", hp: 105, element: "water", theme: "Crystal River", aiAggro: 0.7 },
-            { name: "Flame Imp", hp: 120, element: "fire", theme: "Volcanic Vent", aiAggro: 0.72 },
-            { name: "Stone Guardian", hp: 135, element: "earth", theme: "Ancient Ruins", aiAggro: 0.75 },
-            { name: "Frost Serpent", hp: 150, element: "water", theme: "Frozen Cavern", aiAggro: 0.76 },
-            { name: "Magma Brute", hp: 170, element: "fire", theme: "Magma Chambers", aiAggro: 0.78 },
-            { name: "Thorn Queen", hp: 190, element: "earth", theme: "Tangled Thicket", aiAggro: 0.8 },
-            { name: "Tidal Kraken", hp: 215, element: "water", theme: "Abyssal Trench", aiAggro: 0.82 },
-            { name: "Blazing Phoenix", hp: 240, element: "fire", theme: "Sky Sanctuary", aiAggro: 0.85 },
-            { name: "Granite Titan", hp: 270, element: "earth", theme: "Mountain Peak", aiAggro: 0.86 },
-            { name: "Abyssal Leviathan", hp: 300, element: "water", theme: "Sunken Temple", aiAggro: 0.88 },
-            { name: "Infernal Overlord", hp: 335, element: "fire", theme: "Demon Gate", aiAggro: 0.9 },
-            { name: "Gaia Colossus", hp: 375, element: "earth", theme: "World Core", aiAggro: 0.92 },
-            { name: "Storm Sovereign", hp: 415, element: "water", theme: "Tempest Eye", aiAggro: 0.94 },
-            { name: "Solar Emperor", hp: 460, element: "fire", theme: "Solar Citadel", aiAggro: 0.95 },
-            { name: "Eldritch Treant", hp: 510, element: "earth", theme: "Corrupted Forest", aiAggro: 0.97 },
-            { name: "Titan of Tides", hp: 565, element: "water", theme: "Endless Sea", aiAggro: 0.98 },
-            { name: "Shadow Fiend", hp: 620, element: "fire", theme: "Shadow Realm", aiAggro: 0.99 },
-            { name: "Apex Voidlord", hp: 650, element: "earth", theme: "The Void Apex", aiAggro: 1.0 }
+        // 50 Unique Boss Roster with specific themes and elements
+        const uniqueBosses = [
+            { name: "Sparkling Sprite", element: "fire", theme: "The Outskirts" },
+            { name: "Mossy Golem", element: "earth", theme: "Whispering Woods" },
+            { name: "River Lurker", element: "water", theme: "Crystal River" },
+            { name: "Flame Imp", element: "fire", theme: "Volcanic Vent" },
+            { name: "Stone Guardian", element: "earth", theme: "Ancient Ruins" },
+            { name: "Frost Serpent", element: "water", theme: "Frozen Cavern" },
+            { name: "Magma Brute", element: "fire", theme: "Magma Chambers" },
+            { name: "Thorn Queen", element: "earth", theme: "Tangled Thicket" },
+            { name: "Tidal Kraken", element: "water", theme: "Abyssal Trench" },
+            { name: "Blazing Phoenix", element: "fire", theme: "Sky Sanctuary" },
+            { name: "Granite Titan", element: "earth", theme: "Mountain Peak" },
+            { name: "Abyssal Leviathan", element: "water", theme: "Sunken Temple" },
+            { name: "Infernal Overlord", element: "fire", theme: "Demon Gate" },
+            { name: "Gaia Colossus", element: "earth", theme: "World Core" },
+            { name: "Storm Sovereign", element: "water", theme: "Tempest Eye" },
+            { name: "Solar Emperor", element: "fire", theme: "Solar Citadel" },
+            { name: "Eldritch Treant", element: "earth", theme: "Corrupted Forest" },
+            { name: "Titan of Tides", element: "water", theme: "Endless Sea" },
+            { name: "Shadow Fiend", element: "fire", theme: "Shadow Realm" },
+            { name: "Obsidian Golem", element: "earth", theme: "Volcanic Trench" },
+            { name: "Cascade Siren", element: "water", theme: "Mystic Falls" },
+            { name: "Pyroclastic Wyrm", element: "fire", theme: "Ashen Peaks" },
+            { name: "Verdant Sentinel", element: "earth", theme: "Emerald Canopy" },
+            { name: "Deepwater Angler", element: "water", theme: "Midnight Abyss" },
+            { name: "Cinder Specter", element: "fire", theme: "Ember Wastes" },
+            { name: "Terran Behemoth", element: "earth", theme: "Shattered Plateau" },
+            { name: "Glacial Dragon", element: "water", theme: "Frostbite Summit" },
+            { name: "Hellfire Drake", element: "fire", theme: "Brimstone Ridge" },
+            { name: "Ironroot Ancient", element: "earth", theme: "Ironwood Vale" },
+            { name: "Maelstrom Hydra", element: "water", theme: "Whirlpool Cavern" },
+            { name: "Wildfire Basilisk", element: "fire", theme: "Scorched Steppes" },
+            { name: "Crystal Gargoyle", element: "earth", theme: "Shimmering Spire" },
+            { name: "Tsunami Behemoth", element: "water", theme: "Roaring Sea" },
+            { name: "Scorching Chimera", element: "fire", theme: "Sunspear Canyon" },
+            { name: "Overgrowth Wendigo", element: "earth", theme: "Haunted Thicket" },
+            { name: "Nautilus Monarch", element: "water", theme: "Coral Catacombs" },
+            { name: "Volcanic Juggernaut", element: "fire", theme: "Crater Caldera" },
+            { name: "Boulder Dreadnought", element: "earth", theme: "Quarry Bastion" },
+            { name: "Vortex Kraken", element: "water", theme: "Abyssal Chasm" },
+            { name: "Ashfire Lich", element: "fire", theme: "Desolate Keep" },
+            { name: "Spore Mammoth", element: "earth", theme: "Fungal Marsh" },
+            { name: "Riptide Leviathan", element: "water", theme: "Oceanic Vault" },
+            { name: "Supernova Archon", element: "fire", theme: "Celestial Arena" },
+            { name: "Bedrock Goliath", element: "earth", theme: "Underground Maw" },
+            { name: "Abyssal Serpent", element: "water", theme: "Dark Water Cave" },
+            { name: "Molten Behemoth", element: "fire", theme: "Core Chamber" },
+            { name: "Primeval Treant", element: "earth", theme: "Roots of Creation" },
+            { name: "Maelstrom Sovereign", element: "water", theme: "The Sea Core" },
+            { name: "Chaos Dragon", element: "fire", theme: "Realm Boundary" },
+            { name: "Apex Voidlord", element: "earth", theme: "The Void Apex" }
         ];
 
         let hero = { name: "Hero", hp: 100, maxHp: 100, shield: 0, energy: 3, maxEnergy: 3 };
@@ -308,21 +332,36 @@
             document.getElementById('screenBattle').classList.remove('hidden');
 
             currentLevel = 1;
-            hasRevived = false;
+            revivesUsedThisRun = 0;
             hero.hp = 100;
             initBattle();
         }
 
         function initBattle() {
-            currentBoss = { ...bossList[currentLevel - 1] };
+            const template = uniqueBosses[currentLevel - 1];
+            
+            // Calculate HP scaling that mathematically ALWAYS ends in 0 or 5
+            let calculatedHp = Math.round((70 + (currentLevel * 14)) / 5) * 5;
+            if (currentLevel === 50) calculatedHp = 750; // Guaranteed ending in 0
+
+            currentBoss = {
+                name: template.name,
+                hp: calculatedHp,
+                element: template.element,
+                theme: template.theme,
+                aiAggro: Math.min(1.0, 0.6 + (currentLevel * 0.008))
+            };
+
             currentBoss.currentHp = currentBoss.hp;
             currentBoss.shield = 0;
 
+            // Reset per-level boost usages
+            usedReviveThisLevel = false;
             usedEnergyBoostThisBattle = false;
             usedRerollBoostThisBattle = false;
             resetBoostButtons();
 
-            document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 20`;
+            document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 50`;
             document.getElementById('stageThemeBadge').innerText = `Stage: ${currentBoss.theme}`;
             document.getElementById('bossNameDisplay').innerText = currentBoss.name;
             document.getElementById('bossElementBadge').innerText = currentBoss.element.toUpperCase();
@@ -428,7 +467,7 @@
 
         function bossTurn() {
             let bossActionType = Math.random() < currentBoss.aiAggro ? 'attack' : (Math.random() < 0.5 ? 'shield' : 'heal');
-            let bossPower = Math.round(14 + (currentLevel * 2.5));
+            let bossPower = Math.round(12 + (currentLevel * 1.2));
 
             if (bossActionType === 'attack') {
                 playSound('attack');
@@ -477,7 +516,7 @@
 
         function triggerStageVictory() {
             playSound('win');
-            if (currentLevel >= 20) {
+            if (currentLevel >= 50) {
                 document.getElementById('modalGrandVictory').classList.remove('hidden');
             } else {
                 document.getElementById('modalVictory').classList.remove('hidden');
@@ -545,28 +584,42 @@
         function triggerGameOver() {
             playSound('attack');
             const reviveBtn = document.getElementById('smartlinkReviveBtn');
-            if (hasRevived) {
-                reviveBtn.classList.add('hidden');
+            const remaining = MAX_REVIVES_PER_RUN - revivesUsedThisRun;
+
+            if (usedReviveThisLevel) {
+                reviveBtn.classList.add('opacity-40', 'pointer-events-none');
+                reviveBtn.innerText = `❌ Already Used on Level ${currentLevel}`;
+            } else if (remaining <= 0) {
+                reviveBtn.classList.add('opacity-40', 'pointer-events-none');
+                reviveBtn.innerText = '❌ All Revives Used (0 Left)';
             } else {
-                reviveBtn.classList.remove('hidden');
+                reviveBtn.classList.remove('opacity-40', 'pointer-events-none');
+                reviveBtn.innerText = `✨ Revive Hero (${remaining} Left)`;
             }
             document.getElementById('modalGameOver').classList.remove('hidden');
         }
 
         function reviveHeroSmartlink() {
-            hasRevived = true;
+            const remaining = MAX_REVIVES_PER_RUN - revivesUsedThisRun;
+            if (usedReviveThisLevel || remaining <= 0) return;
+
+            usedReviveThisLevel = true;
+            revivesUsedThisRun++;
+            
             window.open(ADSTERRA_SMARTLINK, '_blank');
             document.getElementById('modalGameOver').classList.add('hidden');
+            
             hero.hp = Math.round(hero.maxHp * 0.5);
             hero.shield = 10;
             hero.energy = hero.maxEnergy;
             drawNewHand(4);
             updateUI();
-            logMessage(`[Smartlink] Revive Token used! Resurrected at Level ${currentLevel} with 50% HP! (Token consumed)`);
+            logMessage(`[Smartlink] Revive consumed! (${MAX_REVIVES_PER_RUN - revivesUsedThisRun} remaining). Resurrected at Level ${currentLevel} with 50% HP!`);
         }
 
         function resetGameRun() {
-            hasRevived = false;
+            revivesUsedThisRun = 0;
+            usedReviveThisLevel = false;
             document.getElementById('modalGameOver').classList.add('hidden');
             document.getElementById('modalGrandVictory').classList.add('hidden');
             currentLevel = 1;
@@ -577,7 +630,7 @@
         function updateUI() {
             document.getElementById('heroHpText').innerText = hero.hp;
             document.getElementById('heroHpBar').style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
-            
+
             const heroShieldEl = document.getElementById('heroShieldText');
             if (hero.shield > 0) {
                 heroShieldEl.innerText = `Shield: ${hero.shield}`;
