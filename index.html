@@ -38,7 +38,7 @@
         <!-- SCREEN 1: Name Entry -->
         <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
-            <p class="text-sm text-slate-400 mb-6">Choose your hero name to embark on your 50-level tactical marathon!</p>
+            <p class="text-sm text-slate-400 mb-6">Choose your hero name to embark on your 50-level tactical marathon across 6 Elements!</p>
             <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
             <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
         </div>
@@ -53,9 +53,15 @@
                     <span class="text-slate-400 hidden sm:inline" id="stageThemeBadge">Stage: The Outskirts</span>
                 </div>
                 <div class="flex items-center gap-3">
-                    <span class="text-slate-300">Energy: <strong class="text-amber-400 text-base" id="playerEnergyDisplay">3</strong>/3</span>
+                    <span class="text-slate-300">Energy: <strong class="text-amber-400 text-base" id="playerEnergyDisplay">3</strong>/<span id="playerMaxEnergyDisplay">3</span></span>
                     <button onclick="endTurn()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow">End Turn</button>
                 </div>
+            </div>
+
+            <!-- Active Relics Bar -->
+            <div id="relicsBar" class="bg-slate-900/60 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-400 flex items-center gap-2 overflow-x-auto hidden">
+                <span class="text-amber-400 font-bold">Relics:</span>
+                <div id="relicsContainer" class="flex gap-2"></div>
             </div>
 
             <!-- Combat Arena Grid -->
@@ -73,7 +79,7 @@
                             <div id="heroHpBar" class="bg-gradient-to-r from-emerald-500 to-green-400 h-full rounded-full transition-all duration-300" style="width: 100%;"></div>
                         </div>
                         <div class="flex justify-between text-xs text-slate-400">
-                            <span>HP: <strong id="heroHpText" class="text-slate-200">100</strong>/100</span>
+                            <span>HP: <strong id="heroHpText" class="text-slate-200">100</strong>/<span id="heroMaxHpText">100</span></span>
                             <span id="heroShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
                         </div>
                     </div>
@@ -101,34 +107,37 @@
                 </div>
             </div>
 
-            <!-- Point-Powered Tactical Power-Shop Bar -->
+            <!-- In-Battle Tactical Shop Bar -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs">
-                <span class="text-slate-400 font-semibold">Tactical Shop (Pick 1 per level - 50 BP each):</span>
+                <span class="text-slate-400 font-semibold">Battle Shop (Pick 1 per level - 50 BP each):</span>
                 <div class="flex gap-2 flex-wrap">
                     <button id="btnEnergyBoost" onclick="buyPointEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +1 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">50 BP</span></button>
                     <button id="btnRerollBoost" onclick="buyPointReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span></button>
                 </div>
             </div>
 
-            <!-- Elemental Advantage Reference Bar -->
-            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-3 py-2 flex justify-between items-center text-xs text-slate-300">
-                <span class="font-bold text-amber-400">🔥 Advantage Chart (+40% DMG):</span>
-                <div class="flex items-center gap-3 font-mono text-[11px]">
+            <!-- 6-Element Advantage Chart -->
+            <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 space-y-1">
+                <div class="font-bold text-amber-400">🔥 6-Element Advantage (+40% DMG):</div>
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 font-mono text-[11px] text-slate-400">
                     <span>🔥 Fire &gt; 🌿 Earth</span>
                     <span>🌿 Earth &gt; 💧 Water</span>
                     <span>💧 Water &gt; 🔥 Fire</span>
+                    <span>🌪️ Air &gt; 🌫️ Spirit</span>
+                    <span>🌫️ Spirit &gt; 🌑 Shadow</span>
+                    <span>🌑 Shadow &gt; 🌪️ Air</span>
                 </div>
             </div>
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash 50-Level Marathon! Earn 50 BP by defeating bosses. Choose wisely in the shop.</div>
+                <div>[System] Welcome to Elemental Clash 50-Level Marathon! 6 Elements unlocked.</div>
             </div>
 
             <!-- Player Hand -->
             <div class="bg-slate-900/90 border border-slate-800 rounded-2xl p-4">
                 <div class="flex justify-between items-center mb-3">
-                    <span class="text-xs font-cinzel font-bold text-slate-300 tracking-wider">YOUR HAND (Unique Cards)</span>
+                    <span class="text-xs font-cinzel font-bold text-slate-300 tracking-wider">YOUR HAND</span>
                     <span class="text-xs text-slate-400">Click a card to play</span>
                 </div>
                 <div id="playerHandContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -144,12 +153,57 @@
         Elemental Clash &bull; Created by Jack Vaughan
     </footer>
 
-    <!-- MODAL: Stage Victory -->
-    <div id="modalVictory" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 max-w-md w-full text-center shadow-2xl card-glow">
-            <h3 class="font-cinzel text-2xl font-bold text-amber-400 mb-2">Stage Cleared!</h3>
-            <p class="text-sm text-slate-300 mb-4" id="victoryMsg">You defeated the boss! +50 BP earned. Health fully restored.</p>
-            <button onclick="advanceToNextLevel()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel">Proceed to Next Level</button>
+    <!-- MODAL: Mandatory Intermission Armory & Shop -->
+    <div id="modalVictory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-lg w-full text-center shadow-2xl card-glow space-y-3 max-h-[90vh] overflow-y-auto">
+            <h3 class="font-cinzel text-2xl font-bold text-amber-400">Stage Cleared!</h3>
+            <p class="text-xs text-slate-300" id="victoryMsg">You defeated the boss! +50 BP earned.</p>
+            
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-2">
+                <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Upgrades (Spend BP):</p>
+                
+                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                    <div>
+                        <p class="font-bold text-slate-200">❤️ Heal & Max HP Up</p>
+                        <p class="text-[10px] text-slate-400">+25 HP & +10 Permanent Max HP.</p>
+                    </div>
+                    <button onclick="buyIntermissionHeal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">50 BP</button>
+                </div>
+
+                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                    <div>
+                        <p class="font-bold text-slate-200">⚡ Permanent Max Energy Boost</p>
+                        <p class="text-[10px] text-slate-400">Increase base turn energy permanently (+1 Max Energy).</p>
+                    </div>
+                    <button onclick="buyIntermissionEnergyCap()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">100 BP</button>
+                </div>
+
+                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                    <div>
+                        <p class="font-bold text-slate-200">🏺 Relic: Aegis Core</p>
+                        <p class="text-[10px] text-slate-400">Gain +8 Shield automatically at start of every combat turn.</p>
+                    </div>
+                    <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
+                </div>
+
+                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                    <div>
+                        <p class="font-bold text-slate-200">🏺 Relic: Greed Ring</p>
+                        <p class="text-[10px] text-slate-400">Earn +25 bonus BP on every stage victory.</p>
+                    </div>
+                    <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
+                </div>
+
+                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
+                    <div>
+                        <p class="font-bold text-slate-200">🎴 Draft High-Tier Elemental Card</p>
+                        <p class="text-[10px] text-slate-400">Add a powerful Air, Shadow, or Spirit card to deck.</p>
+                    </div>
+                    <button onclick="draftRareCard()" class="bg-orange-500 hover:bg-orange-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">50 BP</button>
+                </div>
+            </div>
+
+            <button onclick="advanceToNextLevel()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel text-sm shadow-lg">Enter Next Stage ➔</button>
         </div>
     </div>
 
@@ -169,7 +223,7 @@
     <div id="modalGrandVictory" class="fixed inset-0 bg-slate-950/95 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
         <div class="bg-slate-900 border border-amber-500 rounded-2xl p-6 md:p-8 max-w-md w-full text-center shadow-2xl card-glow space-y-4">
             <h3 class="font-cinzel text-3xl font-bold text-amber-400">Realm Conquered!</h3>
-            <p class="text-sm text-slate-300">Incredible tactical mastery! You defeated all 50 bosses and conquered the Apex Voidlord!</p>
+            <p class="text-sm text-slate-300">Incredible tactical mastery! You defeated all 50 bosses across 6 elements and conquered the Apex Voidlord!</p>
             <button onclick="resetGameRun()" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-3 rounded-xl transition font-cinzel">Play Again</button>
         </div>
     </div>
@@ -184,19 +238,17 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">🔥 Elemental Advantage (+40% Damage):</p>
+                    <p class="font-bold text-amber-400 mb-1">🔥 6-Element System (+40% Damage):</p>
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li><strong>🔥 Fire</strong> deals +40% extra damage to <strong>🌿 Earth</strong></li>
-                        <li><strong>🌿 Earth</strong> deals +40% extra damage to <strong>💧 Water</strong></li>
-                        <li><strong>💧 Water</strong> deals +40% extra damage to <strong>🔥 Fire</strong></li>
+                        <li>🔥 Fire &gt; 🌿 Earth &gt; 💧 Water &gt; 🔥 Fire</li>
+                        <li>🌪️ Air &gt; 🌫️ Spirit &gt; 🌑 Shadow &gt; 🌪️ Air</li>
                     </ul>
                 </div>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">🪙 Battle Points (BP) & Revives:</p>
+                    <p class="font-bold text-amber-400 mb-1">🪙 Battle Points (BP) & Intermission Shop:</p>
                     <ul class="list-disc pl-4 space-y-1 text-slate-400">
-                        <li>Earn exactly <strong>50 BP</strong> by defeating each boss to buy shop perks.</li>
-                        <li>You can only choose <strong>one</strong> shop perk per level (50 BP each).</li>
-                        <li>You have 5 total Ad-Powered Revives per run (1 max per level) if defeated!</li>
+                        <li>Earn 50 BP per boss win. Spend it in the Intermission Shop on Max Energy, Relics, Cards, or Max HP!</li>
+                        <li>You have 5 total Ad-Powered Revives per run if defeated!</li>
                     </ul>
                 </div>
             </div>
@@ -214,6 +266,8 @@
         let revivesUsedThisRun = 0;
         let usedReviveThisLevel = false;
         let shopUsedThisLevel = false;
+
+        let relics = { aegis: false, greed: false };
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
@@ -268,70 +322,75 @@
             document.getElementById('audioToggleBtn').innerText = soundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
         }
 
-        const masterDeck = [
+        // Expanded 6-Element Master Deck
+        let playerDeck = [
             { id: 'f1', name: 'Fireball', type: 'fire', cost: 1, power: 12, icon: '🔥', desc: 'Deals 12 Fire damage.' },
-            { id: 'f2', name: 'Flame Burst', type: 'fire', cost: 1, power: 15, icon: '💥', desc: 'Deals 15 Fire damage.' },
-            { id: 'f3', name: 'Inferno Strike', type: 'fire', cost: 2, power: 25, icon: '🌋', desc: 'Heavy Fire strike (25 dmg).' },
             { id: 'w1', name: 'Aqua Bolt', type: 'water', cost: 1, power: 12, icon: '💧', desc: 'Deals 12 Water damage.' },
-            { id: 'w2', name: 'Tidal Splash', type: 'water', cost: 1, power: 15, icon: '🌊', desc: 'Deals 15 Water damage.' },
-            { id: 'w3', name: 'Tsunami Surge', type: 'water', cost: 2, power: 25, icon: '🌀', desc: 'Heavy Water surge (25 dmg).' },
             { id: 'e1', name: 'Rock Throw', type: 'earth', cost: 1, power: 12, icon: '🪨', desc: 'Deals 12 Earth damage.' },
-            { id: 'e2', name: 'Vine Whip', type: 'earth', cost: 1, power: 15, icon: '🌿', desc: 'Deals 15 Earth damage.' },
-            { id: 'e3', name: 'Earthquake', type: 'earth', cost: 2, power: 25, icon: '⛰️', desc: 'Heavy Earth tremor (25 dmg).' },
+            { id: 'a1', name: 'Gale Slash', type: 'air', cost: 1, power: 13, icon: '🌪️', desc: 'Deals 13 Air damage.' },
+            { id: 'sh1', name: 'Shadow Strike', type: 'shadow', cost: 1, power: 14, icon: '🌑', desc: 'Deals 14 Shadow damage.' },
+            { id: 'sp1', name: 'Spirit Flare', type: 'spirit', cost: 1, power: 13, icon: '🌫️', desc: 'Deals 13 Spirit damage.' },
             { id: 'h1', name: 'Healing Salve', type: 'heal', cost: 1, power: 14, icon: '❤️', desc: 'Restores 14 HP.' },
-            { id: 'h2', name: 'Great Heal', type: 'heal', cost: 2, power: 24, icon: '✨', desc: 'Restores 24 HP.' },
             { id: 's1', name: 'Aegis Shield', type: 'shield', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
         ];
 
+        const rareCardsPool = [
+            { id: 'a2', name: 'Tornado Blast', type: 'air', cost: 2, power: 26, icon: '🌪️', desc: 'Heavy Air surge (26 dmg).' },
+            { id: 'sh2', name: 'Void Nova', type: 'shadow', cost: 2, power: 28, icon: '🌑', desc: 'Heavy Shadow surge (28 dmg).' },
+            { id: 'sp2', name: 'Soul Wave', type: 'spirit', cost: 2, power: 27, icon: '🌫️', desc: 'Heavy Spirit wave (27 dmg).' },
+            { id: 'f2', name: 'Inferno Burst', type: 'fire', cost: 2, power: 28, icon: '🌋', desc: 'Heavy Fire strike (28 dmg).' }
+        ];
+
+        // 50 Unique Boss Roster across 6 elements
         const uniqueBosses = [
             { name: "Sparkling Sprite", element: "fire", theme: "The Outskirts" },
             { name: "Mossy Golem", element: "earth", theme: "Whispering Woods" },
             { name: "River Lurker", element: "water", theme: "Crystal River" },
+            { name: "Zephyr Falcon", element: "air", theme: "Sky Plateau" },
+            { name: "Gloom Specter", element: "shadow", theme: "Forgotten Graveyard" },
+            { name: "Astral Wisp", element: "spirit", theme: "Ethereal Sanctum" },
             { name: "Flame Imp", element: "fire", theme: "Volcanic Vent" },
             { name: "Stone Guardian", element: "earth", theme: "Ancient Ruins" },
             { name: "Frost Serpent", element: "water", theme: "Frozen Cavern" },
+            { name: "Tempest Archon", element: "air", theme: "Storm Spire" },
+            { name: "Abyssal Phantom", element: "shadow", theme: "Shadow Trenches" },
+            { name: "Celestial Seraph", element: "spirit", theme: "Sky Citadel" },
             { name: "Magma Brute", element: "fire", theme: "Magma Chambers" },
             { name: "Thorn Queen", element: "earth", theme: "Tangled Thicket" },
             { name: "Tidal Kraken", element: "water", theme: "Abyssal Trench" },
+            { name: "Cyclone Drake", element: "air", theme: "Howling Peaks" },
+            { name: "Dread Wraith", element: "shadow", theme: "Necropolis" },
+            { name: "Spirit Warden", element: "spirit", theme: "Soul Forge" },
             { name: "Blazing Phoenix", element: "fire", theme: "Sky Sanctuary" },
             { name: "Granite Titan", element: "earth", theme: "Mountain Peak" },
             { name: "Abyssal Leviathan", element: "water", theme: "Sunken Temple" },
+            { name: "Sky Sentinel", element: "air", theme: "Cloud Realm" },
+            { name: "Nightmare Lord", element: "shadow", theme: "Void Chasm" },
+            { name: "Radiant Sovereign", element: "spirit", theme: "Luminous Tower" },
             { name: "Infernal Overlord", element: "fire", theme: "Demon Gate" },
             { name: "Gaia Colossus", element: "earth", theme: "World Core" },
             { name: "Storm Sovereign", element: "water", theme: "Tempest Eye" },
+            { name: "Gale Emperor", element: "air", theme: "Aetherial Vault" },
+            { name: "Shadow King", element: "shadow", theme: "Eclipse Throne" },
+            { name: "Soul Dragon", element: "spirit", theme: "Spirit Domain" },
             { name: "Solar Emperor", element: "fire", theme: "Solar Citadel" },
             { name: "Eldritch Treant", element: "earth", theme: "Corrupted Forest" },
             { name: "Titan of Tides", element: "water", theme: "Endless Sea" },
-            { name: "Shadow Fiend", element: "fire", theme: "Shadow Realm" },
-            { name: "Obsidian Golem", element: "earth", theme: "Volcanic Trench" },
-            { name: "Cascade Siren", element: "water", theme: "Mystic Falls" },
+            { name: "Vortex Wyrm", element: "air", theme: "Tornado Core" },
+            { name: "Obsidian Fiend", element: "shadow", theme: "Obsidian Fortress" },
+            { name: "Divinity Archon", element: "spirit", theme: "Prismatic Realm" },
             { name: "Pyroclastic Wyrm", element: "fire", theme: "Ashen Peaks" },
             { name: "Verdant Sentinel", element: "earth", theme: "Emerald Canopy" },
             { name: "Deepwater Angler", element: "water", theme: "Midnight Abyss" },
-            { name: "Cinder Specter", element: "fire", theme: "Ember Wastes" },
-            { name: "Terran Behemoth", element: "earth", theme: "Shattered Plateau" },
-            { name: "Glacial Dragon", element: "water", theme: "Frostbite Summit" },
-            { name: "Hellfire Drake", element: "fire", theme: "Brimstone Ridge" },
-            { name: "Ironroot Ancient", element: "earth", theme: "Ironwood Vale" },
-            { name: "Maelstrom Hydra", element: "water", theme: "Whirlpool Cavern" },
-            { name: "Wildfire Basilisk", element: "fire", theme: "Scorched Steppes" },
-            { name: "Crystal Gargoyle", element: "earth", theme: "Shimmering Spire" },
-            { name: "Tsunami Behemoth", element: "water", theme: "Roaring Sea" },
-            { name: "Scorching Chimera", element: "fire", theme: "Sunspear Canyon" },
-            { name: "Overgrowth Wendigo", element: "earth", theme: "Haunted Thicket" },
-            { name: "Nautilus Monarch", element: "water", theme: "Coral Catacombs" },
-            { name: "Volcanic Juggernaut", element: "fire", theme: "Crater Caldera" },
-            { name: "Boulder Dreadnought", element: "earth", theme: "Quarry Bastion" },
-            { name: "Vortex Kraken", element: "water", theme: "Abyssal Chasm" },
-            { name: "Ashfire Lich", element: "fire", theme: "Desolate Keep" },
-            { name: "Spore Mammoth", element: "earth", theme: "Fungal Marsh" },
-            { name: "Riptide Leviathan", element: "water", theme: "Oceanic Vault" },
+            { name: "Hurricane Behemoth", element: "air", theme: "Shattered Skies" },
+            { name: "Shadow Lich", element: "shadow", theme: "Dread Catacombs" },
+            { name: "Ethereal Monarch", element: "spirit", theme: "Sanctuary Core" },
             { name: "Supernova Archon", element: "fire", theme: "Celestial Arena" },
             { name: "Bedrock Goliath", element: "earth", theme: "Underground Maw" },
-            { name: "Abyssal Serpent", element: "water", theme: "Dark Water Cave" },
-            { name: "Molten Behemoth", element: "fire", theme: "Core Chamber" },
-            { name: "Primeval Treant", element: "earth", theme: "Roots of Creation" },
-            { name: "Maelstrom Sovereign", element: "water", theme: "The Sea Core" },
+            { name: "Maelstrom Hydra", element: "water", theme: "Whirlpool Cavern" },
+            { name: "Zephyr Titan", element: "air", theme: "Gale Bastion" },
+            { name: "Void Emperor", element: "shadow", theme: "Void Apex" },
+            { name: "Apex Spirit Sovereign", element: "spirit", theme: "Spirit Apex" },
             { name: "Chaos Dragon", element: "fire", theme: "Realm Boundary" },
             { name: "Apex Voidlord", element: "earth", theme: "The Void Apex" }
         ];
@@ -353,14 +412,18 @@
             currentLevel = 1;
             playerPoints = 0;
             revivesUsedThisRun = 0;
+            hero.maxHp = 100;
             hero.hp = 100;
+            hero.maxEnergy = 3;
+            relics = { aegis: false, greed: false };
+
             initBattle();
         }
 
         function initBattle() {
             const template = uniqueBosses[currentLevel - 1];
             let calculatedHp = Math.round((70 + (currentLevel * 14)) / 5) * 5;
-            if (currentLevel === 50) calculatedHp = 750;
+            if (currentLevel === 50) calculatedHp = 800;
 
             currentBoss = {
                 name: template.name,
@@ -376,6 +439,8 @@
             shopUsedThisLevel = false;
             resetShopButtons();
 
+            hero.shield = relics.aegis ? 8 : 0; // Aegis relic bonus
+
             document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 50`;
             document.getElementById('stageThemeBadge').innerText = `Stage: ${currentBoss.theme}`;
             document.getElementById('bossNameDisplay').innerText = currentBoss.name;
@@ -390,7 +455,7 @@
         }
 
         function resetDeck() {
-            drawPile = [...masterDeck].sort(() => Math.random() - 0.5);
+            drawPile = [...playerDeck].sort(() => Math.random() - 0.5);
         }
 
         function drawNewHand(count) {
@@ -443,13 +508,17 @@
                 playSound('attack');
                 let dmg = card.power;
                 
+                // 6-Element Advantage Calculation
                 let hasAdvantage = (card.type === 'fire' && currentBoss.element === 'earth') ||
                                    (card.type === 'earth' && currentBoss.element === 'water') ||
-                                   (card.type === 'water' && currentBoss.element === 'fire');
+                                   (card.type === 'water' && currentBoss.element === 'fire') ||
+                                   (card.type === 'air' && currentBoss.element === 'spirit') ||
+                                   (card.type === 'spirit' && currentBoss.element === 'shadow') ||
+                                   (card.type === 'shadow' && currentBoss.element === 'air');
 
                 if (hasAdvantage) {
                     dmg = Math.round(dmg * 1.4);
-                    logMessage(`[🔥 Elemental Advantage!] Your ${card.type.toUpperCase()} beats ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
+                    logMessage(`[🔥 Advantage!] Your ${card.type.toUpperCase()} beats ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
                 } else {
                     logMessage(`[Attack] You played ${card.name} for ${dmg} damage.`);
                 }
@@ -481,7 +550,7 @@
         }
 
         function bossTurn() {
-            let bossPower = Math.round(12 + (currentLevel * 1.2));
+            let bossPower = Math.round(12 + (currentLevel * 1.25));
             let bossActionType = 'attack';
 
             const bossHpPercent = currentBoss.currentHp / currentBoss.hp;
@@ -539,14 +608,16 @@
             }
 
             hero.energy = hero.maxEnergy;
+            if (relics.aegis) hero.shield += 8; // Aegis per-turn shield refresh
             drawNewHand(4);
             updateUI();
         }
 
         function triggerStageVictory() {
             playSound('win');
-            playerPoints += 50;
-            document.getElementById('victoryMsg').innerText = `You defeated ${currentBoss.name}! +50 BP earned. Health fully restored.`;
+            let earned = 50 + (relics.greed ? 25 : 0);
+            playerPoints += earned;
+            document.getElementById('victoryMsg').innerText = `You defeated ${currentBoss.name}! +${earned} BP earned.`;
             
             if (currentLevel >= 50) {
                 document.getElementById('modalGrandVictory').classList.remove('hidden');
@@ -556,10 +627,54 @@
             updateUI();
         }
 
+        function buyIntermissionHeal() {
+            if (playerPoints < 50) return;
+            playerPoints -= 50;
+            hero.maxHp += 10;
+            hero.hp = Math.min(hero.maxHp, hero.hp + 25);
+            playSound('heal');
+            updateUI();
+            logMessage('[Shop] Upgraded Max HP & restored health.');
+        }
+
+        function buyIntermissionEnergyCap() {
+            if (playerPoints < 100) return;
+            playerPoints -= 100;
+            hero.maxEnergy += 1;
+            playSound('win');
+            updateUI();
+            logMessage('[Shop] Permanently increased turn energy!');
+        }
+
+        function buyRelic(type) {
+            if (relics[type] || playerPoints < 75) return;
+            playerPoints -= 75;
+            relics[type] = true;
+            playSound('win');
+
+            const btn = document.getElementById(type === 'aegis' ? 'btnRelicAegis' : 'btnRelicGreed');
+            if (btn) {
+                btn.classList.add('opacity-40', 'pointer-events-none');
+                btn.innerText = 'Owned';
+            }
+            updateUI();
+            logMessage(`[Shop] Acquired Relic: ${type.toUpperCase()}!`);
+        }
+
+        function draftRareCard() {
+            if (playerPoints < 50 || rareCardsPool.length === 0) return;
+            playerPoints -= 50;
+            let card = rareCardsPool.pop();
+            playerDeck.push(card);
+            playSound('card');
+            updateUI();
+            logMessage(`[Shop] Drafted new card: ${card.name} [${card.type.toUpperCase()}]!`);
+        }
+
         function advanceToNextLevel() {
             document.getElementById('modalVictory').classList.add('hidden');
             currentLevel++;
-            hero.hp = 100;
+            hero.hp = Math.min(hero.maxHp, hero.hp + 30);
             initBattle();
         }
 
@@ -572,7 +687,7 @@
             playSound('heal');
             
             updateUI();
-            logMessage('[Tactical Shop] Purchased +1 Energy for 50 BP.');
+            logMessage('[Battle Shop] Purchased +1 Energy for 50 BP.');
         }
 
         function buyPointReroll() {
@@ -584,7 +699,7 @@
             playSound('card');
 
             updateUI();
-            logMessage('[Tactical Shop] Purchased Hand Reroll for 50 BP.');
+            logMessage('[Battle Shop] Purchased Hand Reroll for 50 BP.');
         }
 
         function resetShopButtons() {
@@ -631,7 +746,7 @@
             hero.energy = hero.maxEnergy;
             drawNewHand(4);
             updateUI();
-            logMessage(`[Sponsor Revive] Revive consumed! (${MAX_REVIVES_PER_RUN - revivesUsedThisRun} remaining). Resurrected at Level ${currentLevel} with 50% HP!`);
+            logMessage(`[Sponsor Revive] Resurrected at Level ${currentLevel} with 50% HP!`);
         }
 
         function resetGameRun() {
@@ -639,6 +754,9 @@
             revivesUsedThisRun = 0;
             usedReviveThisLevel = false;
             shopUsedThisLevel = false;
+            relics = { aegis: false, greed: false };
+            hero.maxHp = 100;
+            hero.maxEnergy = 3;
             document.getElementById('modalGameOver').classList.add('hidden');
             document.getElementById('modalGrandVictory').classList.add('hidden');
             currentLevel = 1;
@@ -649,6 +767,7 @@
         function updateUI() {
             document.getElementById('playerPointsDisplay').innerText = playerPoints;
             document.getElementById('heroHpText').innerText = hero.hp;
+            document.getElementById('heroMaxHpText').innerText = hero.maxHp;
             document.getElementById('heroHpBar').style.width = `${Math.max(0, (hero.hp / hero.maxHp) * 100)}%`;
 
             const heroShieldEl = document.getElementById('heroShieldText');
@@ -671,16 +790,23 @@
             }
 
             document.getElementById('playerEnergyDisplay').innerText = hero.energy;
+            document.getElementById('playerMaxEnergyDisplay').innerText = hero.maxEnergy;
 
-            // Update shop button states (Lock BOTH if one is chosen or player has < 50 BP)
+            // Relics bar update
+            const relicsBar = document.getElementById('relicsBar');
+            const relicsContainer = document.getElementById('relicsContainer');
+            if (relics.aegis || relics.greed) {
+                relicsBar.classList.remove('hidden');
+                relicsContainer.innerHTML = '';
+                if (relics.aegis) relicsContainer.innerHTML += `<span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">🏺 Aegis Core (+8 Shield/turn)</span>`;
+                if (relics.greed) relicsContainer.innerHTML += `<span class="bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">🏺 Greed Ring (+25 BP/win)</span>`;
+            }
+
             const energyBtn = document.getElementById('btnEnergyBoost');
             const rerollBtn = document.getElementById('btnRerollBoost');
             
             if (energyBtn && rerollBtn) {
-                if (shopUsedThisLevel) {
-                    energyBtn.classList.add('opacity-40', 'pointer-events-none');
-                    rerollBtn.classList.add('opacity-40', 'pointer-events-none');
-                } else if (playerPoints < 50) {
+                if (shopUsedThisLevel || playerPoints < 50) {
                     energyBtn.classList.add('opacity-40', 'pointer-events-none');
                     rerollBtn.classList.add('opacity-40', 'pointer-events-none');
                 } else {
