@@ -451,9 +451,19 @@
             { id: 'sp_l1', name: 'Celestial Judgment', element: 'spirit', tier: 'Legendary', cost: 3, power: 60, icon: '🌟', desc: 'Tier 5 Legendary Spirit (60 dmg).' },
             { id: 'sp_l2', name: 'Ascension', element: 'spirit', tier: 'Legendary', cost: 2.5, power: 52, icon: '🌟', desc: 'Tier 5 Legendary Ascendant (52 dmg).' },
 
-            // UTILITY CARDS
-            { id: 'h1', name: 'Healing Salve', element: 'heal', tier: 'Common', cost: 1, power: 14, icon: '❤️', desc: 'Restores 14 HP.' },
-            { id: 's1', name: 'Aegis Shield', element: 'shield', tier: 'Common', cost: 1, power: 15, icon: '🛡️', desc: 'Grants 15 Shield.' }
+            // HEAL UTILITY CARDS (5 Tiers)
+            { id: 'h_c1', name: 'Healing Salve', element: 'heal', tier: 'Common', cost: 1, power: 14, icon: '❤️', desc: 'Tier 1 Heal (14 HP).' },
+            { id: 'h_u1', name: 'Mending Herbs', element: 'heal', tier: 'Uncommon', cost: 1, power: 24, icon: '💚', desc: 'Tier 2 Heal (24 HP).' },
+            { id: 'h_r1', name: 'Rejuvenation', element: 'heal', tier: 'Rare', cost: 1.5, power: 36, icon: '🌿', desc: 'Tier 3 Heal (36 HP).' },
+            { id: 'h_e1', name: 'Divine Blessing', element: 'heal', tier: 'Epic', cost: 2, power: 52, icon: '💖', desc: 'Tier 4 Epic Heal (52 HP).' },
+            { id: 'h_l1', name: 'Resurrection Glow', element: 'heal', tier: 'Legendary', cost: 2, power: 75, icon: '✨', desc: 'Tier 5 Legendary Heal (75 HP).' },
+
+            // SHIELD UTILITY CARDS (5 Tiers)
+            { id: 's_c1', name: 'Aegis Shield', element: 'shield', tier: 'Common', cost: 1, power: 15, icon: '🛡️', desc: 'Tier 1 Shield (15 Shield).' },
+            { id: 's_u1', name: 'Iron Guard', element: 'shield', tier: 'Uncommon', cost: 1, power: 25, icon: '🛡️', desc: 'Tier 2 Shield (25 Shield).' },
+            { id: 's_r1', name: 'Runic Barrier', element: 'shield', tier: 'Rare', cost: 1.5, power: 38, icon: '🛡️', desc: 'Tier 3 Shield (38 Shield).' },
+            { id: 's_e1', name: 'Bastion of Light', element: 'shield', tier: 'Epic', cost: 2, power: 55, icon: '🛡️', desc: 'Tier 4 Epic Shield (55 Shield).' },
+            { id: 's_l1', name: 'Impenetrable Wall', element: 'shield', tier: 'Legendary', cost: 2, power: 80, icon: '🛡️', desc: 'Tier 5 Legendary Shield (80 Shield).' }
         ];
 
         // 50 Unique Boss Roster
@@ -586,8 +596,8 @@
                 masterCardDatabase.find(c => c.id === 'a_c1'),
                 masterCardDatabase.find(c => c.id === 'sh_c1'),
                 masterCardDatabase.find(c => c.id === 'sp_c1'),
-                masterCardDatabase.find(c => c.id === 'h1'),
-                masterCardDatabase.find(c => c.id === 's1')
+                masterCardDatabase.find(c => c.id === 'h_c1'),
+                masterCardDatabase.find(c => c.id === 's_c1')
             ];
 
             saveGameProgress();
@@ -953,7 +963,15 @@
             if (!select) return;
             const cardId = select.value;
             let fusionCost = Math.round(40 * getInflationMultiplier());
-            if (!cardId || playerPoints < fusionCost) return;
+            
+            if (!cardId) {
+                logMessage(`[Forge] Please select a valid card pair from the dropdown to fuse.`);
+                return;
+            }
+            if (playerPoints < fusionCost) {
+                logMessage(`[Forge] Not enough BP! Need ${fusionCost} BP to fuse.`);
+                return;
+            }
 
             let sampleCard = playerDeck.find(c => c.id === cardId);
             if (!sampleCard) return;
@@ -963,7 +981,10 @@
             else if (sampleCard.tier === 'Uncommon') nextTierName = 'Rare';
             else if (sampleCard.tier === 'Rare') nextTierName = 'Epic';
             else if (sampleCard.tier === 'Epic') nextTierName = 'Legendary';
-            else return;
+            else {
+                logMessage(`[Forge] This card is already at maximum Legendary tier!`);
+                return;
+            }
 
             let pool = masterCardDatabase.filter(c => c.element === sampleCard.element && c.tier === nextTierName);
             if (pool.length === 0) return;
