@@ -215,7 +215,7 @@
         </div>
     </div>
 
-    <!-- MODAL: Intermission Armory & Fusion Forge -->
+    <!-- MODAL: Intermission Armory, Fusion Forge, AFK Farm & Royal Vault -->
     <div id="modalVictory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-xl w-full text-center shadow-2xl card-glow space-y-3 max-h-[90vh] overflow-y-auto">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400">Stage Cleared!</h3>
@@ -247,6 +247,66 @@
                             <!-- Populated dynamically -->
                         </select>
                         <button onclick="executeCardFusion()" class="bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs whitespace-nowrap transition shadow">Fuse Pair</button>
+                    </div>
+                </div>
+
+                <!-- AFK Sparring Grounds Upgrade Section -->
+                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs shadow">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-amber-400">⚔️ AFK Sparring Grounds</span>
+                        <span class="text-[10px] text-amber-300 font-mono" id="trainingLvlBadge">Lvl 0 (Locked)</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 leading-relaxed">
+                        Slowly generates passive BP over time in the background. Upgrade to boost the payout rate!
+                    </p>
+                    <div class="flex justify-between items-center pt-1">
+                        <span class="text-slate-300 text-[11px]">Yield: <strong id="trainingRateText" class="text-amber-400">0 BP / 10s</strong></span>
+                        <button id="btnUpgradeTraining" onclick="upgradeTrainingGrounds()" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow">
+                            Unlock (<span id="trainingCostText">100</span> BP)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- NEW: BP Royal Vault & Compound Interest Section -->
+                <div class="bg-slate-900 p-3 rounded-lg border border-amber-500/40 space-y-3 text-xs shadow">
+                    <div class="flex justify-between items-center">
+                        <span class="font-bold text-amber-400">🏦 Royal BP Bank Vault</span>
+                        <span class="text-[10px] text-emerald-400 font-mono font-bold" id="vaultBalanceDisplay">Vault: 0 BP</span>
+                    </div>
+                    <p class="text-[10px] text-slate-400 leading-relaxed">
+                        Deposit BP into the Bank Vault to earn compounding interest! Upgrade interest rates and payout frequency (Daily ➔ Hourly ➔ Minutely ➔ Per Second).
+                    </p>
+                    
+                    <!-- Deposit / Withdraw Actions -->
+                    <div class="flex gap-2 items-center bg-slate-950 p-2 rounded-lg border border-slate-800">
+                        <input type="number" id="vaultAmountInput" min="1" placeholder="Amount BP..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-100 text-center focus:outline-none focus:border-amber-500">
+                        <button onclick="depositToVault()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] whitespace-nowrap transition">Deposit</button>
+                        <button onclick="withdrawFromVault()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] whitespace-nowrap transition">Withdraw</button>
+                    </div>
+
+                    <!-- Interest Stats Banner -->
+                    <div class="grid grid-cols-2 gap-2 bg-slate-950/70 p-2 rounded-lg border border-slate-800 text-[11px] text-slate-300">
+                        <div>Rate: <strong id="vaultRateText" class="text-amber-400">2% / payout</strong></div>
+                        <div>Frequency: <strong id="vaultFreqText" class="text-amber-400">Daily (24h)</strong></div>
+                    </div>
+
+                    <!-- Dual Upgrade Path Buttons -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
+                        <button id="btnUpgradeVaultRate" onclick="upgradeVaultRate()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-amber-500/30 font-semibold p-2 rounded-lg text-[11px] text-left transition flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-amber-400">📈 Boost Rate (Lvl <span id="vaultRateLvlText">1</span>)</p>
+                                <p class="text-[9px] text-slate-400">+2% Interest/level</p>
+                            </div>
+                            <span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="vaultRateCostText">250 BP</span>
+                        </button>
+
+                        <button id="btnUpgradeVaultFreq" onclick="upgradeVaultFreq()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-amber-500/30 font-semibold p-2 rounded-lg text-[11px] text-left transition flex justify-between items-center">
+                            <div>
+                                <p class="font-bold text-amber-400">⚡ Speed (Lvl <span id="vaultFreqLvlText">1</span>)</p>
+                                <p class="text-[9px] text-slate-400" id="vaultFreqSubtext">Next: Hourly</p>
+                            </div>
+                            <span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="vaultFreqCostText">500 BP</span>
+                        </button>
                     </div>
                 </div>
 
@@ -388,6 +448,12 @@
         let handSize = 4;
         let relics = { aegis: false, greed: false };
         let tutorialStep = 1;
+        let trainingLevel = 0; // AFK Sparring Grounds Level
+
+        // Vault & Interest State Variables
+        let vaultBalance = 0;
+        let vaultRateLevel = 1; // Level 1 = 2% interest per payout
+        let vaultFreqLevel = 1; // 1 = Daily, 2 = Hourly, 3 = Minutely, 4 = Per Second
 
         // Achievements system
         let achievements = {
@@ -400,6 +466,160 @@
         };
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+
+        // Slow passive trickle loop for AFK Sparring Grounds (Ticks every 10 seconds)
+        setInterval(() => {
+            if (trainingLevel > 0) {
+                let earnedBp = trainingLevel >= 4 ? trainingLevel + 1 : trainingLevel; 
+                playerPoints += earnedBp;
+                logMessage(`[AFK Sparring] Training grounds produced +${earnedBp} BP.`);
+                updateUI();
+                saveGameProgress();
+            }
+        }, 10000);
+
+        // Vault Compound Interest Loop (Ticks every 1 second, checks exact timeframes)
+        let vaultTimerSeconds = 0;
+        setInterval(() => {
+            if (vaultBalance > 0) {
+                vaultTimerSeconds++;
+                let targetSeconds = getVaultIntervalSeconds();
+                if (vaultTimerSeconds >= targetSeconds) {
+                    vaultTimerSeconds = 0;
+                    let ratePercent = vaultRateLevel * 0.02; // 2% per rate level
+                    let interestEarned = Math.max(1, Math.floor(vaultBalance * ratePercent));
+                    vaultBalance += interestEarned;
+                    logMessage(`[🏦 Royal Vault] Compounded +${interestEarned} BP in interest! (New Balance: ${vaultBalance} BP)`);
+                    updateUI();
+                    saveGameProgress();
+                }
+            }
+        }, 1000);
+
+        function getVaultIntervalSeconds() {
+            if (vaultFreqLevel === 1) return 86400; // Daily (24 Hours)
+            if (vaultFreqLevel === 2) return 3600;  // Hourly (1 Hour)
+            if (vaultFreqLevel === 3) return 60;    // Minutely (1 Minute)
+            if (vaultFreqLevel >= 4) return 1;     // Per Second (Every 1 Second)
+            return 86400;
+        }
+
+        function getVaultFreqLabel() {
+            if (vaultFreqLevel === 1) return "Daily (24h)";
+            if (vaultFreqLevel === 2) return "Hourly (1h)";
+            if (vaultFreqLevel === 3) return "Minutely (1m)";
+            if (vaultFreqLevel >= 4) return "Per Second (1s)";
+            return "Daily (24h)";
+        }
+
+        function getVaultRateUpgradeCost() {
+            return Math.round(250 * Math.pow(2.4, vaultRateLevel - 1));
+        }
+
+        function getVaultFreqUpgradeCost() {
+            if (vaultFreqLevel === 1) return 500;   // Daily -> Hourly
+            if (vaultFreqLevel === 2) return 2500;  // Hourly -> Minutely
+            if (vaultFreqLevel === 3) return 10000; // Minutely -> Per Second
+            return 999999;
+        }
+
+        function depositToVault() {
+            let input = document.getElementById('vaultAmountInput');
+            let amount = parseInt(input.value);
+            if (isNaN(amount) || amount <= 0) return;
+
+            if (playerPoints < amount) {
+                logMessage(`[Vault] Not enough active BP to deposit ${amount} BP!`);
+                return;
+            }
+
+            playerPoints -= amount;
+            vaultBalance += amount;
+            input.value = '';
+            playSound('win');
+            saveGameProgress();
+            updateUI();
+            logMessage(`[Vault] Deposited ${amount} BP into the Royal Vault.`);
+        }
+
+        function withdrawFromVault() {
+            let input = document.getElementById('vaultAmountInput');
+            let amount = parseInt(input.value);
+            if (isNaN(amount) || amount <= 0) return;
+
+            if (vaultBalance < amount) {
+                logMessage(`[Vault] You only have ${vaultBalance} BP inside the Vault!`);
+                return;
+            }
+
+            vaultBalance -= amount;
+            playerPoints += amount;
+            input.value = '';
+            playSound('win');
+            saveGameProgress();
+            updateUI();
+            logMessage(`[Vault] Withdrew ${amount} BP from the Royal Vault.`);
+        }
+
+        function upgradeVaultRate() {
+            let cost = getVaultRateUpgradeCost();
+            if (playerPoints < cost) {
+                logMessage(`[Vault] Not enough BP! Need ${cost} BP to boost interest rate.`);
+                return;
+            }
+
+            playerPoints -= cost;
+            vaultRateLevel++;
+            playSound('win');
+            saveGameProgress();
+            updateUI();
+            logMessage(`[Vault] Upgraded Interest Rate to Level ${vaultRateLevel} (${vaultRateLevel * 2}% per payout)!`);
+        }
+
+        function upgradeVaultFreq() {
+            if (vaultFreqLevel >= 4) {
+                logMessage(`[Vault] Payout frequency is already maxed at Per Second compounding!`);
+                return;
+            }
+
+            let cost = getVaultFreqUpgradeCost();
+            if (playerPoints < cost) {
+                logMessage(`[Vault] Not enough BP! Need ${cost} BP to upgrade payout speed.`);
+                return;
+            }
+
+            playerPoints -= cost;
+            vaultFreqLevel++;
+            playSound('win');
+            saveGameProgress();
+            updateUI();
+            logMessage(`[Vault] Upgraded Payout Speed to ${getVaultFreqLabel()}!`);
+        }
+
+        function getTrainingUpgradeCost() {
+            if (trainingLevel === 0) return 100;
+            if (trainingLevel === 1) return 250;
+            if (trainingLevel === 2) return 500;
+            if (trainingLevel === 3) return 1000;
+            return Math.round(1000 * Math.pow(1.8, trainingLevel - 3));
+        }
+
+        function upgradeTrainingGrounds() {
+            let cost = getTrainingUpgradeCost();
+            if (playerPoints < cost) {
+                logMessage(`[Forge] Not enough BP! Need ${cost} BP to upgrade Training Grounds.`);
+                return;
+            }
+
+            playerPoints -= cost;
+            trainingLevel++;
+            playSound('win');
+
+            saveGameProgress();
+            updateUI();
+            updateArmoryUI();
+            logMessage(`[AFK Sparring] Upgraded Training Grounds to Level ${trainingLevel}! Speed/Yield increased.`);
+        }
 
         function playSound(type) {
             if (!soundEnabled) return;
@@ -702,6 +922,10 @@
                 heroMaxEnergy: hero.maxEnergy,
                 handSize: handSize,
                 relics: relics,
+                trainingLevel: trainingLevel,
+                vaultBalance: vaultBalance,
+                vaultRateLevel: vaultRateLevel,
+                vaultFreqLevel: vaultFreqLevel,
                 deckIds: playerDeck.map(c => c.id)
             };
             localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -728,6 +952,10 @@
             hero.maxEnergy = 3;
             handSize = 4;
             relics = { aegis: false, greed: false };
+            trainingLevel = 0;
+            vaultBalance = 0;
+            vaultRateLevel = 1;
+            vaultFreqLevel = 1;
             tutorialStep = 1;
 
             playerDeck = [
@@ -746,7 +974,6 @@
                 saveAchievementsData();
             }
 
-            // Start background music on user interaction
             const music = document.getElementById('bgMusic');
             if (music && soundEnabled) {
                 music.volume = 0.4;
@@ -774,6 +1001,10 @@
                 hero.maxEnergy = data.heroMaxEnergy || 3;
                 handSize = data.handSize || 4;
                 relics = data.relics || { aegis: false, greed: false };
+                trainingLevel = data.trainingLevel || 0;
+                vaultBalance = data.vaultBalance || 0;
+                vaultRateLevel = data.vaultRateLevel || 1;
+                vaultFreqLevel = data.vaultFreqLevel || 1;
 
                 playerDeck = [];
                 if (data.deckIds && Array.isArray(data.deckIds)) {
@@ -786,7 +1017,6 @@
                     playerDeck = [masterCardDatabase.find(c => c.id === 'f_c1')];
                 }
 
-                // Start background music on load interaction
                 const music = document.getElementById('bgMusic');
                 if (music && soundEnabled) {
                     music.volume = 0.4;
@@ -1148,7 +1378,7 @@
             if (currentLevel === 0) {
                 logMessage(`[Tutorial] Training Dummy defeated! Fully restoring health and advancing to Level 1.`);
                 currentLevel = 1;
-                hero.hp = hero.maxHp; // FULLY RESTORE HP AFTER TUTORIAL
+                hero.hp = hero.maxHp;
                 saveGameProgress();
                 initBattle();
                 return;
@@ -1366,6 +1596,63 @@
             document.getElementById('relicGreedCost').innerText = Math.round(75 * mult);
             document.getElementById('fusionCostText').innerText = `Cost: ${Math.round(40 * mult)} BP`;
 
+            // AFK Training Grounds UI Sync
+            const trainingBadge = document.getElementById('trainingLvlBadge');
+            const trainingRate = document.getElementById('trainingRateText');
+            const trainingCostBtn = document.getElementById('btnUpgradeTraining');
+            const trainingCostText = document.getElementById('trainingCostText');
+
+            if (trainingBadge) {
+                let currentTrainingCost = getTrainingUpgradeCost();
+                if (trainingLevel === 0) {
+                    trainingBadge.innerText = "Lvl 0 (Locked)";
+                    trainingRate.innerText = "0 BP / 10s";
+                    trainingCostText.innerText = currentTrainingCost;
+                    trainingCostBtn.innerHTML = `Unlock (<span>${currentTrainingCost}</span> BP)`;
+                } else {
+                    let yieldRate = trainingLevel >= 4 ? trainingLevel + 1 : trainingLevel;
+                    trainingBadge.innerText = `Lvl ${trainingLevel} (Active)`;
+                    trainingRate.innerText = `${yieldRate} BP / 10s`;
+                    trainingCostText.innerText = currentTrainingCost;
+                    trainingCostBtn.innerHTML = `Upgrade (<span>${currentTrainingCost}</span> BP)`;
+                }
+
+                if (playerPoints < currentTrainingCost) {
+                    trainingCostBtn.classList.add('opacity-40');
+                } else {
+                    trainingCostBtn.classList.remove('opacity-40');
+                }
+            }
+
+            // Vault UI Sync
+            document.getElementById('vaultBalanceDisplay').innerText = `Vault: ${vaultBalance} BP`;
+            document.getElementById('vaultRateText').innerText = `${vaultRateLevel * 2}% / payout`;
+            document.getElementById('vaultFreqText').innerText = getVaultFreqLabel();
+            
+            document.getElementById('vaultRateLvlText').innerText = vaultRateLevel;
+            const rateCost = getVaultRateUpgradeCost();
+            document.getElementById('vaultRateCostText').innerText = `${rateCost} BP`;
+            const btnRate = document.getElementById('btnUpgradeVaultRate');
+            if (playerPoints < rateCost) btnRate.classList.add('opacity-40');
+            else btnRate.classList.remove('opacity-40');
+
+            document.getElementById('vaultFreqLvlText').innerText = vaultFreqLevel;
+            const freqCost = getVaultFreqUpgradeCost();
+            const btnFreq = document.getElementById('btnUpgradeVaultFreq');
+            const subtext = document.getElementById('vaultFreqSubtext');
+
+            if (vaultFreqLevel >= 4) {
+                document.getElementById('vaultFreqCostText').innerText = `MAX`;
+                subtext.innerText = `Compounding: Per Second`;
+                btnFreq.classList.add('opacity-40', 'pointer-events-none');
+            } else {
+                document.getElementById('vaultFreqCostText').innerText = `${freqCost} BP`;
+                let nextLabel = vaultFreqLevel === 1 ? "Hourly" : vaultFreqLevel === 2 ? "Minutely" : "Per Second";
+                subtext.innerText = `Next: ${nextLabel}`;
+                if (playerPoints < freqCost) btnFreq.classList.add('opacity-40');
+                else btnFreq.classList.remove('opacity-40');
+            }
+
             const btn = document.getElementById('btnHandUpgrade');
             const label = document.getElementById('handUpgradeLabel');
             const costEl = document.getElementById('handUpgradeCost');
@@ -1505,6 +1792,10 @@
             shopUsedThisLevel = false;
             handSize = 4;
             relics = { aegis: false, greed: false };
+            trainingLevel = 0;
+            vaultBalance = 0;
+            vaultRateLevel = 1;
+            vaultFreqLevel = 1;
             hero.maxHp = 100;
             hero.maxEnergy = 3;
 
