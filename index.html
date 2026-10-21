@@ -261,7 +261,7 @@
                         <span class="text-[10px] text-emerald-400 font-mono font-bold" id="vaultBalanceDisplay">Vault: 0 BP</span>
                     </div>
                     <p class="text-[10px] text-slate-400 leading-relaxed">
-                        Deposit BP into the Bank Vault to earn compounding interest! Upgrade interest rates and payout frequency (Daily ➔ Hourly ➔ Minutely ➔ Per Second).
+                        Deposit BP into the Bank Vault to earn compounding interest! Upgrade interest rates and payout frequency (Daily ➔ Hourly ➔ Minutely ➔ Per Second). Works offline!
                     </p>
                     
                     <div class="flex gap-2 items-center bg-slate-950 p-2 rounded-lg border border-slate-800">
@@ -414,7 +414,7 @@
     <!-- Game Engine Script -->
     <script>
         const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
-        const SAVE_KEY = "elemental_clash_save_v2";
+        const SAVE_KEY = "elemental_clash_save_v3";
 
         let soundEnabled = true;
         let playerPoints = 0;
@@ -431,6 +431,7 @@
         let vaultBalance = 0;
         let vaultRateLevel = 1;
         let vaultFreqLevel = 1;
+        let lastVaultTickTime = Date.now();
 
         let achievements = {
             tutorial: { title: "First Steps", desc: "Complete the training tutorial.", unlocked: false },
@@ -454,7 +455,7 @@
             }
         }, 10000);
 
-        // Vault Compound Interest loop
+        // Vault Compound Interest loop & Offline Payout Calculator
         let vaultTimerSeconds = 0;
         setInterval(() => {
             if (vaultBalance > 0) {
@@ -462,15 +463,48 @@
                 let targetSeconds = getVaultIntervalSeconds();
                 if (vaultTimerSeconds >= targetSeconds) {
                     vaultTimerSeconds = 0;
-                    let ratePercent = vaultRateLevel * 0.02;
-                    let interestEarned = Math.max(1, Math.floor(vaultBalance * ratePercent));
-                    vaultBalance += interestEarned;
-                    logMessage(`[🏦 Royal Vault] Compounded +${interestEarned} BP in interest! (New Balance: ${vaultBalance} BP)`);
-                    updateUI();
-                    saveGameProgress();
+                    processVaultInterestPayout();
                 }
             }
         }, 1000);
+
+        function processVaultInterestPayout() {
+            let ratePercent = vaultRateLevel * 0.02;
+            let interestEarned = Math.max(1, Math.floor(vaultBalance * ratePercent));
+            vaultBalance += interestEarned;
+            lastVaultTickTime = Date.now();
+            logMessage(`[🏦 Royal Vault] Compounded +${interestEarned} BP in interest! (New Balance: ${vaultBalance} BP)`);
+            updateUI();
+            saveGameProgress();
+        }
+
+        function calculateOfflineVaultProgress(savedTimestamp) {
+            if (!savedTimestamp || vaultBalance <= 0) return;
+            
+            let now = Date.now();
+            let elapsedSeconds = Math.floor((now - savedTimestamp) / 1000);
+            if (elapsedSeconds <= 0) return;
+
+            let intervalSec = getVaultIntervalSeconds();
+            let missedPayouts = Math.floor(elapsedSeconds / intervalSec);
+
+            if (missedPayouts > 0) {
+                // Safety cap to prevent freezing if away for months/years
+                if (missedPayouts > 10000) missedPayouts = 10000;
+
+                let ratePercent = vaultRateLevel * 0.02;
+                let totalInterestEarned = 0;
+
+                for (let i = 0; i < missedPayouts; i++) {
+                    let interest = Math.max(1, Math.floor(vaultBalance * ratePercent));
+                    vaultBalance += interest;
+                    totalInterestEarned += interest;
+                }
+
+                lastVaultTickTime = now;
+                logMessage(`[🏦 Royal Vault Offline] While you were away, your vault compounded ${missedPayouts} times and earned +${totalInterestEarned} BP!`);
+            }
+        }
 
         function getVaultIntervalSeconds() {
             if (vaultFreqLevel === 1) return 86400; // Daily
@@ -905,6 +939,7 @@
                 vaultBalance: vaultBalance,
                 vaultRateLevel: vaultRateLevel,
                 vaultFreqLevel: vaultFreqLevel,
+                lastVaultTickTime: lastVaultTickTime,
                 deckIds: playerDeck.map(c => c.id)
             };
             localStorage.setItem(SAVE_KEY, JSON.stringify(saveData));
@@ -935,6 +970,7 @@
             vaultBalance = 0;
             vaultRateLevel = 1;
             vaultFreqLevel = 1;
+            lastVaultTickTime = Date.now();
             tutorialStep = 1;
 
             playerDeck = [
@@ -984,6 +1020,10 @@
                 vaultBalance = data.vaultBalance || 0;
                 vaultRateLevel = data.vaultRateLevel || 1;
                 vaultFreqLevel = data.vaultFreqLevel || 1;
+                lastVaultTickTime = data.lastVaultTickTime || Date.now();
+
+                // Calculate offline compound interest upon loading!
+                calculateOfflineVaultProgress(lastVaultTickTime);
 
                 playerDeck = [];
                 if (data.deckIds && Array.isArray(data.deckIds)) {
@@ -1002,6 +1042,7 @@
                     music.play().catch(e => {});
                 }
 
+                saveGameProgress();
                 launchBattleScreen();
             } catch(e) {
                 localStorage.removeItem(SAVE_KEY);
@@ -1794,6 +1835,7 @@
             vaultBalance = 0;
             vaultRateLevel = 1;
             vaultFreqLevel = 1;
+            lastVaultTickTime = Date.now();
             hero.maxHp = 100;
             hero.maxEnergy = 3;
 
