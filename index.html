@@ -548,59 +548,31 @@
             { id: 's_l1', name: 'Impenetrable Wall', element: 'shield', tier: 'Legendary', cost: 2, power: 80, icon: '🛡️', desc: 'Tier 5 Legendary Shield (80 Shield).' }
         ];
 
-        // 50 Unique Boss Roster
-        const uniqueBosses = [
-            { name: "Sparkling Sprite", element: "fire", theme: "The Outskirts" },
-            { name: "Mossy Golem", element: "earth", theme: "Whispering Woods" },
-            { name: "River Lurker", element: "water", theme: "Crystal River" },
-            { name: "Zephyr Falcon", element: "air", theme: "Sky Plateau" },
-            { name: "Gloom Specter", element: "shadow", theme: "Forgotten Graveyard" },
-            { name: "Astral Wisp", element: "spirit", theme: "Ethereal Sanctum" },
-            { name: "Flame Imp", element: "fire", theme: "Volcanic Vent" },
-            { name: "Stone Guardian", element: "earth", theme: "Ancient Ruins" },
-            { name: "Frost Serpent", element: "water", theme: "Frozen Cavern" },
-            { name: "Tempest Archon", element: "air", theme: "Storm Spire" },
-            { name: "Abyssal Phantom", element: "shadow", theme: "Shadow Trenches" },
-            { name: "Celestial Seraph", element: "spirit", theme: "Sky Citadel" },
-            { name: "Magma Brute", element: "fire", theme: "Magma Chambers" },
-            { name: "Thorn Queen", element: "earth", theme: "Tangled Thicket" },
-            { name: "Tidal Kraken", element: "water", theme: "Abyssal Trench" },
-            { name: "Cyclone Drake", element: "air", theme: "Howling Peaks" },
-            { name: "Dread Wraith", element: "shadow", theme: "Necropolis" },
-            { name: "Spirit Warden", element: "spirit", theme: "Soul Forge" },
-            { name: "Blazing Phoenix", element: "fire", theme: "Sky Sanctuary" },
-            { name: "Granite Titan", element: "earth", theme: "Mountain Peak" },
-            { name: "Abyssal Leviathan", element: "water", theme: "Sunken Temple" },
-            { name: "Sky Sentinel", element: "air", theme: "Cloud Realm" },
-            { name: "Nightmare Lord", element: "shadow", theme: "Void Chasm" },
-            { name: "Radiant Sovereign", element: "spirit", theme: "Luminous Tower" },
-            { name: "Infernal Overlord", element: "fire", theme: "Demon Gate" },
-            { name: "Gaia Colossus", element: "earth", theme: "World Core" },
-            { name: "Storm Sovereign", element: "water", theme: "Tempest Eye" },
-            { name: "Gale Emperor", element: "air", theme: "Aetherial Vault" },
-            { name: "Shadow King", element: "shadow", theme: "Eclipse Throne" },
-            { name: "Soul Dragon", element: "spirit", theme: "Spirit Domain" },
-            { name: "Solar Emperor", element: "fire", theme: "Solar Citadel" },
-            { name: "Eldritch Treant", element: "earth", theme: "Corrupted Forest" },
-            { name: "Titan of Tides", element: "water", theme: "Endless Sea" },
-            { name: "Vortex Wyrm", element: "air", theme: "Tornado Core" },
-            { name: "Obsidian Fiend", element: "shadow", theme: "Obsidian Fortress" },
-            { name: "Divinity Archon", element: "spirit", theme: "Prismatic Realm" },
-            { name: "Pyroclastic Wyrm", element: "fire", theme: "Ashen Peaks" },
-            { name: "Verdant Sentinel", element: "earth", theme: "Emerald Canopy" },
-            { name: "Deepwater Angler", element: "water", theme: "Midnight Abyss" },
-            { name: "Hurricane Behemoth", element: "air", theme: "Shattered Skies" },
-            { name: "Shadow Lich", element: "shadow", theme: "Dread Catacombs" },
-            { name: "Ethereal Monarch", element: "spirit", theme: "Sanctuary Core" },
-            { name: "Supernova Archon", element: "fire", theme: "Celestial Arena" },
-            { name: "Bedrock Goliath", element: "earth", theme: "Underground Maw" },
-            { name: "Maelstrom Hydra", element: "water", theme: "Whirlpool Cavern" },
-            { name: "Zephyr Titan", element: "air", theme: "Gale Bastion" },
-            { name: "Void Emperor", element: "shadow", theme: "Void Apex" },
-            { name: "Apex Spirit Sovereign", element: "spirit", theme: "Spirit Apex" },
-            { name: "Chaos Dragon", element: "fire", theme: "Realm Boundary" },
-            { name: "Apex Voidlord", element: "earth", theme: "The Void Apex" }
+        // Randomized Boss Pool for Endless Variety
+        const bossArchetypePool = [
+            { name: "Roaming Sprite", theme: "The Outskirts" },
+            { name: "Wandering Golem", theme: "Whispering Woods" },
+            { name: "River Lurker", theme: "Crystal River" },
+            { name: "Sky Falcon", theme: "Sky Plateau" },
+            { name: "Gloom Specter", theme: "Forgotten Graveyard" },
+            { name: "Astral Wisp", theme: "Ethereal Sanctum" },
+            { name: "Magma Brute", theme: "Volcanic Vent" },
+            { name: "Stone Guardian", theme: "Ancient Ruins" },
+            { name: "Frost Serpent", theme: "Frozen Cavern" },
+            { name: "Tempest Archon", theme: "Storm Spire" },
+            { name: "Abyssal Phantom", theme: "Shadow Trenches" },
+            { name: "Celestial Seraph", theme: "Sky Citadel" },
+            { name: "Thorn Queen", theme: "Tangled Thicket" },
+            { name: "Tidal Kraken", theme: "Abyssal Trench" },
+            { name: "Cyclone Drake", theme: "Howling Peaks" },
+            { name: "Dread Wraith", theme: "Necropolis" },
+            { name: "Spirit Warden", theme: "Soul Forge" },
+            { name: "Blazing Phoenix", theme: "Sky Sanctuary" },
+            { name: "Granite Titan", theme: "Mountain Peak" },
+            { name: "Nightmare Lord", theme: "Void Chasm" }
         ];
+
+        const possibleElements = ['fire', 'water', 'earth', 'air', 'shadow', 'spirit'];
 
         let playerDeck = [];
         let hero = { name: "Hero", hp: 100, maxHp: 100, shield: 0, energy: 3, maxEnergy: 3 };
@@ -868,16 +840,32 @@
                 updateTutorialBannerText();
             } else {
                 banner.classList.add('hidden');
-                const template = uniqueBosses[currentLevel - 1];
+                
                 let calculatedHp = Math.round((70 + (currentLevel * 14)) / 5) * 5;
                 if (currentLevel === 50) calculatedHp = 800;
 
+                let bossName = "";
+                let bossElement = "";
+                let bossTheme = "";
+
+                if (currentLevel === 50) {
+                    bossName = "Apex Voidlord";
+                    bossElement = "earth";
+                    bossTheme = "The Void Apex";
+                } else {
+                    const randomArchetype = bossArchetypePool[Math.floor(Math.random() * bossArchetypePool.length)];
+                    const randomElement = possibleElements[Math.floor(Math.random() * possibleElements.length)];
+                    bossName = `Corrupted ${randomArchetype.name}`;
+                    bossElement = randomElement;
+                    bossTheme = randomArchetype.theme;
+                }
+
                 currentBoss = {
-                    name: template.name,
+                    name: bossName,
                     hp: calculatedHp,
                     currentHp: calculatedHp,
-                    element: template.element,
-                    theme: template.theme,
+                    element: bossElement,
+                    theme: bossTheme,
                     shield: 0
                 };
 
