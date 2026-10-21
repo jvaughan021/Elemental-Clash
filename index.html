@@ -38,7 +38,7 @@
         <!-- SCREEN 1: Name Entry -->
         <div id="screenName" class="bg-slate-900/90 border border-slate-800 rounded-2xl p-6 md:p-8 max-w-md mx-auto text-center shadow-2xl card-glow">
             <h2 class="font-cinzel text-2xl md:text-3xl font-bold text-amber-400 mb-2">Enter the Arena</h2>
-            <p class="text-sm text-slate-400 mb-6">Master fractional .5 energy costs, fuse cards, and collect powerful relics!</p>
+            <p class="text-sm text-slate-400 mb-6">Survive Armory inflation and boss element retaliations across 50 brutal levels!</p>
             <input type="text" id="heroNameInput" placeholder="Enter Hero Name..." maxlength="18" class="w-full bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-center text-lg font-bold text-slate-100 focus:outline-none focus:border-amber-500 mb-6" value="Hero">
             <button onclick="startGameFlow()" class="w-full bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold py-3.5 px-6 rounded-xl shadow-lg transition transform active:scale-95 text-base font-cinzel">Begin 50-Level Journey</button>
         </div>
@@ -83,7 +83,7 @@
                             <span id="heroShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
                         </div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-400 text-center" id="heroStatusText">Ready for battle. Play cards from your hand!</div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-400 text-center" id="heroStatusText">Ready for battle. Watch out for elemental retaliations!</div>
                 </div>
 
                 <!-- Boss Panel -->
@@ -103,22 +103,22 @@
                             <span id="bossShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
                         </div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-red-300/80 text-center italic" id="bossIntentText">Boss is preparing an attack...</div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-red-300/80 text-center italic" id="bossIntentText">Boss will counter bad elements!</div>
                 </div>
             </div>
 
             <!-- In-Battle Tactical Shop Bar -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-xl p-2.5 flex flex-wrap justify-between items-center gap-2 text-xs">
-                <span class="text-slate-400 font-semibold">Battle Shop (Pick 1 per level - 50 BP each):</span>
+                <span class="text-slate-400 font-semibold">Battle Shop (Pick 1 per level - <span id="battleShopCostText">50</span> BP):</span>
                 <div class="flex gap-2 flex-wrap">
-                    <button id="btnEnergyBoost" onclick="buyPointEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +0.5 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">50 BP</span></button>
-                    <button id="btnRerollBoost" onclick="buyPointReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span></button>
+                    <button id="btnEnergyBoost" onclick="buyPointEnergyBoost()" class="bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 px-3 py-1.5 rounded-lg border border-amber-500/30 transition flex items-center gap-1 font-medium">⚡ +0.5 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300" id="battleShopEnergyCost">50 BP</span></button>
+                    <button id="btnRerollBoost" onclick="buyPointReroll()" class="bg-blue-500/10 hover:bg-blue-500/20 text-blue-400 px-3 py-1.5 rounded-lg border border-blue-500/30 transition flex items-center gap-1 font-medium">🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300" id="battleShopRerollCost">50 BP</span></button>
                 </div>
             </div>
 
             <!-- 6-Element Advantage Chart -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 space-y-1">
-                <div class="font-bold text-amber-400">🔥 6-Element Advantage (+40% DMG):</div>
+                <div class="font-bold text-amber-400">🔥 6-Element Advantage (+40% DMG / Retaliation Risk):</div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 font-mono text-[11px] text-slate-400">
                     <span>🔥 Fire &gt; 🌿 Earth</span>
                     <span>🌿 Earth &gt; 💧 Water</span>
@@ -131,7 +131,7 @@
 
             <!-- Combat Log -->
             <div class="bg-slate-900/60 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Relics, Fusion Forge, and Fractional Energy active.</div>
+                <div>[System] Welcome to Elemental Clash! Armory inflation and boss counter-attacks active.</div>
             </div>
 
             <!-- Player Hand -->
@@ -153,22 +153,25 @@
         Elemental Clash &bull; Created by Jack Vaughan
     </footer>
 
-    <!-- MODAL: Mandatory Intermission Armory & Card Fusion Forge -->
+    <!-- MODAL: Inflated Intermission Armory & Fusion Forge -->
     <div id="modalVictory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-xl w-full text-center shadow-2xl card-glow space-y-3 max-h-[90vh] overflow-y-auto">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400">Stage Cleared!</h3>
             <p class="text-xs text-slate-300" id="victoryMsg">You defeated the boss! +50 BP earned.</p>
             
             <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-3">
-                <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Armory & Fusion Forge:</p>
+                <div class="flex justify-between items-center">
+                    <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Armory & Inflation Market:</p>
+                    <span class="text-[10px] text-red-400 font-mono" id="inflationBadge">Prices +0% (Lvl 1)</span>
+                </div>
                 
                 <!-- Card Fusion Section -->
                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs">
                     <div class="flex justify-between items-center">
-                        <span class="font-bold text-amber-400">🔥 Card Fusion Forge (Combine 2 identical cards)</span>
-                        <span class="text-[10px] text-slate-400">Cost: 40 BP</span>
+                        <span class="font-bold text-amber-400">🔥 Card Fusion Forge</span>
+                        <span class="text-[10px] text-amber-300 font-mono" id="fusionCostText">Cost: 40 BP</span>
                     </div>
-                    <p class="text-[10px] text-slate-400">Select two identical cards from your collection to fuse them into the next rarity tier!</p>
+                    <p class="text-[10px] text-slate-400">Select two identical cards to fuse into the next rarity tier.</p>
                     <div class="flex gap-2 items-center">
                         <select id="fusionCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500">
                             <!-- Populated dynamically -->
@@ -181,24 +184,24 @@
                     <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
                         <div>
                             <p class="font-bold text-slate-200">❤️ Max HP Up</p>
-                            <p class="text-[10px] text-slate-400">+25 HP & +10 Max HP.</p>
+                            <p class="text-[10px] text-slate-400">+25 HP & +10 Max HP</p>
                         </div>
-                        <button onclick="buyIntermissionHeal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">50 BP</button>
+                        <button onclick="buyIntermissionHeal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="healCostText">50</span> BP</button>
                     </div>
 
                     <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
                         <div>
                             <p class="font-bold text-slate-200">⚡ +0.5 Max Energy</p>
-                            <p class="text-[10px] text-slate-400">Increase turn energy.</p>
+                            <p class="text-[10px] text-slate-400">Increase turn energy</p>
                         </div>
-                        <button onclick="buyIntermissionEnergyCap()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
+                        <button onclick="buyIntermissionEnergyCap()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="energyCapCostText">75</span> BP</button>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs">
                     <div>
-                        <p class="font-bold text-slate-200" id="handUpgradeLabel">🃏 Expand Hand Size (4 ➔ 6)</p>
-                        <p class="text-[10px] text-slate-400">Draw more cards each turn during combat.</p>
+                        <p class="font-bold text-slate-200" id="handUpgradeLabel">🃏 Expand Hand Size</p>
+                        <p class="text-[10px] text-slate-400">Draw more cards each turn</p>
                     </div>
                     <button id="btnHandUpgrade" onclick="buyHandSizeUpgrade()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="handUpgradeCost">100</span> BP</button>
                 </div>
@@ -210,7 +213,7 @@
                             <p class="font-bold text-slate-200">🏺 Aegis Core</p>
                             <p class="text-[10px] text-slate-400">+8 Shield/turn</p>
                         </div>
-                        <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
+                        <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="relicAegisCost">75</span> BP</button>
                     </div>
 
                     <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800">
@@ -218,7 +221,7 @@
                             <p class="font-bold text-slate-200">🏺 Greed Ring</p>
                             <p class="text-[10px] text-slate-400">+25 BP per win</p>
                         </div>
-                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition">75 BP</button>
+                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition"><span id="relicGreedCost">75</span> BP</button>
                     </div>
                 </div>
             </div>
@@ -258,8 +261,11 @@
             <div class="space-y-3 text-xs md:text-sm text-slate-300 leading-relaxed">
                 <p><strong>Elemental Clash</strong> is a tactical 1v1 card battle game created by <strong>Jack Vaughan</strong>.</p>
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800">
-                    <p class="font-bold text-amber-400 mb-1">🏺 Relics & Armory:</p>
-                    <p class="text-slate-400 text-[11px]">Collect powerful relics like the Greed Ring (+25 BP per win) and Aegis Core (+8 shield per turn) in the Intermission Armory!</p>
+                    <p class="font-bold text-amber-400 mb-1">⚠️ Brutal New Mechanics:</p>
+                    <ul class="list-disc pl-4 space-y-1 text-slate-400">
+                        <li><strong>Armory Inflation:</strong> Shop prices increase progressively as you advance through levels!</li>
+                        <li><strong>Boss Retaliation:</strong> Hitting a boss with an element they counter will trigger an instant retaliatory strike against your hero!</li>
+                    </ul>
                 </div>
             </div>
             <button onclick="closeRules()" class="mt-5 w-full bg-slate-800 hover:bg-slate-700 text-slate-200 font-bold py-2.5 rounded-xl transition text-xs">Got it, Let's Play!</button>
@@ -333,7 +339,6 @@
             document.getElementById('audioToggleBtn').innerText = soundEnabled ? '🔊 Sound: ON' : '🔇 Sound: OFF';
         }
 
-        // Master 60-Card Database with Fractional .5 Energy Costs across Tiers
         const masterCardDatabase = [
             // FIRE
             { id: 'f_c1', name: 'Spark', element: 'fire', tier: 'Common', cost: 0.5, power: 8, icon: '🔥', desc: 'Tier 1 Fire strike (0.5 ⚡).' },
@@ -469,6 +474,11 @@
         let playerHand = [];
         let drawPile = [];
 
+        // Armory Inflation Multiplier (increases by 6% per level)
+        function getInflationMultiplier() {
+            return 1 + ((currentLevel - 1) * 0.06);
+        }
+
         function startGameFlow() {
             const nameInput = document.getElementById('heroNameInput').value.trim();
             if (nameInput) hero.name = nameInput;
@@ -595,11 +605,33 @@
                                    (card.element === 'spirit' && currentBoss.element === 'shadow') ||
                                    (card.element === 'shadow' && currentBoss.element === 'air');
 
+                // Boss Counter-Element Check (Does the boss counter YOU?)
+                let bossCountersPlayer = (currentBoss.element === 'fire' && card.element === 'earth') ||
+                                         (currentBoss.element === 'earth' && card.element === 'water') ||
+                                         (currentBoss.element === 'water' && card.element === 'fire') ||
+                                         (currentBoss.element === 'air' && card.element === 'shadow') ||
+                                         (currentBoss.element === 'spirit' && card.element === 'air') ||
+                                         (currentBoss.element === 'shadow' && card.element === 'spirit');
+
                 if (hasAdvantage) {
                     dmg = Math.round(dmg * 1.4);
                     logMessage(`[🔥 Advantage!] Your ${card.element.toUpperCase()} beats ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
+                } else if (bossCountersPlayer) {
+                    dmg = Math.round(dmg * 0.7); // Reduced damage for playing into boss counter
+                    logMessage(`[⚠️ Bad Matchup!] ${currentBoss.name} counters ${card.element.toUpperCase()}! Damage reduced to ${dmg}.`);
+                    
+                    // Trigger Instant Boss Retaliation Counter-Attack!
+                    let counterDmg = Math.round(10 + (currentLevel * 0.8));
+                    hero.hp = Math.max(0, hero.hp - counterDmg);
+                    showPopup('heroDamagePopup', `-${counterDmg}`, 'text-red-500');
+                    logMessage(`[⚡ Boss Retaliation!] ${currentBoss.name} immediately strikes back for ${counterDmg} damage!`);
                 } else {
                     logMessage(`[Attack] You played ${card.name} for ${dmg} damage.`);
+                }
+
+                if (hero.hp <= 0) {
+                    triggerGameOver();
+                    return;
                 }
 
                 if (currentBoss.shield > 0) {
@@ -718,6 +750,7 @@
             });
 
             let validFusions = Object.keys(counts).filter(id => counts[id] >= 2);
+            let fusionCost = Math.round(40 * getInflationMultiplier());
 
             if (validFusions.length === 0) {
                 select.innerHTML = `<option value="">No duplicate pairs available to fuse</option>`;
@@ -729,7 +762,7 @@
                 if (sampleCard && sampleCard.tier !== 'Legendary') {
                     let opt = document.createElement('option');
                     opt.value = id;
-                    opt.innerText = `Fuse 2x [${sampleCard.tier}] ${sampleCard.name} (Cost: 40 BP)`;
+                    opt.innerText = `Fuse 2x [${sampleCard.tier}] ${sampleCard.name} (Cost: ${fusionCost} BP)`;
                     select.appendChild(opt);
                 }
             });
@@ -738,7 +771,8 @@
         function executeCardFusion() {
             const select = document.getElementById('fusionCardSelect');
             const cardId = select.value;
-            if (!cardId || playerPoints < 40) return;
+            let fusionCost = Math.round(40 * getInflationMultiplier());
+            if (!cardId || playerPoints < fusionCost) return;
 
             let sampleCard = playerDeck.find(c => c.id === cardId);
             if (!sampleCard) return;
@@ -764,16 +798,17 @@
             });
 
             playerDeck.push(upgradedCard);
-            playerPoints -= 40;
+            playerPoints -= fusionCost;
             playSound('win');
             updateUI();
             populateFusionDropdown();
-            logMessage(`[Forge] Successfully fused two cards into [${upgradedCard.tier}] ${upgradedCard.name}!`);
+            logMessage(`[Forge] Fused two cards into [${upgradedCard.tier}] ${upgradedCard.name}!`);
         }
 
         function buyIntermissionHeal() {
-            if (playerPoints < 50) return;
-            playerPoints -= 50;
+            let cost = Math.round(50 * getInflationMultiplier());
+            if (playerPoints < cost) return;
+            playerPoints -= cost;
             hero.maxHp += 10;
             hero.hp = Math.min(hero.maxHp, hero.hp + 25);
             playSound('heal');
@@ -783,8 +818,9 @@
         }
 
         function buyIntermissionEnergyCap() {
-            if (playerPoints < 75) return;
-            playerPoints -= 75;
+            let cost = Math.round(75 * getInflationMultiplier());
+            if (playerPoints < cost) return;
+            playerPoints -= cost;
             hero.maxEnergy = Math.round((hero.maxEnergy + 0.5) * 10) / 10;
             playSound('win');
             updateUI();
@@ -793,11 +829,12 @@
         }
 
         function getHandUpgradeCost() {
-            if (handSize === 4) return 100;
-            if (handSize === 6) return 200;
-            if (handSize === 8) return 350;
-            if (handSize === 10) return 500;
-            return 999999;
+            let base = 100;
+            if (handSize === 6) base = 200;
+            if (handSize === 8) base = 350;
+            if (handSize === 10) base = 500;
+            if (handSize >= 12) return 999999;
+            return Math.round(base * getInflationMultiplier());
         }
 
         function buyHandSizeUpgrade() {
@@ -812,6 +849,16 @@
         }
 
         function updateArmoryUI() {
+            let mult = getInflationMultiplier();
+            let inflationPercent = Math.round((mult - 1) * 100);
+            document.getElementById('inflationBadge').innerText = `Prices +${inflationPercent}% (Lvl ${currentLevel})`;
+
+            document.getElementById('healCostText').innerText = Math.round(50 * mult);
+            document.getElementById('energyCapCostText').innerText = Math.round(75 * mult);
+            document.getElementById('relicAegisCost').innerText = Math.round(75 * mult);
+            document.getElementById('relicGreedCost').innerText = Math.round(75 * mult);
+            document.getElementById('fusionCostText').innerText = `Cost: ${Math.round(40 * mult)} BP`;
+
             const btn = document.getElementById('btnHandUpgrade');
             const label = document.getElementById('handUpgradeLabel');
             const costEl = document.getElementById('handUpgradeCost');
@@ -832,7 +879,6 @@
                 }
             }
 
-            // Update relic buttons
             const aegisBtn = document.getElementById('btnRelicAegis');
             if (relics.aegis) {
                 aegisBtn.classList.add('opacity-40', 'pointer-events-none');
@@ -847,8 +893,9 @@
         }
 
         function buyRelic(type) {
-            if (relics[type] || playerPoints < 75) return;
-            playerPoints -= 75;
+            let cost = Math.round(75 * getInflationMultiplier());
+            if (relics[type] || playerPoints < cost) return;
+            playerPoints -= cost;
             relics[type] = true;
             playSound('win');
 
