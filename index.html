@@ -445,7 +445,7 @@
                             <span class="bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="relicAegisCost">75 BP</span>
                         </button>
 
-                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="buyRelic('greed')" onclick="buyRelic('greed')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
                             <div>
                                 <p class="font-bold text-slate-200">🏺 Greed Ring</p>
                                 <p class="text-[9px] text-slate-400">+25 BP per win</p>
@@ -1157,7 +1157,7 @@
                 currentLevel = data.currentLevel !== undefined ? data.currentLevel : 0;
                 playerPoints = data.playerPoints || 0;
                 hero.maxHp = data.heroMaxHp || 100;
-                hero.hp = data.heroHp || hero.maxHp;
+                hero.hp = data.heroHp !== undefined ? data.heroHp : hero.maxHp;
                 hero.maxEnergy = data.heroMaxEnergy || 3;
                 handSize = data.handSize || 4;
 
@@ -1652,6 +1652,9 @@
         function triggerStageVictory() {
             playSound('win');
             
+            // Apply full stage-clear completion healing bonus (+30 HP, capped at max HP)
+            hero.hp = Math.min(hero.maxHp, hero.hp + 30);
+
             if (currentLevel === 0) {
                 logMessage(`[Tutorial] Training Dummy defeated! Fully restoring health and advancing to Level 1.`);
                 currentLevel = 1;
@@ -2039,7 +2042,7 @@
             document.getElementById('modalVictory').classList.add('hidden');
             currentLevel++;
             
-            // FIX: Guaranteed full stage-clear healing buffer (+30 HP, capped at max HP) right as you step into any next level
+            // Ensure absolute baseline HP recovery when stepping into the next stage
             hero.hp = Math.min(hero.maxHp, hero.hp + 30);
             
             saveGameProgress();
