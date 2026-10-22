@@ -102,7 +102,7 @@
                 </div>
                 <div class="flex items-center gap-3">
                     <span class="text-slate-300">Energy: <strong class="text-amber-400 text-base" id="playerEnergyDisplay">3</strong>/<span id="playerMaxEnergyDisplay">3</span></span>
-                    <button onclick="endTurn()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-md font-cinzel">End Turn</button>
+                    <button onclick="endTurn()" class="bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition shadow-md font-cinzel">End Turn</button>
                 </div>
             </div>
 
@@ -187,7 +187,7 @@
                     <span class="text-xs font-cinzel font-bold text-slate-300 tracking-wider">YOUR HAND (<span id="handCountDisplay">4</span> Cards)</span>
                     <span class="text-xs text-slate-400">Click a card to play</span>
                 </div>
-                <div id="playerHandContainer" class="grid grid-cols-2 sm:grid-cols-4 gap-3"></div>
+                <div id="playerHandContainer" class="grid grid-cols-1 sm:grid-cols-4 gap-3"></div>
             </div>
         </div>
 
@@ -530,7 +530,7 @@
     <!-- Game Engine Script -->
     <script>
         const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
-        const SAVE_KEY = "elemental_clash_save_v10";
+        const SAVE_KEY = "elemental_clash_save_v12";
 
         let soundEnabled = true;
         let playerPoints = 0;
@@ -1521,6 +1521,7 @@
                 showPopup('bossDamagePopup', `-${dmg}`, 'text-amber-400');
 
                 if (currentBoss.currentHp <= 0) {
+                    updateUI();
                     triggerStageVictory();
                     return;
                 }
@@ -1614,6 +1615,12 @@
                 currentBoss.currentHp += healAmt;
                 showPopup('bossDamagePopup', `+${healAmt}`, 'text-emerald-400');
                 logMessage(`[🧠 Smart AI Regenerate] ${currentBoss.name} regains ${healAmt} HP!`);
+            }
+
+            if (currentBoss.currentHp <= 0) {
+                updateUI();
+                triggerStageVictory();
+                return;
             }
 
             if (hero.hp <= 0) {
@@ -2022,6 +2029,7 @@
         function advanceToNextLevel() {
             document.getElementById('modalVictory').classList.add('hidden');
             currentLevel++;
+            // FIX: Ensure HP is restored and capped at maxHp cleanly when advancing levels
             hero.hp = Math.min(hero.maxHp, hero.hp + 30);
             saveGameProgress();
             initBattle();
