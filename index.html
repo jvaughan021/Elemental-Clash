@@ -1520,7 +1520,6 @@
                 currentBoss.currentHp = Math.max(0, currentBoss.currentHp - dmg);
                 showPopup('bossDamagePopup', `-${dmg}`, 'text-amber-400');
 
-                // FIX: Force absolute check and immediate victory hook
                 if (currentBoss.currentHp <= 0 || currentBoss.currentHp === 0) {
                     currentBoss.currentHp = 0;
                     updateUI();
@@ -1529,7 +1528,6 @@
                 }
             }
 
-            // SAFETY CHECK: Double check if boss HP hit 0 even outside direct damage block
             if (currentBoss.currentHp <= 0) {
                 currentBoss.currentHp = 0;
                 updateUI();
@@ -1654,6 +1652,9 @@
         function triggerStageVictory() {
             playSound('win');
             
+            // FIX: Apply the +30 HP stage-clear regen right here upon victory confirmation, before opening intermission/advancing
+            hero.hp = Math.min(hero.maxHp, hero.hp + 30);
+
             if (currentLevel === 0) {
                 logMessage(`[Tutorial] Training Dummy defeated! Fully restoring health and advancing to Level 1.`);
                 currentLevel = 1;
@@ -2040,7 +2041,7 @@
         function advanceToNextLevel() {
             document.getElementById('modalVictory').classList.add('hidden');
             currentLevel++;
-            hero.hp = Math.min(hero.maxHp, hero.hp + 30);
+            // Note: HP regen is now securely handled upon stage victory, so advancing clean preserves the healed amount.
             saveGameProgress();
             initBattle();
         }
