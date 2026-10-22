@@ -2042,8 +2042,8 @@
             document.getElementById('modalVictory').classList.add('hidden');
             currentLevel++;
             
-            // Ensure absolute baseline HP recovery when stepping into the next stage
-            hero.hp = Math.min(hero.maxHp, hero.hp + 30);
+            // Restore the hero to 100 HP when entering the next level.
+            hero.hp = 100;
             
             saveGameProgress();
             initBattle();
