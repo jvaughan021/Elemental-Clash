@@ -106,10 +106,10 @@
                 </div>
             </div>
 
-            <!-- Active Relics Bar -->
-            <div id="relicsBar" class="bg-slate-900/70 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-400 flex items-center gap-2 overflow-x-auto hidden shadow">
-                <span class="text-amber-400 font-bold">Relics:</span>
-                <div id="relicsContainer" class="flex gap-2"></div>
+            <!-- Active Stats & Relics Bar -->
+            <div id="relicsBar" class="bg-slate-900/70 border border-slate-800 rounded-xl px-3 py-1.5 text-xs text-slate-400 flex items-center gap-2 overflow-x-auto shadow">
+                <span class="text-amber-400 font-bold">Active Upgrades:</span>
+                <div id="relicsContainer" class="flex gap-2 text-[11px]"></div>
             </div>
 
             <!-- Combat Arena Grid -->
@@ -130,7 +130,7 @@
                             <span id="heroShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
                         </div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-400 text-center" id="heroStatusText">Ready for battle. Watch out for elemental retaliations!</div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-400 text-center" id="heroStatusText">Ready for battle. Watch out for element spam fatigue!</div>
                 </div>
 
                 <!-- Boss Panel -->
@@ -149,7 +149,7 @@
                             <span id="bossShieldText" class="text-blue-400 font-semibold hidden">Shield: 0</span>
                         </div>
                     </div>
-                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-300 text-center italic" id="bossIntentText">Practice your cards here! No BP rewarded.</div>
+                    <div class="mt-4 pt-3 border-t border-slate-800/60 text-xs text-slate-300 text-center italic" id="bossIntentText">Smart AI ready to punish spamming!</div>
                 </div>
             </div>
 
@@ -164,7 +164,7 @@
 
             <!-- 6-Element Advantage Chart -->
             <div class="bg-slate-900/80 border border-slate-800 rounded-xl px-3 py-2 text-xs text-slate-300 space-y-1 shadow">
-                <div class="font-bold text-amber-400">🔥 6-Element Advantage (+40% DMG / Retaliation Risk):</div>
+                <div class="font-bold text-amber-400">🔥 6-Element Advantage & Anti-Spam Rule:</div>
                 <div class="grid grid-cols-2 sm:grid-cols-3 gap-1 font-mono text-[11px] text-slate-400">
                     <span>🔥 Fire &gt; 🌿 Earth</span>
                     <span>🌿 Earth &gt; 💧 Water</span>
@@ -173,11 +173,12 @@
                     <span>🌫️ Spirit &gt; 🌑 Shadow</span>
                     <span>🌑 Shadow &gt; 🌪️ Air</span>
                 </div>
+                <div class="text-[10px] text-amber-300/80 pt-0.5">⚠️ Spamming identical element cards in a single turn triggers Boss Anticipation!</div>
             </div>
 
             <!-- Combat Log -->
             <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 h-24 overflow-y-auto text-xs font-mono text-slate-300 flex flex-col gap-1 shadow-inner" id="combatLog">
-                <div>[System] Welcome to Elemental Clash! Defeat the Training Dummy to begin your journey.</div>
+                <div>[System] Welcome to Elemental Clash! Plan your element combos carefully.</div>
             </div>
 
             <!-- Player Hand -->
@@ -205,9 +206,9 @@
         </div>
     </div>
 
-    <!-- MODAL: Intermission Armory, Fusion Forge, AFK Farm & Royal Vault -->
+    <!-- MODAL: Intermission Skill Trees & Armory -->
     <div id="modalVictory" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4 overflow-y-auto">
-        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-xl w-full text-center shadow-2xl card-glow space-y-3 max-h-[90vh] overflow-y-auto">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 md:p-6 max-w-2xl w-full text-center shadow-2xl card-glow space-y-3 max-h-[90vh] overflow-y-auto">
             <h3 class="font-cinzel text-2xl font-bold text-amber-400">Stage Cleared!</h3>
             <p class="text-xs text-slate-300" id="victoryMsg">You defeated the boss! +50 BP earned.</p>
             
@@ -216,126 +217,241 @@
                 <span class="text-amber-400 font-bold text-sm">🪙 <span id="shopPlayerPointsDisplay">0</span> BP</span>
             </div>
 
-            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-3 shadow-inner">
+            <!-- Intermission Skill Trees Container -->
+            <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 text-left space-y-4 shadow-inner">
                 <div class="flex justify-between items-center">
-                    <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Armory & Forge:</p>
+                    <p class="text-xs font-bold text-amber-400 uppercase tracking-wider">Intermission Skill Trees & Armory:</p>
                     <span class="text-[10px] text-red-400 font-mono" id="inflationBadge">Prices +0% (Lvl 1)</span>
                 </div>
                 
-                <!-- Card Fusion Section -->
+                <!-- CARD FUSION FORGE -->
                 <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs shadow">
                     <div class="flex justify-between items-center">
                         <span class="font-bold text-amber-400">🔥 Card Fusion Forge</span>
                         <span class="text-[10px] text-amber-300 font-mono" id="fusionCostText">Cost: 40 BP</span>
                     </div>
-                    <p class="text-[10px] text-slate-400 leading-relaxed">
-                        <strong>Fusion Ladder:</strong> When you have 2 identical cards in your deck, select them here to upgrade into the next tier (Common ➔ Uncommon ➔ Rare ➔ Epic ➔ Legendary)!
-                    </p>
                     <div class="flex gap-2 items-center pt-1">
                         <select id="fusionCardSelect" class="w-full bg-slate-950 border border-slate-700 rounded-lg p-2 text-xs text-slate-200 focus:outline-none focus:border-amber-500 shadow-inner"></select>
                         <button onclick="executeCardFusion()" class="bg-gradient-to-r from-amber-500 to-orange-600 text-slate-950 font-bold px-4 py-2 rounded-lg text-xs whitespace-nowrap transition shadow">Fuse Pair</button>
                     </div>
                 </div>
 
-                <!-- AFK Sparring Grounds Section -->
-                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs shadow">
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-amber-400">⚔️ AFK Sparring Grounds</span>
-                        <span class="text-[10px] text-amber-300 font-mono" id="trainingLvlBadge">Lvl 0 (Locked)</span>
-                    </div>
-                    <p class="text-[10px] text-slate-400 leading-relaxed">
-                        Slowly generates passive BP over time in the background (tab must be open). Upgrade to boost the payout rate!
-                    </p>
-                    <div class="flex justify-between items-center pt-1">
-                        <span class="text-slate-300 text-[11px]">Yield: <strong id="trainingRateText" class="text-amber-400">0 BP / 10s</strong></span>
-                        <button id="btnUpgradeTraining" onclick="upgradeTrainingGrounds()" class="bg-gradient-to-r from-amber-500 to-orange-600 hover:from-amber-400 hover:to-orange-500 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition shadow">
-                            Unlock (<span id="trainingCostText">100</span> BP)
+                <!-- TREE 1: OFFENSE & COMBAT -->
+                <div class="bg-slate-900 p-3 rounded-lg border border-red-500/30 space-y-2 text-xs shadow">
+                    <p class="font-bold text-red-400 uppercase tracking-wider text-[11px]">⚔️ Offense Skill Tree</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button onclick="buyUpgrade('atkPower')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">⚔️ Card DMG (+<span id="atkVal">0</span>)</p>
+                                <p class="text-[9px] text-slate-400">+2 DMG to all attacks</p>
+                            </div>
+                            <span class="bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="atkCost">80 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('critChance')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🎯 Crit Chance (<span id="critVal">0</span>%)</p>
+                                <p class="text-[9px] text-slate-400">+5% Crit chance (1.5x)</p>
+                            </div>
+                            <span class="bg-yellow-500/20 text-yellow-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="critCost">120 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('critMult')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">💥 Crit DMG (<span id="critMultVal">1.5</span>x)</p>
+                                <p class="text-[9px] text-slate-400">+0.25x Critical damage</p>
+                            </div>
+                            <span class="bg-yellow-500/20 text-yellow-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="critMultCost">200 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('elemAmp')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🔥 Elem Amp (+<span id="elemAmpVal">40</span>%)</p>
+                                <p class="text-[9px] text-slate-400">+10% Advantage bonus</p>
+                            </div>
+                            <span class="bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="elemAmpCost">150 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('finisher')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">💀 Finisher (+<span id="finisherVal">0</span>%)</p>
+                                <p class="text-[9px] text-slate-400">+15% DMG when Boss &lt;30% HP</p>
+                            </div>
+                            <span class="bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="finisherCost">175 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('firstStrike')" id="btnFirstStrike" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">⚡ First Strike</p>
+                                <p class="text-[9px] text-slate-400">2x DMG on 1st card played</p>
+                            </div>
+                            <span class="bg-red-500/20 text-red-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="firstStrikeCost">250 BP</span>
                         </button>
                     </div>
                 </div>
 
-                <!-- BP Royal Vault Section -->
-                <div class="bg-slate-900 p-3 rounded-lg border border-amber-500/40 space-y-3 text-xs shadow">
-                    <div class="flex justify-between items-center">
-                        <span class="font-bold text-amber-400">🏦 Royal BP Bank Vault</span>
-                        <span class="text-[10px] text-emerald-400 font-mono font-bold" id="vaultBalanceDisplay">Vault: 0 BP</span>
-                    </div>
-                    <p class="text-[10px] text-slate-400 leading-relaxed">
-                        Deposit BP to earn offline compounding interest! Upgrade interest rates and payout speed. <strong>Warning: Wiped on death!</strong>
-                    </p>
-                    
-                    <div class="flex gap-2 items-center bg-slate-950 p-2 rounded-lg border border-slate-800">
-                        <input type="number" id="vaultAmountInput" min="1" placeholder="Amount BP..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-100 text-center focus:outline-none focus:border-amber-500">
-                        <button onclick="depositToVault()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] whitespace-nowrap transition">Deposit</button>
-                        <button onclick="withdrawFromVault()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] whitespace-nowrap transition">Withdraw</button>
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-2 bg-slate-950/70 p-2 rounded-lg border border-slate-800 text-[11px] text-slate-300">
-                        <div>Rate: <strong id="vaultRateText" class="text-amber-400">2% / payout</strong></div>
-                        <div>Frequency: <strong id="vaultFreqText" class="text-amber-400">Daily (24h)</strong></div>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-1">
-                        <button id="btnUpgradeVaultRate" onclick="upgradeVaultRate()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-amber-500/30 font-semibold p-2 rounded-lg text-[11px] text-left transition flex justify-between items-center">
+                <!-- TREE 2: DEFENSE & SURVIVABILITY -->
+                <div class="bg-slate-900 p-3 rounded-lg border border-blue-500/30 space-y-2 text-xs shadow">
+                    <p class="font-bold text-blue-400 uppercase tracking-wider text-[11px]">🛡️ Defense Skill Tree</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button onclick="buyUpgrade('maxHp')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
                             <div>
-                                <p class="font-bold text-amber-400">📈 Boost Rate (Lvl <span id="vaultRateLvlText">1</span>)</p>
-                                <p class="text-[9px] text-slate-400">+2% Interest/level</p>
+                                <p class="font-bold text-slate-200">❤️ Max HP Boost</p>
+                                <p class="text-[9px] text-slate-400">+10 Max HP & +25 HP</p>
                             </div>
-                            <span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="vaultRateCostText">250 BP</span>
+                            <span class="bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="maxHpCost">50 BP</span>
                         </button>
 
-                        <button id="btnUpgradeVaultFreq" onclick="upgradeVaultFreq()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-amber-500/30 font-semibold p-2 rounded-lg text-[11px] text-left transition flex justify-between items-center">
+                        <button onclick="buyUpgrade('armor')" id="btnArmor" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
                             <div>
-                                <p class="font-bold text-amber-400">⚡ Speed (Lvl <span id="vaultFreqLvlText">1</span>)</p>
+                                <p class="font-bold text-slate-200">🛡️ Armor (-<span id="armorVal">0</span> DMG)</p>
+                                <p class="text-[9px] text-slate-400">Reduces boss attack damage</p>
+                            </div>
+                            <span class="bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="armorCost">150 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('thorns')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🌵 Thorns (<span id="thornsVal">0</span>%)</p>
+                                <p class="text-[9px] text-slate-400">Reflects boss attack damage</p>
+                            </div>
+                            <span class="bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="thornsCost">160 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('lifesteal')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🩸 Lifesteal (<span id="lifestealVal">0</span>%)</p>
+                                <p class="text-[9px] text-slate-400">Heal for % of damage dealt</p>
+                            </div>
+                            <span class="bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="lifestealCost">220 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('retalResist')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🧱 Counter Resist</p>
+                                <p class="text-[9px] text-slate-400">-25% Retaliation damage taken</p>
+                            </div>
+                            <span class="bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="retalResistCost">140 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('secondWind')" id="btnSecondWind" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🌬️ Second Wind</p>
+                                <p class="text-[9px] text-slate-400">Revive at 25% HP once/run</p>
+                            </div>
+                            <span class="bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="secondWindCost">300 BP</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TREE 3: DECK & HAND MASTERY -->
+                <div class="bg-slate-900 p-3 rounded-lg border border-amber-500/30 space-y-2 text-xs shadow">
+                    <p class="font-bold text-amber-400 uppercase tracking-wider text-[11px]">⚡ Deck & Energy Tree</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button onclick="buyUpgrade('maxEnergy')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">⚡ Max Energy Cap</p>
+                                <p class="text-[9px] text-slate-400">+0.5 Energy per turn</p>
+                            </div>
+                            <span class="bg-emerald-500/20 text-emerald-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="maxEnergyCost">75 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('handSize')" id="btnHandSize" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🃏 Expand Hand Size</p>
+                                <p class="text-[9px] text-slate-400">Draw +2 cards in hand</p>
+                            </div>
+                            <span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="handSizeCost">100 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('initEnergy')" id="btnInitEnergy" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">⚡ Initial Turn Surge</p>
+                                <p class="text-[9px] text-slate-400">Start fights with +2 bonus ⚡</p>
+                            </div>
+                            <span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="initEnergyCost">250 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('freeReroll')" id="btnFreeReroll" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🔄 Free Hand Reroll</p>
+                                <p class="text-[9px] text-slate-400">1 Free reroll per battle</p>
+                            </div>
+                            <span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="freeRerollCost">180 BP</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- TREE 4: ECONOMY, VAULT & AFK -->
+                <div class="bg-slate-900 p-3 rounded-lg border border-purple-500/30 space-y-2 text-xs shadow">
+                    <p class="font-bold text-purple-400 uppercase tracking-wider text-[11px]">🏦 Economy & Vault Tree</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button onclick="upgradeTrainingGrounds()" id="btnTraining" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">⚔️ AFK Sparring (Lvl <span id="trainingLvlVal">0</span>)</p>
+                                <p class="text-[9px] text-slate-400"><span id="trainingYieldVal">0</span> BP / 10s passive yield</p>
+                            </div>
+                            <span class="bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="trainingCost">350 BP</span>
+                        </button>
+
+                        <button onclick="upgradeVaultRate()" id="btnVaultRate" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">📈 Vault Rate (Lvl <span id="vaultRateLvlVal">1</span>)</p>
+                                <p class="text-[9px] text-slate-400">+2% Interest/payout</p>
+                            </div>
+                            <span class="bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="vaultRateCost">500 BP</span>
+                        </button>
+
+                        <button onclick="upgradeVaultFreq()" id="btnVaultFreq" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">⚡ Vault Speed (Lvl <span id="vaultFreqLvlVal">1</span>)</p>
                                 <p class="text-[9px] text-slate-400" id="vaultFreqSubtext">Next: Hourly</p>
                             </div>
-                            <span class="bg-amber-500/20 text-amber-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="vaultFreqCostText">500 BP</span>
+                            <span class="bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="vaultFreqCost">1000 BP</span>
+                        </button>
+
+                        <button onclick="buyUpgrade('bounty')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">💰 Bounty Hunter (+<span id="bountyVal">0</span> BP)</p>
+                                <p class="text-[9px] text-slate-400">+15 BP bonus per boss kill</p>
+                            </div>
+                            <span class="bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="bountyCost">120 BP</span>
                         </button>
                     </div>
-                </div>
 
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 shadow">
-                        <div>
-                            <p class="font-bold text-slate-200">❤️ Max HP Up</p>
-                            <p class="text-[10px] text-slate-400">+25 HP & +10 Max HP</p>
+                    <!-- Bank Vault Control Box -->
+                    <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 space-y-2 mt-2">
+                        <div class="flex justify-between items-center">
+                            <span class="font-bold text-emerald-400">🏦 Royal Vault Balance:</span>
+                            <span class="text-xs font-mono font-bold text-emerald-300" id="vaultBalanceDisplay">0 BP</span>
                         </div>
-                        <button onclick="buyIntermissionHeal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="healCostText">50</span> BP</button>
-                    </div>
-
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 shadow">
-                        <div>
-                            <p class="font-bold text-slate-200">⚡ +0.5 Max Energy</p>
-                            <p class="text-[10px] text-slate-400">Increase turn energy</p>
+                        <div class="flex gap-2 items-center">
+                            <input type="number" id="vaultAmountInput" min="1" placeholder="Amount BP..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-slate-100 text-center focus:outline-none focus:border-amber-500">
+                            <button onclick="depositToVault()" class="bg-emerald-600 hover:bg-emerald-500 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] whitespace-nowrap transition">Deposit</button>
+                            <button onclick="withdrawFromVault()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] whitespace-nowrap transition">Withdraw</button>
                         </div>
-                        <button onclick="buyIntermissionEnergyCap()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="energyCapCostText">75</span> BP</button>
                     </div>
                 </div>
 
-                <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 text-xs shadow">
-                    <div>
-                        <p class="font-bold text-slate-200" id="handUpgradeLabel">🃏 Expand Hand Size</p>
-                        <p class="text-[10px] text-slate-400">Draw more cards each turn</p>
-                    </div>
-                    <button id="btnHandUpgrade" onclick="buyHandSizeUpgrade()" class="bg-amber-600 hover:bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="handUpgradeCost">100</span> BP</button>
-                </div>
+                <!-- TREE 5: RELICS & ARTIFACTS -->
+                <div class="bg-slate-900 p-3 rounded-lg border border-slate-800 space-y-2 text-xs shadow">
+                    <p class="font-bold text-slate-300 uppercase tracking-wider text-[11px]">🏺 Relics & Artifacts</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🏺 Aegis Core</p>
+                                <p class="text-[9px] text-slate-400">+8 Shield/turn</p>
+                            </div>
+                            <span class="bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="relicAegisCost">75 BP</span>
+                        </button>
 
-                <!-- Relics Grid -->
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 shadow">
-                        <div>
-                            <p class="font-bold text-slate-200">🏺 Aegis Core</p>
-                            <p class="text-[10px] text-slate-400">+8 Shield/turn</p>
-                        </div>
-                        <button id="btnRelicAegis" onclick="buyRelic('aegis')" class="bg-blue-500 hover:bg-blue-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="relicAegisCost">75</span> BP</button>
-                    </div>
-
-                    <div class="flex items-center justify-between bg-slate-900 p-2.5 rounded-lg border border-slate-800 shadow">
-                        <div>
-                            <p class="font-bold text-slate-200">🏺 Greed Ring</p>
-                            <p class="text-[10px] text-slate-400">+25 BP per win</p>
-                        </div>
-                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-purple-500 hover:bg-purple-400 text-slate-950 font-bold px-3 py-1 rounded text-xs transition shadow"><span id="relicGreedCost">75</span> BP</button>
+                        <button id="btnRelicGreed" onclick="buyRelic('greed')" class="bg-slate-950 hover:bg-slate-800 p-2 rounded-lg border border-slate-800 flex justify-between items-center text-left">
+                            <div>
+                                <p class="font-bold text-slate-200">🏺 Greed Ring</p>
+                                <p class="text-[9px] text-slate-400">+25 BP per win</p>
+                            </div>
+                            <span class="bg-purple-500/20 text-purple-300 px-1.5 py-0.5 rounded font-bold text-[10px]" id="relicGreedCost">75 BP</span>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -392,8 +508,8 @@
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
-                    <p class="font-bold text-amber-400">🔥 Elemental Advantage & Boss Counter-Attacks:</p>
-                    <p class="text-slate-400 text-[11px]">Pay close attention to elements! Advantage deals <strong>+40% bonus damage</strong>. If the boss counters your element, damage drops to 70% and the boss <strong>immediately retaliates</strong>!</p>
+                    <p class="font-bold text-amber-400">🔥 Anti-Spam & Element Fatigue:</p>
+                    <p class="text-slate-400 text-[11px]">Playing multiple cards of the <strong>same element</strong> in a single turn triggers Boss Anticipation, reducing your damage! Mix up your elements or risk getting countered.</p>
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
@@ -402,7 +518,7 @@
                 </div>
 
                 <div class="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2 shadow-inner">
-                    <p class="font-bold text-amber-400">💾 Saving Progress:</p>
+                    <p class="font-bold text-slate-200">💾 Saving Progress:</p>
                     <p class="text-slate-400 text-[11px]">Your run automatically saves after every victory, draft, or shop purchase. You can resume right where you left off anytime!</p>
                 </div>
             </div>
@@ -414,7 +530,7 @@
     <!-- Game Engine Script -->
     <script>
         const ADSTERRA_SMARTLINK = "https://asiafilm.org/4/933970a4a94101ae768f8ce4511e46cf";
-        const SAVE_KEY = "elemental_clash_save_v4";
+        const SAVE_KEY = "elemental_clash_save_v10";
 
         let soundEnabled = true;
         let playerPoints = 0;
@@ -426,6 +542,31 @@
         let handSize = 4;
         let relics = { aegis: false, greed: false };
         let tutorialStep = 1;
+
+        let atkPowerBonus = 0;
+        let critChance = 0;
+        let critMult = 1.5;
+        let elemAmpBonus = 0;
+        let finisherBonus = 0;
+        let hasFirstStrike = false;
+        let playedFirstCardThisFight = false;
+
+        // Anti-Spam Tracking
+        let lastPlayedElementThisTurn = null;
+        let sameElementCountThisTurn = 0;
+
+        let armorValue = 0;
+        let thornsPercent = 0;
+        let lifestealPercent = 0;
+        let retalResist = 0;
+        let secondWindAvailable = false;
+        let secondWindTriggered = false;
+
+        let initialEnergyBonus = 0;
+        let freeRerollsLeft = 0;
+        let hasFreeRerollUpgrade = false;
+
+        let bountyBonus = 0;
         let trainingLevel = 0;
 
         let vaultBalance = 0;
@@ -444,10 +585,9 @@
 
         const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-        // Passive Sparring Grounds loop (Ticks every 10 seconds)
         setInterval(() => {
             if (trainingLevel > 0) {
-                let earnedBp = trainingLevel >= 4 ? trainingLevel + 1 : trainingLevel; 
+                let earnedBp = trainingLevel; 
                 playerPoints += earnedBp;
                 logMessage(`[AFK Sparring] Training grounds produced +${earnedBp} BP.`);
                 updateUI();
@@ -455,7 +595,6 @@
             }
         }, 10000);
 
-        // Vault Compound Interest loop & Offline Payout Calculator
         let vaultTimerSeconds = 0;
         setInterval(() => {
             if (vaultBalance > 0) {
@@ -490,7 +629,6 @@
 
             if (missedPayouts > 0) {
                 if (missedPayouts > 10000) missedPayouts = 10000;
-
                 let ratePercent = vaultRateLevel * 0.02;
                 let totalInterestEarned = 0;
 
@@ -506,10 +644,10 @@
         }
 
         function getVaultIntervalSeconds() {
-            if (vaultFreqLevel === 1) return 86400; // Daily
-            if (vaultFreqLevel === 2) return 3600;  // Hourly
-            if (vaultFreqLevel === 3) return 60;    // Minutely
-            if (vaultFreqLevel >= 4) return 1;     // Per Second
+            if (vaultFreqLevel === 1) return 86400;
+            if (vaultFreqLevel === 2) return 3600;
+            if (vaultFreqLevel === 3) return 60;
+            if (vaultFreqLevel >= 4) return 1;
             return 86400;
         }
 
@@ -522,13 +660,13 @@
         }
 
         function getVaultRateUpgradeCost() {
-            return Math.round(250 * Math.pow(2.4, vaultRateLevel - 1));
+            return Math.round(500 * Math.pow(3, vaultRateLevel - 1));
         }
 
         function getVaultFreqUpgradeCost() {
-            if (vaultFreqLevel === 1) return 500;
-            if (vaultFreqLevel === 2) return 2500;
-            if (vaultFreqLevel === 3) return 10000;
+            if (vaultFreqLevel === 1) return 1000;
+            if (vaultFreqLevel === 2) return 5000;
+            if (vaultFreqLevel === 3) return 25000;
             return 999999;
         }
 
@@ -574,31 +712,19 @@
 
         function upgradeVaultRate() {
             let cost = getVaultRateUpgradeCost();
-            if (playerPoints < cost) {
-                logMessage(`[Vault] Not enough BP! Need ${cost} BP to boost interest rate.`);
-                return;
-            }
-
+            if (playerPoints < cost) return;
             playerPoints -= cost;
             vaultRateLevel++;
             playSound('win');
             saveGameProgress();
             updateUI();
-            logMessage(`[Vault] Upgraded Interest Rate to Level ${vaultRateLevel} (${vaultRateLevel * 2}% per payout)!`);
+            logMessage(`[Vault] Upgraded Interest Rate to Level ${vaultRateLevel}!`);
         }
 
         function upgradeVaultFreq() {
-            if (vaultFreqLevel >= 4) {
-                logMessage(`[Vault] Payout frequency is already maxed at Per Second compounding!`);
-                return;
-            }
-
+            if (vaultFreqLevel >= 4) return;
             let cost = getVaultFreqUpgradeCost();
-            if (playerPoints < cost) {
-                logMessage(`[Vault] Not enough BP! Need ${cost} BP to upgrade payout speed.`);
-                return;
-            }
-
+            if (playerPoints < cost) return;
             playerPoints -= cost;
             vaultFreqLevel++;
             playSound('win');
@@ -608,28 +734,20 @@
         }
 
         function getTrainingUpgradeCost() {
-            if (trainingLevel === 0) return 100;
-            if (trainingLevel === 1) return 250;
-            if (trainingLevel === 2) return 500;
-            if (trainingLevel === 3) return 1000;
-            return Math.round(1000 * Math.pow(1.8, trainingLevel - 3));
+            if (trainingLevel === 0) return 350;
+            return Math.round(350 * Math.pow(2.5, trainingLevel));
         }
 
         function upgradeTrainingGrounds() {
             let cost = getTrainingUpgradeCost();
-            if (playerPoints < cost) {
-                logMessage(`[Forge] Not enough BP! Need ${cost} BP to upgrade Training Grounds.`);
-                return;
-            }
-
+            if (playerPoints < cost) return;
             playerPoints -= cost;
             trainingLevel++;
             playSound('win');
-
             saveGameProgress();
             updateUI();
             updateArmoryUI();
-            logMessage(`[AFK Sparring] Upgraded Training Grounds to Level ${trainingLevel}! Speed/Yield increased.`);
+            logMessage(`[AFK Sparring] Upgraded to Level ${trainingLevel}!`);
         }
 
         function playSound(type) {
@@ -681,7 +799,6 @@
         function toggleAudio() {
             soundEnabled = !soundEnabled;
             const music = document.getElementById('bgMusic');
-            
             if (soundEnabled) {
                 document.getElementById('audioToggleBtn').innerText = '🔊 Sound: ON';
                 if (music) music.play().catch(e => {});
@@ -692,7 +809,6 @@
         }
 
         const masterCardDatabase = [
-            // FIRE
             { id: 'f_c1', name: 'Spark', element: 'fire', tier: 'Common', cost: 0.5, power: 8, icon: '🔥', desc: 'Tier 1 Fire strike (0.5 ⚡).' },
             { id: 'f_c2', name: 'Flame Dart', element: 'fire', tier: 'Common', cost: 1, power: 12, icon: '🔥', desc: 'Tier 1 Fire strike (12 dmg).' },
             { id: 'f_u1', name: 'Fireball', element: 'fire', tier: 'Uncommon', cost: 1.5, power: 20, icon: '💥', desc: 'Tier 2 Fire strike (20 dmg).' },
@@ -704,7 +820,6 @@
             { id: 'f_l1', name: 'Supernova', element: 'fire', tier: 'Legendary', cost: 3, power: 60, icon: '🌟', desc: 'Tier 5 Legendary cataclysm (60 dmg).' },
             { id: 'f_l2', name: 'Solar Flare', element: 'fire', tier: 'Legendary', cost: 2.5, power: 52, icon: '🌟', desc: 'Tier 5 Legendary Solar (52 dmg).' },
 
-            // WATER
             { id: 'w_c1', name: 'Water Droplet', element: 'water', tier: 'Common', cost: 0.5, power: 8, icon: '💧', desc: 'Tier 1 Water bolt (0.5 ⚡).' },
             { id: 'w_c2', name: 'Aqua Spray', element: 'water', tier: 'Common', cost: 1, power: 12, icon: '💧', desc: 'Tier 1 Water bolt (12 dmg).' },
             { id: 'w_u1', name: 'Aqua Bolt', element: 'water', tier: 'Uncommon', cost: 1.5, power: 20, icon: '🌊', desc: 'Tier 2 Water bolt (20 dmg).' },
@@ -716,7 +831,6 @@
             { id: 'w_l1', name: 'Leviathan Wrath', element: 'water', tier: 'Legendary', cost: 3, power: 60, icon: '🌊', desc: 'Tier 5 Legendary Ocean (60 dmg).' },
             { id: 'w_l2', name: 'Wrath of Deep', element: 'water', tier: 'Legendary', cost: 2.5, power: 52, icon: '🌊', desc: 'Tier 5 Legendary Abyssal (52 dmg).' },
 
-            // EARTH
             { id: 'e_c1', name: 'Pebble Toss', element: 'earth', tier: 'Common', cost: 0.5, power: 8, icon: '🪨', desc: 'Tier 1 Earth strike (0.5 ⚡).' },
             { id: 'e_c2', name: 'Dirt Clod', element: 'earth', tier: 'Common', cost: 1, power: 12, icon: '🪨', desc: 'Tier 1 Earth strike (12 dmg).' },
             { id: 'e_u1', name: 'Rock Throw', element: 'earth', tier: 'Uncommon', cost: 1.5, power: 20, icon: '⛰️', desc: 'Tier 2 Earth strike (20 dmg).' },
@@ -728,7 +842,6 @@
             { id: 'e_l1', name: 'World Shatter', element: 'earth', tier: 'Legendary', cost: 3, power: 60, icon: '🌍', desc: 'Tier 5 Legendary World (60 dmg).' },
             { id: 'e_l2', name: 'Continental Crush', element: 'earth', tier: 'Legendary', cost: 2.5, power: 52, icon: '🌍', desc: 'Tier 5 Legendary Tectonic (52 dmg).' },
 
-            // AIR
             { id: 'a_c1', name: 'Breeze', element: 'air', tier: 'Common', cost: 0.5, power: 8, icon: '🌪️', desc: 'Tier 1 Air strike (0.5 ⚡).' },
             { id: 'a_c2', name: 'Zephyr Gust', element: 'air', tier: 'Common', cost: 1, power: 12, icon: '🌪️', desc: 'Tier 1 Air strike (12 dmg).' },
             { id: 'a_u1', name: 'Gale Slash', element: 'air', tier: 'Uncommon', cost: 1.5, power: 20, icon: '💨', desc: 'Tier 2 Air strike (20 dmg).' },
@@ -740,7 +853,6 @@
             { id: 'a_l1', name: 'Stratosphere Wrath', element: 'air', tier: 'Legendary', cost: 3, power: 60, icon: '⚡', desc: 'Tier 5 Legendary Sky (60 dmg).' },
             { id: 'a_l2', name: 'Aetherial Storm', element: 'air', tier: 'Legendary', cost: 2.5, power: 52, icon: '⚡', desc: 'Tier 5 Legendary Aether (52 dmg).' },
 
-            // SHADOW
             { id: 'sh_c1', name: 'Dusk', element: 'shadow', tier: 'Common', cost: 0.5, power: 8, icon: '🌑', desc: 'Tier 1 Shadow strike (0.5 ⚡).' },
             { id: 'sh_c2', name: 'Dark Whispers', element: 'shadow', tier: 'Common', cost: 1, power: 12, icon: '🌑', desc: 'Tier 1 Shadow strike (12 dmg).' },
             { id: 'sh_u1', name: 'Shadow Strike', element: 'shadow', tier: 'Uncommon', cost: 1.5, power: 20, icon: '👤', desc: 'Tier 2 Shadow strike (20 dmg).' },
@@ -752,7 +864,6 @@
             { id: 'sh_l1', name: 'Eclipse Cataclysm', element: 'shadow', tier: 'Legendary', cost: 3, power: 60, icon: '🕳️', desc: 'Tier 5 Legendary Void (60 dmg).' },
             { id: 'sh_l2', name: 'Realm of Darkness', element: 'shadow', tier: 'Legendary', cost: 2.5, power: 52, icon: '🕳️', desc: 'Tier 5 Legendary Dark (52 dmg).' },
 
-            // SPIRIT
             { id: 'sp_c1', name: 'Spark of Hope', element: 'spirit', tier: 'Common', cost: 0.5, power: 8, icon: '🌫️', desc: 'Tier 1 Spirit strike (0.5 ⚡).' },
             { id: 'sp_c2', name: 'Ethereal Touch', element: 'spirit', tier: 'Common', cost: 1, power: 12, icon: '🌫️', desc: 'Tier 1 Spirit strike (12 dmg).' },
             { id: 'sp_u1', name: 'Spirit Flare', element: 'spirit', tier: 'Uncommon', cost: 1.5, power: 20, icon: '✨', desc: 'Tier 2 Spirit strike (20 dmg).' },
@@ -764,14 +875,12 @@
             { id: 'sp_l1', name: 'Celestial Judgment', element: 'spirit', tier: 'Legendary', cost: 3, power: 60, icon: '🌟', desc: 'Tier 5 Legendary Spirit (60 dmg).' },
             { id: 'sp_l2', name: 'Ascension', element: 'spirit', tier: 'Legendary', cost: 2.5, power: 52, icon: '🌟', desc: 'Tier 5 Legendary Ascendant (52 dmg).' },
 
-            // HEAL UTILITY CARDS (5 Tiers)
             { id: 'h_c1', name: 'Healing Salve', element: 'heal', tier: 'Common', cost: 1, power: 14, icon: '❤️', desc: 'Tier 1 Heal (14 HP).' },
             { id: 'h_u1', name: 'Mending Herbs', element: 'heal', tier: 'Uncommon', cost: 1, power: 24, icon: '💚', desc: 'Tier 2 Heal (24 HP).' },
             { id: 'h_r1', name: 'Rejuvenation', element: 'heal', tier: 'Rare', cost: 1.5, power: 36, icon: '🌿', desc: 'Tier 3 Heal (36 HP).' },
             { id: 'h_e1', name: 'Divine Blessing', element: 'heal', tier: 'Epic', cost: 2, power: 52, icon: '💖', desc: 'Tier 4 Epic Heal (52 HP).' },
             { id: 'h_l1', name: 'Resurrection Glow', element: 'heal', tier: 'Legendary', cost: 2, power: 75, icon: '✨', desc: 'Tier 5 Legendary Heal (75 HP).' },
 
-            // SHIELD UTILITY CARDS (5 Tiers)
             { id: 's_c1', name: 'Aegis Shield', element: 'shield', tier: 'Common', cost: 1, power: 15, icon: '🛡️', desc: 'Tier 1 Shield (15 Shield).' },
             { id: 's_u1', name: 'Iron Guard', element: 'shield', tier: 'Uncommon', cost: 1, power: 25, icon: '🛡️', desc: 'Tier 2 Shield (25 Shield).' },
             { id: 's_r1', name: 'Runic Barrier', element: 'shield', tier: 'Rare', cost: 1.5, power: 38, icon: '🛡️', desc: 'Tier 3 Shield (38 Shield).' },
@@ -934,6 +1043,24 @@
                 heroMaxEnergy: hero.maxEnergy,
                 handSize: handSize,
                 relics: relics,
+                
+                atkPowerBonus: atkPowerBonus,
+                critChance: critChance,
+                critMult: critMult,
+                elemAmpBonus: elemAmpBonus,
+                finisherBonus: finisherBonus,
+                hasFirstStrike: hasFirstStrike,
+                
+                armorValue: armorValue,
+                thornsPercent: thornsPercent,
+                lifestealPercent: lifestealPercent,
+                retalResist: retalResist,
+                secondWindAvailable: secondWindAvailable,
+
+                initialEnergyBonus: initialEnergyBonus,
+                hasFreeRerollUpgrade: hasFreeRerollUpgrade,
+
+                bountyBonus: bountyBonus,
                 trainingLevel: trainingLevel,
                 vaultBalance: vaultBalance,
                 vaultRateLevel: vaultRateLevel,
@@ -964,6 +1091,25 @@
             hero.hp = 100;
             hero.maxEnergy = 3;
             handSize = 4;
+
+            atkPowerBonus = 0;
+            critChance = 0;
+            critMult = 1.5;
+            elemAmpBonus = 0;
+            finisherBonus = 0;
+            hasFirstStrike = false;
+
+            armorValue = 0;
+            thornsPercent = 0;
+            lifestealPercent = 0;
+            retalResist = 0;
+            secondWindAvailable = false;
+            secondWindTriggered = false;
+
+            initialEnergyBonus = 0;
+            hasFreeRerollUpgrade = false;
+
+            bountyBonus = 0;
             relics = { aegis: false, greed: false };
             trainingLevel = 0;
             vaultBalance = 0;
@@ -1014,6 +1160,24 @@
                 hero.hp = data.heroHp || hero.maxHp;
                 hero.maxEnergy = data.heroMaxEnergy || 3;
                 handSize = data.handSize || 4;
+
+                atkPowerBonus = data.atkPowerBonus || 0;
+                critChance = data.critChance || 0;
+                critMult = data.critMult || 1.5;
+                elemAmpBonus = data.elemAmpBonus || 0;
+                finisherBonus = data.finisherBonus || 0;
+                hasFirstStrike = data.hasFirstStrike || false;
+
+                armorValue = data.armorValue || 0;
+                thornsPercent = data.thornsPercent || 0;
+                lifestealPercent = data.lifestealPercent || 0;
+                retalResist = data.retalResist || 0;
+                secondWindAvailable = data.secondWindAvailable || false;
+
+                initialEnergyBonus = data.initialEnergyBonus || 0;
+                hasFreeRerollUpgrade = data.hasFreeRerollUpgrade || false;
+
+                bountyBonus = data.bountyBonus || 0;
                 relics = data.relics || { aegis: false, greed: false };
                 trainingLevel = data.trainingLevel || 0;
                 vaultBalance = data.vaultBalance || 0;
@@ -1058,14 +1222,20 @@
 
         function getInflationMultiplier() {
             if (currentLevel === 0) return 1;
-            return 1 + ((currentLevel - 1) * 0.06);
+            return 1 + ((currentLevel - 1) * 0.08);
         }
 
         function initBattle() {
             usedReviveThisLevel = false;
             shopUsedThisLevel = false;
+            playedFirstCardThisFight = false;
+            freeRerollsLeft = hasFreeRerollUpgrade ? 1 : 0;
+            lastPlayedElementThisTurn = null;
+            sameElementCountThisTurn = 0;
             resetShopButtons();
+
             hero.shield = relics.aegis ? 8 : 0;
+            hero.energy = hero.maxEnergy + initialEnergyBonus;
 
             const banner = document.getElementById('tutorialBanner');
 
@@ -1111,13 +1281,15 @@
                     bossTheme = randomArchetype.theme;
                 }
 
+                let initialShield = currentLevel <= 5 ? 10 : Math.round(currentLevel * 2);
+
                 currentBoss = {
                     name: bossName,
                     hp: calculatedHp,
                     currentHp: calculatedHp,
                     element: bossElement,
                     theme: bossTheme,
-                    shield: 0
+                    shield: initialShield
                 };
 
                 document.getElementById('currentLevelBadge').innerText = `Level ${currentLevel} / 50`;
@@ -1125,20 +1297,18 @@
                 document.getElementById('bossNameDisplay').innerText = currentBoss.name;
                 document.getElementById('bossElementBadge').innerText = currentBoss.element.toUpperCase();
                 document.getElementById('bossMaxHpText').innerText = currentBoss.hp;
-                document.getElementById('bossIntentText').innerText = "Boss will counter bad elements!";
+                document.getElementById('bossIntentText').innerText = "Boss has initial defensive ward active!";
             }
 
             updateBossAmbiance();
-
-            hero.energy = hero.maxEnergy;
             resetDeck();
             drawNewHand(handSize);
             updateUI();
             
             if (currentLevel === 0) {
-                logMessage(`[Tutorial] Facing the Training Dummy! Follow the guidance steps above.`);
+                logMessage(`[Tutorial] Facing the Training Dummy! Follow guidance steps above.`);
             } else {
-                logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} [${currentBoss.element.toUpperCase()} element]!`);
+                logMessage(`[Battle] Level ${currentLevel}: Facing ${currentBoss.name} [${currentBoss.element.toUpperCase()}]! Boss shielded.`);
             }
             checkAchievements();
         }
@@ -1193,14 +1363,21 @@
 
         function drawNewHand(count) {
             playerHand = [];
+            if (drawPile.length < count) resetDeck();
+
             for (let i = 0; i < count; i++) {
                 if (drawPile.length === 0) resetDeck();
+                if (drawPile.length === 0) break;
+
                 let card = drawPile.pop();
-                while (playerHand.some(c => c.name === card.name)) {
-                    if (drawPile.length === 0) resetDeck();
+                let attempts = 0;
+
+                while (playerHand.some(c => c.id === card.id) && attempts < drawPile.length) {
                     drawPile.unshift(card);
                     card = drawPile.pop();
+                    attempts++;
                 }
+
                 playerHand.push(card);
             }
         }
@@ -1225,13 +1402,13 @@
             if (drawPile.length === 0) resetDeck();
             if (drawPile.length > 0) {
                 let newCard = drawPile.pop();
-                while (playerHand.some(c => c.name === newCard.name) && drawPile.length > 0) {
+                let attempts = 0;
+                while (playerHand.some(c => c.id === newCard.id) && attempts < drawPile.length) {
                     drawPile.unshift(newCard);
                     newCard = drawPile.pop();
+                    attempts++;
                 }
-                if (!playerHand.some(c => c.name === newCard.name)) {
-                    playerHand.push(newCard);
-                }
+                playerHand.push(newCard);
             }
 
             if (card.element === 'heal') {
@@ -1245,9 +1422,39 @@
                 logMessage(`[Action] You used ${card.name}, gaining ${card.power} shield.`);
             } else {
                 playSound('attack');
-                if (card.power >= 40) triggerScreenShake();
+                let baseDmg = card.power + atkPowerBonus;
 
-                let dmg = card.power;
+                if (card.element === lastPlayedElementThisTurn) {
+                    sameElementCountThisTurn++;
+                    if (sameElementCountThisTurn >= 2) {
+                        baseDmg = Math.round(baseDmg * 0.75);
+                        logMessage(`[⚠️ Element Fatigue!] Spamming ${card.element.toUpperCase()} cards reduces damage to ${baseDmg}! Mix your elements!`);
+                    }
+                } else {
+                    lastPlayedElementThisTurn = card.element;
+                    sameElementCountThisTurn = 1;
+                }
+
+                if (hasFirstStrike && !playedFirstCardThisFight) {
+                    baseDmg *= 2;
+                    logMessage(`[⚡ First Strike!] First card played dealt 2x damage (${baseDmg} DMG)!`);
+                }
+                playedFirstCardThisFight = true;
+
+                let isCrit = Math.random() < (critChance / 100);
+                if (isCrit) {
+                    baseDmg = Math.round(baseDmg * critMult);
+                    logMessage(`[🎯 CRITICAL HIT!] Damage multiplied by ${critMult}x to ${baseDmg}!`);
+                }
+
+                if (currentBoss.currentHp / currentBoss.hp <= 0.30 && finisherBonus > 0) {
+                    baseDmg = Math.round(baseDmg * (1 + (finisherBonus / 100)));
+                    logMessage(`[💀 Finisher Bonus!] +${finisherBonus}% executed on low HP boss!`);
+                }
+
+                if (baseDmg >= 40) triggerScreenShake();
+
+                let dmg = baseDmg;
                 
                 let hasAdvantage = currentBoss.element !== 'neutral' && (
                                    (card.element === 'fire' && currentBoss.element === 'earth') ||
@@ -1266,23 +1473,39 @@
                                          (currentBoss.element === 'shadow' && card.element === 'spirit'));
 
                 if (hasAdvantage) {
-                    dmg = Math.round(dmg * 1.4);
-                    logMessage(`[🔥 Advantage!] Your ${card.element.toUpperCase()} beats ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
+                    let advMult = 1.4 + (elemAmpBonus / 100);
+                    dmg = Math.round(dmg * advMult);
+                    logMessage(`[🔥 Advantage!] Beat ${currentBoss.element.toUpperCase()}! Damage boosted to ${dmg}!`);
                 } else if (bossCountersPlayer) {
                     dmg = Math.round(dmg * 0.7);
-                    logMessage(`[⚠️ Bad Matchup!] ${currentBoss.name} counters ${card.element.toUpperCase()}! Damage reduced to ${dmg}.`);
+                    logMessage(`[⚠️ Bad Matchup!] Boss counters ${card.element.toUpperCase()}! Damage reduced to ${dmg}.`);
                     
-                    let counterDmg = Math.round(10 + (currentLevel * 0.8));
-                    hero.hp = Math.max(0, hero.hp - counterDmg);
-                    showPopup('heroDamagePopup', `-${counterDmg}`, 'text-red-500');
-                    logMessage(`[⚡ Boss Retaliation!] ${currentBoss.name} immediately strikes back for ${counterDmg} damage!`);
+                    let rawCounter = 10 + (currentLevel * 1.1);
+                    let netCounter = Math.max(1, Math.round((rawCounter * (1 - (retalResist / 100))) - armorValue));
+                    hero.hp = Math.max(0, hero.hp - netCounter);
+                    showPopup('heroDamagePopup', `-${netCounter}`, 'text-red-500');
+                    logMessage(`[⚡ Smart AI Retaliation!] Boss instantly strikes back for ${netCounter} damage!`);
                 } else {
                     logMessage(`[Attack] You played ${card.name} for ${dmg} damage.`);
                 }
 
+                if (lifestealPercent > 0) {
+                    let healed = Math.round(dmg * (lifestealPercent / 100));
+                    if (healed > 0) {
+                        hero.hp = Math.min(hero.maxHp, hero.hp + healed);
+                        logMessage(`[🩸 Lifesteal] Drained +${healed} HP from strike!`);
+                    }
+                }
+
                 if (hero.hp <= 0) {
-                    triggerGameOver();
-                    return;
+                    if (secondWindAvailable && !secondWindTriggered) {
+                        secondWindTriggered = true;
+                        hero.hp = Math.round(hero.maxHp * 0.25);
+                        logMessage(`[🌬️ Second Wind!] Revived from death with ${hero.hp} HP!`);
+                    } else {
+                        triggerGameOver();
+                        return;
+                    }
                 }
 
                 if (currentBoss.shield > 0) {
@@ -1307,14 +1530,16 @@
         }
 
         function endTurn() {
-            logMessage(`[Turn] You ended your turn. ${currentBoss.name} evaluates the battlefield...`);
+            logMessage(`[Turn] You ended your turn. ${currentBoss.name} calculates optimal strike...`);
+            lastPlayedElementThisTurn = null;
+            sameElementCountThisTurn = 0;
             bossTurn();
         }
 
         function bossTurn() {
             if (currentLevel === 0) {
                 playSound('attack');
-                let dummyDmg = 5;
+                let dummyDmg = Math.max(1, 5 - armorValue);
                 hero.hp = Math.max(0, hero.hp - dummyDmg);
                 showPopup('heroDamagePopup', `-${dummyDmg}`, 'text-red-500');
                 logMessage(`[Training Dummy] Dummy strikes you gently for ${dummyDmg} damage.`);
@@ -1326,33 +1551,36 @@
                 return;
             }
 
-            let bossPower = Math.round(12 + (currentLevel * 1.25));
-            let bossActionType = 'attack';
+            let basePower = Math.round(14 + (currentLevel * 1.55));
+            let bossHpPct = currentBoss.currentHp / currentBoss.hp;
+            let heroHpPct = hero.hp / hero.maxHp;
 
-            const bossHpPercent = currentBoss.currentHp / currentBoss.hp;
-            const isDamaged = currentBoss.currentHp < currentBoss.hp;
+            let actionChoice = 'attack';
 
-            if (isDamaged && bossHpPercent <= 0.35) {
-                bossActionType = (currentBoss.shield < 10) ? 'shield' : 'heal';
-            } else if (isDamaged && Math.random() < 0.3) {
-                bossActionType = 'heal';
-            } else if (currentBoss.shield === 0 && Math.random() < 0.25) {
-                bossActionType = 'shield';
+            if (bossHpPct <= 0.35 && Math.random() < 0.6) {
+                actionChoice = (currentBoss.shield < 15 && Math.random() < 0.5) ? 'shield' : 'heal';
+            } else if (heroHpPct <= 0.35 && Math.random() < 0.7) {
+                actionChoice = 'berserk';
+            } else if (hero.shield === 0 && bossHpPct > 0.5 && Math.random() < 0.3) {
+                actionChoice = 'shield';
             } else {
-                bossActionType = 'attack';
+                actionChoice = 'attack';
             }
 
-            if (bossActionType === 'attack') {
+            if (actionChoice === 'attack' || actionChoice === 'berserk') {
                 playSound('attack');
-                if (bossPower > 25) triggerScreenShake();
+                if (basePower > 25) triggerScreenShake();
                 
-                let bossHasAdvantage = Math.random() < Math.min(0.7, 0.25 + (currentLevel * 0.01));
-                if (bossHasAdvantage) {
-                    bossPower = Math.round(bossPower * 1.3);
-                    logMessage(`[⚠️ Boss Surge!] ${currentBoss.name} unearths an elemental strike! Attack boosted to ${bossPower}!`);
+                let isBerserk = (actionChoice === 'berserk');
+                let surgeChance = Math.min(0.85, 0.3 + (currentLevel * 0.012));
+                let bossHasSurge = (Math.random() < surgeChance || isBerserk);
+
+                if (bossHasSurge) {
+                    basePower = Math.round(basePower * (isBerserk ? 1.45 : 1.25));
+                    logMessage(`[🧠 Smart AI Surge!] ${currentBoss.name} unloads a calculated strike for ${basePower} DMG!`);
                 }
 
-                let netDmg = bossPower;
+                let netDmg = Math.max(1, basePower - armorValue);
                 if (hero.shield > 0) {
                     if (hero.shield >= netDmg) {
                         hero.shield -= netDmg;
@@ -1364,24 +1592,39 @@
                 }
                 hero.hp = Math.max(0, hero.hp - netDmg);
                 showPopup('heroDamagePopup', `-${netDmg}`, 'text-red-500');
-                if (!bossHasAdvantage) {
+                if (!bossHasSurge) {
                     logMessage(`[Boss] ${currentBoss.name} strikes for ${netDmg} damage.`);
                 }
-            } else if (bossActionType === 'shield') {
+
+                if (thornsPercent > 0 && netDmg > 0) {
+                    let reflected = Math.round(netDmg * (thornsPercent / 100));
+                    if (reflected > 0) {
+                        currentBoss.currentHp = Math.max(0, currentBoss.currentHp - reflected);
+                        logMessage(`[🌵 Thorns] Reflected ${reflected} damage back at boss!`);
+                    }
+                }
+            } else if (actionChoice === 'shield') {
                 playSound('card');
-                currentBoss.shield += bossPower;
-                logMessage(`[Boss] ${currentBoss.name} strategically raises a ${bossPower} shield!`);
-            } else if (bossActionType === 'heal') {
+                let shieldGain = Math.round(basePower * 1.2);
+                currentBoss.shield += shieldGain;
+                logMessage(`[🧠 Smart AI Defense] ${currentBoss.name} predicts your attack and raises a ${shieldGain} shield!`);
+            } else if (actionChoice === 'heal') {
                 playSound('heal');
-                let actualHeal = Math.min(currentBoss.hp - currentBoss.currentHp, bossPower);
-                currentBoss.currentHp += actualHeal;
-                showPopup('bossDamagePopup', `+${actualHeal}`, 'text-emerald-400');
-                logMessage(`[Boss] ${currentBoss.name} recovers ${actualHeal} HP!`);
+                let healAmt = Math.min(currentBoss.hp - currentBoss.currentHp, Math.round(basePower * 0.9));
+                currentBoss.currentHp += healAmt;
+                showPopup('bossDamagePopup', `+${healAmt}`, 'text-emerald-400');
+                logMessage(`[🧠 Smart AI Regenerate] ${currentBoss.name} regains ${healAmt} HP!`);
             }
 
             if (hero.hp <= 0) {
-                triggerGameOver();
-                return;
+                if (secondWindAvailable && !secondWindTriggered) {
+                    secondWindTriggered = true;
+                    hero.hp = Math.round(hero.maxHp * 0.25);
+                    logMessage(`[🌬️ Second Wind!] Revived from death with ${hero.hp} HP!`);
+                } else {
+                    triggerGameOver();
+                    return;
+                }
             }
 
             hero.energy = hero.maxEnergy;
@@ -1402,7 +1645,7 @@
                 return;
             }
 
-            let earned = 50 + (relics.greed ? 25 : 0);
+            let earned = 50 + bountyBonus + (relics.greed ? 25 : 0);
             playerPoints += earned;
             document.getElementById('victoryMsg').innerText = `You defeated ${currentBoss.name}! +${earned} BP earned.`;
             
@@ -1504,14 +1747,7 @@
             const cardId = select.value;
             let fusionCost = Math.round(40 * getInflationMultiplier());
             
-            if (!cardId) {
-                logMessage(`[Forge] Please select a valid card pair from the dropdown to fuse.`);
-                return;
-            }
-            if (playerPoints < fusionCost) {
-                logMessage(`[Forge] Not enough BP! Need ${fusionCost} BP to fuse.`);
-                return;
-            }
+            if (!cardId || playerPoints < fusionCost) return;
 
             let sampleCard = playerDeck.find(c => c.id === cardId);
             if (!sampleCard) return;
@@ -1521,10 +1757,7 @@
             else if (sampleCard.tier === 'Uncommon') nextTierName = 'Rare';
             else if (sampleCard.tier === 'Rare') nextTierName = 'Epic';
             else if (sampleCard.tier === 'Epic') nextTierName = 'Legendary';
-            else {
-                logMessage(`[Forge] This card is already at maximum Legendary tier!`);
-                return;
-            }
+            else return;
 
             let pool = masterCardDatabase.filter(c => c.element === sampleCard.element && c.tier === nextTierName);
             if (pool.length === 0) return;
@@ -1550,56 +1783,116 @@
             updateUI();
             updateArmoryUI();
             populateFusionDropdown();
-            logMessage(`[Forge] Fused two cards into [${upgradedCard.tier}] ${upgradedCard.name}! Spent ${fusionCost} BP.`);
+            logMessage(`[Forge] Fused two cards into [${upgradedCard.tier}] ${upgradedCard.name}!`);
         }
 
-        function buyIntermissionHeal() {
-            let cost = Math.round(50 * getInflationMultiplier());
-            if (playerPoints < cost) return;
-            playerPoints -= cost;
-            hero.maxHp += 10;
-            hero.hp = Math.min(hero.maxHp, hero.hp + 25);
-            playSound('heal');
-            
-            saveGameProgress();
-            updateUI();
-            updateArmoryUI();
-            logMessage('[Shop] Upgraded Max HP & restored health.');
-        }
+        function buyUpgrade(type) {
+            let mult = getInflationMultiplier();
 
-        function buyIntermissionEnergyCap() {
-            let cost = Math.round(75 * getInflationMultiplier());
-            if (playerPoints < cost) return;
-            playerPoints -= cost;
-            hero.maxEnergy = Math.round((hero.maxEnergy + 0.5) * 10) / 10;
+            if (type === 'maxHp') {
+                let cost = Math.round(50 * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                hero.maxHp += 10;
+                hero.hp = Math.min(hero.maxHp, hero.hp + 25);
+            } else if (type === 'maxEnergy') {
+                let cost = Math.round(75 * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                hero.maxEnergy = Math.round((hero.maxEnergy + 0.5) * 10) / 10;
+            } else if (type === 'atkPower') {
+                let cost = Math.round((80 + (atkPowerBonus * 15)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                atkPowerBonus += 2;
+            } else if (type === 'critChance') {
+                if (critChance >= 50) return;
+                let cost = Math.round((120 + (critChance * 8)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                critChance += 5;
+            } else if (type === 'critMult') {
+                let cost = Math.round((200 + ((critMult - 1.5) * 400)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                critMult = Math.round((critMult + 0.25) * 100) / 100;
+            } else if (type === 'elemAmp') {
+                let cost = Math.round((150 + (elemAmpBonus * 10)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                elemAmpBonus += 10;
+            } else if (type === 'finisher') {
+                let cost = Math.round((175 + (finisherBonus * 8)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                finisherBonus += 15;
+            } else if (type === 'firstStrike') {
+                let cost = Math.round(250 * mult);
+                if (hasFirstStrike || playerPoints < cost) return;
+                playerPoints -= cost;
+                hasFirstStrike = true;
+            } else if (type === 'armor') {
+                if (armorValue >= 5) return;
+                let cost = Math.round((150 * Math.pow(1.8, armorValue)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                armorValue += 1;
+            } else if (type === 'thorns') {
+                let cost = Math.round((160 + (thornsPercent * 10)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                thornsPercent += 10;
+            } else if (type === 'lifesteal') {
+                let cost = Math.round((220 + (lifestealPercent * 15)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                lifestealPercent += 5;
+            } else if (type === 'retalResist') {
+                if (retalResist >= 75) return;
+                let cost = Math.round((140 + (retalResist * 5)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                retalResist += 25;
+            } else if (type === 'secondWind') {
+                let cost = Math.round(300 * mult);
+                if (secondWindAvailable || playerPoints < cost) return;
+                playerPoints -= cost;
+                secondWindAvailable = true;
+            } else if (type === 'handSize') {
+                let cost = getHandUpgradeCost();
+                if (handSize >= 12 || playerPoints < cost) return;
+                playerPoints -= cost;
+                handSize += 2;
+            } else if (type === 'initEnergy') {
+                let cost = Math.round(250 * mult);
+                if (initialEnergyBonus >= 2 || playerPoints < cost) return;
+                playerPoints -= cost;
+                initialEnergyBonus += 1;
+            } else if (type === 'freeReroll') {
+                let cost = Math.round(180 * mult);
+                if (hasFreeRerollUpgrade || playerPoints < cost) return;
+                playerPoints -= cost;
+                hasFreeRerollUpgrade = true;
+            } else if (type === 'bounty') {
+                let cost = Math.round((120 + (bountyBonus * 8)) * mult);
+                if (playerPoints < cost) return;
+                playerPoints -= cost;
+                bountyBonus += 15;
+            }
+
             playSound('win');
-            
             saveGameProgress();
             updateUI();
             updateArmoryUI();
-            logMessage('[Shop] Permanently increased turn max energy by +0.5!');
         }
 
         function getHandUpgradeCost() {
             let base = 100;
-            if (handSize === 6) base = 200;
-            if (handSize === 8) base = 350;
-            if (handSize === 10) base = 500;
+            if (handSize === 6) base = 250;
+            if (handSize === 8) base = 500;
+            if (handSize === 10) base = 1000;
             if (handSize >= 12) return 999999;
             return Math.round(base * getInflationMultiplier());
-        }
-
-        function buyHandSizeUpgrade() {
-            let cost = getHandUpgradeCost();
-            if (handSize >= 12 || playerPoints < cost) return;
-            playerPoints -= cost;
-            handSize += 2;
-            playSound('win');
-            
-            saveGameProgress();
-            updateUI();
-            updateArmoryUI();
-            logMessage(`[Shop] Expanded combat hand size to ${handSize} cards!`);
         }
 
         function updateArmoryUI() {
@@ -1611,102 +1904,94 @@
             const inflationBadge = document.getElementById('inflationBadge');
             if (inflationBadge) inflationBadge.innerText = `Prices +${inflationPercent}% (Lvl ${currentLevel})`;
 
-            const healCostEl = document.getElementById('healCostText');
-            if (healCostEl) healCostEl.innerText = Math.round(50 * mult);
-            const energyCapCostEl = document.getElementById('energyCapCostText');
-            if (energyCapCostEl) energyCapCostEl.innerText = Math.round(75 * mult);
-            const aegisCostEl = document.getElementById('relicAegisCost');
-            if (aegisCostEl) aegisCostEl.innerText = Math.round(75 * mult);
-            const greedCostEl = document.getElementById('relicGreedCost');
-            if (greedCostEl) greedCostEl.innerText = Math.round(75 * mult);
-            const fusionCostEl = document.getElementById('fusionCostText');
-            if (fusionCostEl) fusionCostEl.innerText = `Cost: ${Math.round(40 * mult)} BP`;
+            document.getElementById('atkVal').innerText = atkPowerBonus;
+            document.getElementById('atkCost').innerText = `${Math.round((80 + (atkPowerBonus * 15)) * mult)} BP`;
+            document.getElementById('critVal').innerText = critChance;
+            document.getElementById('critCost').innerText = critChance >= 50 ? "MAX" : `${Math.round((120 + (critChance * 8)) * mult)} BP`;
+            document.getElementById('critMultVal').innerText = critMult;
+            document.getElementById('critMultCost').innerText = `${Math.round((200 + ((critMult - 1.5) * 400)) * mult)} BP`;
+            document.getElementById('elemAmpVal').innerText = elemAmpBonus;
+            document.getElementById('elemAmpCost').innerText = `${Math.round((150 + (elemAmpBonus * 10)) * mult)} BP`;
+            document.getElementById('finisherVal').innerText = finisherBonus;
+            document.getElementById('finisherCost').innerText = `${Math.round((175 + (finisherBonus * 8)) * mult)} BP`;
 
-            // Sparring Grounds UI
-            const trainingBadge = document.getElementById('trainingLvlBadge');
-            const trainingRate = document.getElementById('trainingRateText');
-            const trainingCostBtn = document.getElementById('btnUpgradeTraining');
-            const trainingCostText = document.getElementById('trainingCostText');
-
-            if (trainingBadge) {
-                let currentTrainingCost = getTrainingUpgradeCost();
-                if (trainingLevel === 0) {
-                    trainingBadge.innerText = "Lvl 0 (Locked)";
-                    if (trainingRate) trainingRate.innerText = "0 BP / 10s";
-                    if (trainingCostText) trainingCostText.innerText = currentTrainingCost;
-                    if (trainingCostBtn) trainingCostBtn.innerHTML = `Unlock (<span>${currentTrainingCost}</span> BP)`;
+            const fsBtn = document.getElementById('btnFirstStrike');
+            if (fsBtn) {
+                if (hasFirstStrike) {
+                    fsBtn.classList.add('opacity-40', 'pointer-events-none');
+                    document.getElementById('firstStrikeCost').innerText = 'OWNED';
                 } else {
-                    let yieldRate = trainingLevel >= 4 ? trainingLevel + 1 : trainingLevel;
-                    trainingBadge.innerText = `Lvl ${trainingLevel} (Active)`;
-                    if (trainingRate) trainingRate.innerText = `${yieldRate} BP / 10s`;
-                    if (trainingCostText) trainingCostText.innerText = currentTrainingCost;
-                    if (trainingCostBtn) trainingCostBtn.innerHTML = `Upgrade (<span>${currentTrainingCost}</span> BP)`;
-                }
-
-                if (trainingCostBtn) {
-                    if (playerPoints < currentTrainingCost) trainingCostBtn.classList.add('opacity-40');
-                    else trainingCostBtn.classList.remove('opacity-40');
+                    document.getElementById('firstStrikeCost').innerText = `${Math.round(250 * mult)} BP`;
                 }
             }
 
-            // Vault UI
-            const vBal = document.getElementById('vaultBalanceDisplay');
-            if (vBal) vBal.innerText = `Vault: ${vaultBalance} BP`;
-            const vRate = document.getElementById('vaultRateText');
-            if (vRate) vRate.innerText = `${vaultRateLevel * 2}% / payout`;
-            const vFreq = document.getElementById('vaultFreqText');
-            if (vFreq) vFreq.innerText = getVaultFreqLabel();
+            document.getElementById('maxHpCost').innerText = `${Math.round(50 * mult)} BP`;
+            document.getElementById('armorVal').innerText = armorValue;
+            document.getElementById('armorCost').innerText = armorValue >= 5 ? "MAX" : `${Math.round((150 * Math.pow(1.8, armorValue)) * mult)} BP`;
+            document.getElementById('thornsVal').innerText = thornsPercent;
+            document.getElementById('thornsCost').innerText = `${Math.round((160 + (thornsPercent * 10)) * mult)} BP`;
+            document.getElementById('lifestealVal').innerText = lifestealPercent;
+            document.getElementById('lifestealCost').innerText = `${Math.round((220 + (lifestealPercent * 15)) * mult)} BP`;
+            document.getElementById('retalResistCost').innerText = retalResist >= 75 ? "MAX" : `${Math.round((140 + (retalResist * 5)) * mult)} BP`;
+
+            const swBtn = document.getElementById('btnSecondWind');
+            if (swBtn) {
+                if (secondWindAvailable) {
+                    swBtn.classList.add('opacity-40', 'pointer-events-none');
+                    document.getElementById('secondWindCost').innerText = 'OWNED';
+                } else {
+                    document.getElementById('secondWindCost').innerText = `${Math.round(300 * mult)} BP`;
+                }
+            }
+
+            document.getElementById('maxEnergyCost').innerText = `${Math.round(75 * mult)} BP`;
+            document.getElementById('handSizeCost').innerText = handSize >= 12 ? "MAX" : `${getHandUpgradeCost()} BP`;
             
-            const vRateLvl = document.getElementById('vaultRateLvlText');
-            if (vRateLvl) vRateLvl.innerText = vaultRateLevel;
-            const rateCost = getVaultRateUpgradeCost();
-            const vRateCost = document.getElementById('vaultRateCostText');
-            if (vRateCost) vRateCost.innerText = `${rateCost} BP`;
-            const btnRate = document.getElementById('btnUpgradeVaultRate');
-            if (btnRate) {
-                if (playerPoints < rateCost) btnRate.classList.add('opacity-40');
-                else btnRate.classList.remove('opacity-40');
+            const ieBtn = document.getElementById('btnInitEnergy');
+            if (ieBtn) {
+                if (initialEnergyBonus >= 2) {
+                    ieBtn.classList.add('opacity-40', 'pointer-events-none');
+                    document.getElementById('initEnergyCost').innerText = 'MAX';
+                } else {
+                    document.getElementById('initEnergyCost').innerText = `${Math.round(250 * mult)} BP`;
+                }
             }
 
-            const vFreqLvl = document.getElementById('vaultFreqLvlText');
-            if (vFreqLvl) vFreqLvl.innerText = vaultFreqLevel;
-            const freqCost = getVaultFreqUpgradeCost();
-            const btnFreq = document.getElementById('btnUpgradeVaultFreq');
-            const subtext = document.getElementById('vaultFreqSubtext');
-            const vFreqCost = document.getElementById('vaultFreqCostText');
+            const frBtn = document.getElementById('btnFreeReroll');
+            if (frBtn) {
+                if (hasFreeRerollUpgrade) {
+                    frBtn.classList.add('opacity-40', 'pointer-events-none');
+                    document.getElementById('freeRerollCost').innerText = 'OWNED';
+                } else {
+                    document.getElementById('freeRerollCost').innerText = `${Math.round(180 * mult)} BP`;
+                }
+            }
 
+            document.getElementById('bountyVal').innerText = bountyBonus;
+            document.getElementById('bountyCost').innerText = `${Math.round((120 + (bountyBonus * 8)) * mult)} BP`;
+            document.getElementById('trainingLvlVal').innerText = trainingLevel;
+            document.getElementById('trainingYieldVal').innerText = trainingLevel;
+            document.getElementById('trainingCost').innerText = `${getTrainingUpgradeCost()} BP`;
+            document.getElementById('vaultRateLvlVal').innerText = vaultRateLevel;
+            document.getElementById('vaultRateCost').innerText = `${getVaultRateUpgradeCost()} BP`;
+            document.getElementById('vaultFreqLvlVal').innerText = vaultFreqLevel;
+
+            const btnFreq = document.getElementById('btnVaultFreq');
             if (btnFreq) {
                 if (vaultFreqLevel >= 4) {
-                    if (vFreqCost) vFreqCost.innerText = `MAX`;
-                    if (subtext) subtext.innerText = `Compounding: Per Second`;
+                    document.getElementById('vaultFreqCost').innerText = `MAX`;
+                    document.getElementById('vaultFreqSubtext').innerText = `Per Second`;
                     btnFreq.classList.add('opacity-40', 'pointer-events-none');
                 } else {
-                    if (vFreqCost) vFreqCost.innerText = `${freqCost} BP`;
+                    document.getElementById('vaultFreqCost').innerText = `${getVaultFreqUpgradeCost()} BP`;
                     let nextLabel = vaultFreqLevel === 1 ? "Hourly" : vaultFreqLevel === 2 ? "Minutely" : "Per Second";
-                    if (subtext) subtext.innerText = `Next: ${nextLabel}`;
-                    if (playerPoints < freqCost) btnFreq.classList.add('opacity-40');
-                    else btnFreq.classList.remove('opacity-40');
+                    document.getElementById('vaultFreqSubtext').innerText = `Next: ${nextLabel}`;
                 }
             }
 
-            const btn = document.getElementById('btnHandUpgrade');
-            const label = document.getElementById('handUpgradeLabel');
-            const costEl = document.getElementById('handUpgradeCost');
-
-            if (btn && label && costEl) {
-                if (handSize >= 12) {
-                    label.innerText = "🃏 Hand Size Maxed (12 Cards)";
-                    btn.classList.add('opacity-40', 'pointer-events-none');
-                    costEl.innerText = "MAX";
-                } else {
-                    let nextSize = handSize + 2;
-                    let cost = getHandUpgradeCost();
-                    label.innerText = `🃏 Expand Hand Size (${handSize} ➔ ${nextSize})`;
-                    costEl.innerText = cost;
-                    if (playerPoints < cost) btn.classList.add('opacity-40');
-                    else btn.classList.remove('opacity-40');
-                }
-            }
+            document.getElementById('vaultBalanceDisplay').innerText = `${vaultBalance} BP`;
+            document.getElementById('relicAegisCost').innerText = `${Math.round(75 * mult)} BP`;
+            document.getElementById('relicGreedCost').innerText = `${Math.round(75 * mult)} BP`;
 
             const aegisBtn = document.getElementById('btnRelicAegis');
             if (aegisBtn && relics.aegis) {
@@ -1728,7 +2013,6 @@
             playerPoints -= cost;
             relics[type] = true;
             playSound('win');
-
             saveGameProgress();
             updateUI();
             updateArmoryUI();
@@ -1747,23 +2031,28 @@
             if (shopUsedThisLevel || playerPoints < 50) return;
             playerPoints -= 50;
             shopUsedThisLevel = true;
-
             hero.energy = Math.round((hero.energy + 0.5) * 10) / 10;
             playSound('heal');
-            
             saveGameProgress();
             updateUI();
             logMessage('[Battle Shop] Purchased +0.5 Energy for 50 BP.');
         }
 
         function buyPointReroll() {
+            if (freeRerollsLeft > 0) {
+                freeRerollsLeft--;
+                drawNewHand(handSize);
+                playSound('card');
+                updateUI();
+                logMessage('[Skill] Used 1 Free Hand Reroll!');
+                return;
+            }
+
             if (shopUsedThisLevel || playerPoints < 50) return;
             playerPoints -= 50;
             shopUsedThisLevel = true;
-
             drawNewHand(handSize);
             playSound('card');
-
             saveGameProgress();
             updateUI();
             logMessage('[Battle Shop] Purchased Hand Reroll for 50 BP.');
@@ -1776,7 +2065,11 @@
                 energyBtn.innerHTML = `⚡ +0.5 Energy <span class="text-[10px] bg-amber-500/20 px-1 rounded text-amber-300">50 BP</span>`;
             }
             if (rerollBtn) {
-                rerollBtn.innerHTML = `🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span>`;
+                if (freeRerollsLeft > 0) {
+                    rerollBtn.innerHTML = `🔄 Free Reroll <span class="text-[10px] bg-emerald-500/20 px-1 rounded text-emerald-300">FREE</span>`;
+                } else {
+                    rerollBtn.innerHTML = `🔄 Reroll Hand <span class="text-[10px] bg-blue-500/20 px-1 rounded text-blue-300">50 BP</span>`;
+                }
             }
         }
 
@@ -1828,6 +2121,25 @@
             usedReviveThisLevel = false;
             shopUsedThisLevel = false;
             handSize = 4;
+
+            atkPowerBonus = 0;
+            critChance = 0;
+            critMult = 1.5;
+            elemAmpBonus = 0;
+            finisherBonus = 0;
+            hasFirstStrike = false;
+
+            armorValue = 0;
+            thornsPercent = 0;
+            lifestealPercent = 0;
+            retalResist = 0;
+            secondWindAvailable = false;
+            secondWindTriggered = false;
+
+            initialEnergyBonus = 0;
+            hasFreeRerollUpgrade = false;
+
+            bountyBonus = 0;
             relics = { aegis: false, greed: false };
             trainingLevel = 0;
             vaultBalance = 0;
@@ -1899,26 +2211,18 @@
             const relicsBar = document.getElementById('relicsBar');
             const relicsContainer = document.getElementById('relicsContainer');
             if (relicsBar && relicsContainer) {
-                if (relics.aegis || relics.greed) {
-                    relicsBar.classList.remove('hidden');
-                    relicsContainer.innerHTML = '';
-                    if (relics.aegis) relicsContainer.innerHTML += `<span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">🏺 Aegis Core (+8 Shield/turn)</span>`;
-                    if (relics.greed) relicsContainer.innerHTML += `<span class="bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">🏺 Greed Ring (+25 BP/win)</span>`;
-                }
+                relicsContainer.innerHTML = '';
+                if (atkPowerBonus > 0) relicsContainer.innerHTML += `<span class="bg-red-500/20 text-red-300 px-2 py-0.5 rounded border border-red-500/30">⚔️ DMG +${atkPowerBonus}</span>`;
+                if (armorValue > 0) relicsContainer.innerHTML += `<span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">🛡️ Armor -${armorValue}</span>`;
+                if (critChance > 0) relicsContainer.innerHTML += `<span class="bg-yellow-500/20 text-yellow-300 px-2 py-0.5 rounded border border-yellow-500/30">🎯 Crit ${critChance}% (${critMult}x)</span>`;
+                if (lifestealPercent > 0) relicsContainer.innerHTML += `<span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">🩸 Lifesteal ${lifestealPercent}%</span>`;
+                if (thornsPercent > 0) relicsContainer.innerHTML += `<span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">🌵 Thorns ${thornsPercent}%</span>`;
+                if (secondWindAvailable) relicsContainer.innerHTML += `<span class="bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded border border-emerald-500/30">🌬️ 2nd Wind</span>`;
+                if (relics.aegis) relicsContainer.innerHTML += `<span class="bg-blue-500/20 text-blue-300 px-2 py-0.5 rounded border border-blue-500/30">🏺 Aegis (+8 Shield)</span>`;
+                if (relics.greed) relicsContainer.innerHTML += `<span class="bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded border border-purple-500/30">🏺 Greed (+25 BP)</span>`;
             }
 
-            const energyBtn = document.getElementById('btnEnergyBoost');
-            const rerollBtn = document.getElementById('btnRerollBoost');
-            
-            if (energyBtn && rerollBtn) {
-                if (shopUsedThisLevel || playerPoints < 50) {
-                    energyBtn.classList.add('opacity-40', 'pointer-events-none');
-                    rerollBtn.classList.add('opacity-40', 'pointer-events-none');
-                } else {
-                    energyBtn.classList.remove('opacity-40', 'pointer-events-none');
-                    rerollBtn.classList.remove('opacity-40', 'pointer-events-none');
-                }
-            }
+            resetShopButtons();
 
             const handContainer = document.getElementById('playerHandContainer');
             if (handContainer) {
