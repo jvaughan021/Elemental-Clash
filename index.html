@@ -1680,6 +1680,17 @@
             }
         }
 
+        function cardDescriptionWithStats(card) {
+            const value = card.element === 'heal' || card.element === 'shield'
+                ? card.power : card.power + atkPowerBonus;
+            const stat = card.element === 'heal' ? `${value} HP restored`
+                : card.element === 'shield' ? `${value} Shield` : `${value} DMG`;
+            // Preserve the original tier and ability wording, replacing outdated
+            // damage/energy parentheticals with the current card stat.
+            const description = card.desc.replace(/\s*\([^)]*(?:dmg|shield|heal|hp|⚡)[^)]*\)/gi, '').replace(/\.$/, '');
+            return `${description} (${stat}).`;
+        }
+
         function openDraftModal() {
             const container = document.getElementById('draftCardsContainer');
             if (!container) return;
@@ -1705,7 +1716,7 @@
                             <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
                             <span class="text-[9px] uppercase tracking-wider text-slate-400">${card.tier}</span>
                         </div>
-                        <p class="text-[10px] text-slate-400 leading-tight mb-3">${card.desc}</p>
+                        <p class="text-[10px] text-slate-400 leading-tight mb-3">${cardDescriptionWithStats(card)}</p>
                     </div>
                     <button class="w-full bg-amber-500/10 hover:bg-amber-500 hover:text-slate-950 text-amber-400 font-bold py-1.5 rounded-lg text-xs transition border border-amber-500/30">Select Card</button>
                 `;
@@ -2270,7 +2281,7 @@
                                 <h4 class="font-bold text-xs text-slate-200 mb-0.5">${card.name}</h4>
                                 <span class="text-[9px] uppercase tracking-wider text-slate-400 font-mono">${card.tier}</span>
                             </div>
-                            <p class="text-[10px] text-slate-400 leading-tight">${card.desc}</p>
+                                <p class="text-[10px] text-slate-400 leading-tight">${cardDescriptionWithStats(card)}</p>
                         </div>
                     `;
                     if (canAfford) {
