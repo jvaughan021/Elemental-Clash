@@ -1520,13 +1520,21 @@
                 currentBoss.currentHp = Math.max(0, currentBoss.currentHp - dmg);
                 showPopup('bossDamagePopup', `-${dmg}`, 'text-amber-400');
 
-                // FIX: Ensure boss defeat triggers reliably when currentHp is 0 or less
-                if (currentBoss.currentHp <= 0) {
+                // FIX: Force absolute check and immediate victory hook
+                if (currentBoss.currentHp <= 0 || currentBoss.currentHp === 0) {
                     currentBoss.currentHp = 0;
                     updateUI();
                     triggerStageVictory();
                     return;
                 }
+            }
+
+            // SAFETY CHECK: Double check if boss HP hit 0 even outside direct damage block
+            if (currentBoss.currentHp <= 0) {
+                currentBoss.currentHp = 0;
+                updateUI();
+                triggerStageVictory();
+                return;
             }
 
             updateUI();
