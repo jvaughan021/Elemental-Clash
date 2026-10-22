@@ -1652,9 +1652,6 @@
         function triggerStageVictory() {
             playSound('win');
             
-            // FIX: Apply the +30 HP stage-clear regen right here upon victory confirmation, before opening intermission/advancing
-            hero.hp = Math.min(hero.maxHp, hero.hp + 30);
-
             if (currentLevel === 0) {
                 logMessage(`[Tutorial] Training Dummy defeated! Fully restoring health and advancing to Level 1.`);
                 currentLevel = 1;
@@ -2041,7 +2038,10 @@
         function advanceToNextLevel() {
             document.getElementById('modalVictory').classList.add('hidden');
             currentLevel++;
-            // Note: HP regen is now securely handled upon stage victory, so advancing clean preserves the healed amount.
+            
+            // FIX: Guaranteed full stage-clear healing buffer (+30 HP, capped at max HP) right as you step into any next level
+            hero.hp = Math.min(hero.maxHp, hero.hp + 30);
+            
             saveGameProgress();
             initBattle();
         }
