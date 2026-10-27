@@ -1,0 +1,1402 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Elemental Clash</title><style>
+:root{font-family:system-ui,Segoe UI,sans-serif;color:#edf2ff;background:#0b1020}*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at top,#25315b,#0b1020 65%);min-height:100vh}button,input,select{font:inherit}button{background:#283861;color:white;border:1px solid #506398;border-radius:10px;padding:9px 12px;cursor:pointer}button:hover{background:#3c5186}button:disabled{opacity:.4;cursor:not-allowed}.primary{background:#6654d9}.wrap{max-width:1150px;margin:auto;padding:16px}header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}h1{font-size:clamp(25px,5vw,40px);margin:10px 0}h2{margin:0 0 14px}h3{margin:12px 0}nav{display:flex;gap:7px;flex-wrap:wrap;margin:18px 0}.panel{background:#151e37;border:1px solid #334469;border-radius:16px;padding:16px;margin-bottom:14px;box-shadow:0 8px 25px #05081355}.stats{display:flex;gap:10px;flex-wrap:wrap}.pill{background:#253457;border-radius:999px;padding:7px 12px}.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px}.card{background:linear-gradient(145deg,#273456,#161f39);border:1px solid #546389;border-radius:13px;padding:12px;min-height:125px}.card strong{display:block;margin-bottom:6px}.card small{color:#aebbe0}.card button{margin-top:8px}.muted{color:#aab8da}.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{max-width:100%}.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}input,select{background:#101a30;color:white;border:1px solid #506398;border-radius:8px;padding:9px;max-width:100%}.bar{height:15px;background:#4c2638;border-radius:10px;overflow:hidden}.bar>div{height:100%;background:#34c88b;transition:width .3s}.log{height:160px;overflow:auto;background:#0d1428;border-radius:10px;padding:10px;font-size:13px}.tiny{font-size:12px}.battle-banner{padding:12px;border:1px solid #556b9e;border-radius:12px;background:#202d50;margin:12px 0}.battle-banner strong{font-size:18px}.battle-actions{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}.battle-card{border-color:#7783b4}.battle-card:hover{border-color:#b8b9ff}.good{color:#77e9ae}.bad{color:#ff9c9c}@media(max-width:650px){.split{grid-template-columns:1fr}.wrap{padding:10px}.panel{padding:12px}}
+.element-guide{margin:18px 0;padding:15px;border:1px solid #445781;border-radius:14px;background:#111c36}.element-guide h3{margin-top:0}.matchup-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px}.matchup-card{background:#1b2946;border:1px solid #354669;border-radius:10px;padding:12px;line-height:1.7}.matchup-card strong{display:block;margin-bottom:5px}.matchup-good{color:#86efac}.matchup-bad{color:#fda4af}.matchup-neutral{color:#cbd5e1}
+.tutorial-progress{height:9px;background:#111b31;border-radius:20px;overflow:hidden;margin:12px 0}.tutorial-progress>div{height:100%;background:#8e80ff;transition:width .2s}.tutorial-highlight{outline:2px solid #b5aaff;outline-offset:3px}.tutorial-step{border:1px solid #8e80ff;background:linear-gradient(135deg,#222c58,#182342);padding:16px;border-radius:15px;margin:12px 0}.tutorial-step p{line-height:1.6}.tutorial-step button{margin:4px 5px 4px 0}.tutorial-kicker{color:#c8c2ff;font-size:13px;font-weight:700}.tactic{border:1px solid #4b668c;background:#182744;border-radius:12px;padding:12px;margin:12px 0}.tactic strong{display:block;margin-bottom:6px}.advantage{color:#86efac}.disadvantage{color:#fda4af}.neutral{color:#cbd5e1}.card-tip{margin-top:8px;font-weight:700;font-size:12px}.creator-credit{font-size:13px;color:#c8c2ff;font-weight:650;margin-top:6px}.creator-footer{margin-top:20px;padding:16px 0;text-align:center;border-top:1px solid #354669}.creator-footer strong{display:block;color:#e3ddff;font-size:14px;margin-bottom:6px}@keyframes stunPulse{0%{filter:brightness(1)}25%{filter:brightness(2);transform:translateX(3px)}50%{transform:translateX(-3px)}100%{filter:brightness(1);transform:none}}@keyframes sleepFloat{0%{opacity:0;transform:translateY(18px)}40%{opacity:1}100%{opacity:0;transform:translateY(-38px)}}.status-overlay{position:fixed;inset:0;z-index:9999;pointer-events:none;display:flex;justify-content:center;align-items:center;background:#080c2055}.status-overlay span{background:#101832ed;border:2px solid #8b85ff;border-radius:18px;padding:22px;color:white;text-align:center;font-size:clamp(18px,4vw,28px);font-weight:800;box-shadow:0 0 50px #715cffaa}.status-overlay.stun span{animation:stunPulse .5s ease-in-out 2;border-color:#58c8ff}.status-overlay.sleep span{animation:sleepFloat 1.6s ease-out forwards;border-color:#c9a5ff}.team-choice-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:18px 0}.team-choice{display:flex;gap:10px;align-items:center;padding:18px 14px;background:#1e2a49;border:1px solid #465b89;border-radius:14px;cursor:pointer}.team-choice:has(input:checked){border-color:#9c90ff;background:#2b3263;box-shadow:0 0 0 1px #9c90ff}.team-choice input{accent-color:#9c90ff}.team-choice-content{display:flex;flex-direction:column;gap:6px}.team-choice-content small{color:#b8c7e6}.team-setup,.team-join{padding:18px 0;border-top:1px solid #334469}.team-settings{display:flex;flex-wrap:wrap;gap:12px;margin:12px 0 16px}.team-settings label{display:flex;flex-direction:column;gap:7px}.team-settings [hidden]{display:none}.team-join .row input{min-width:180px;flex:1;max-width:300px}@media(max-width:650px){.team-choice-grid{grid-template-columns:1fr}.team-choice{padding:14px}}
+.team-fighters{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin:12px 0 20px}
+.team-fighter{background:#1b2d51;border:1px solid #465e8b;border-radius:13px;padding:12px;min-width:0}
+.team-fighter strong{display:block;font-size:1rem;overflow-wrap:anywhere}.team-fighter p{font-size:1.05rem;margin:7px 0}.team-fighter small{color:#b8c6e5;font-size:.78rem}
+.team-hand{display:grid;grid-template-columns:repeat(auto-fill,minmax(175px,1fr));gap:10px;margin:12px 0}
+.team-hand-card{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px;background:#1c2b4d;border:1px solid #455b87;border-radius:13px;min-height:76px}
+.team-hand-card strong{display:block;font-size:.95rem}.team-hand-card small{display:block;font-size:.8rem;color:#b5c7e9;margin-top:5px}
+.team-hand-card button{flex-shrink:0}
+@media(max-width:550px){.team-fighters{grid-template-columns:repeat(2,minmax(0,1fr))}.team-hand{grid-template-columns:1fr}.team-fighter{padding:10px}}
+
+.team-hp{width:100%;height:13px;background:#0c142b;border:1px solid #50618c;border-radius:999px;overflow:hidden;margin-top:11px}
+.team-hp-fill{height:100%;background:linear-gradient(90deg,#e74d66,#ff8e79);border-radius:999px;transition:width .3s ease}
+.team-boss-hp{height:18px;margin:12px 0}
+.team-target-help{padding:13px 15px;background:#172844;border:1px solid #465c88;border-radius:13px;margin:16px 0}
+.team-target-help p{font-size:.9rem;color:#c4d2ec;margin:8px 0 12px}
+.team-target-help select{display:block;margin-top:6px;max-width:100%}
+.team-card-type{font-size:.8rem;color:#b9b6ff;margin-top:5px;font-weight:600}
+.team-card-detail{font-size:.88rem;color:#e2e9fa;margin-top:8px;line-height:1.5}
+.team-card-effect{font-size:.82rem;color:#afc4df;margin-top:7px;line-height:1.45}
+.team-hand-card{display:block;background:linear-gradient(145deg,#273456,#161f39);border:1px solid #7783b4;min-height:125px}.team-hand-card>div{min-width:0}.team-hand-card strong{font-size:1rem}.team-hand-card button{margin-top:8px}.team-hand-card .card-tip{margin-top:8px;font-weight:700;font-size:12px}.team-hand-card .team-card-advice{background:none;border:0;padding:0;margin:7px 0;color:#b8c7e6;font-weight:400}.team-hand-card .team-card-detail{font-size:.84rem;color:#aebbe0}.team-hand-card .team-card-effect{font-size:.78rem;color:#aebbe0}
+
+/* Update 58: relationship-based HP colours across all combat modes. */
+.health-bar.health-ally>div,.team-hp-fill.health-fill-ally{background:linear-gradient(90deg,#16a34a,#4ade80)!important}
+.health-bar.health-enemy>div,.team-hp-fill.health-fill-enemy{background:linear-gradient(90deg,#dc2626,#fb7185)!important}
+.health-bar{overflow:hidden;border-radius:999px}
+.health-bar>div{height:100%;transition:width .25s ease}
+
+.coop-party{background:#182b45;border:1px solid #5275a3;border-radius:13px;padding:14px;margin:15px 0}
+.coop-party-names{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.coop-party-names span{padding:7px 11px;background:#273d60;border-radius:999px;font-size:.9rem}
+.coop-enemy-heading{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px;margin:10px 0}
+.coop-enemy-heading span{font-size:.88rem;color:#ffd3b0}
+.coop-info,.team-card-advice{padding:10px 12px;background:#213756;border:1px solid #3c618a;border-radius:9px;color:#cfe2f7;font-size:.88rem;line-height:1.5;margin:10px 0}
+.team-card-advice{font-size:.78rem;margin-bottom:0}
+.lb-table{margin-top:14px}.lb-entry{display:grid;grid-template-columns:60px 1fr minmax(85px,auto);gap:10px;padding:12px;border-bottom:1px solid #3a4e75;align-items:center}.lb-heading{background:#26385a;border-radius:8px}.lb-entry strong{text-align:right}@media(max-width:500px){.lb-entry{grid-template-columns:45px 1fr 75px;gap:6px;font-size:.85rem}} 
+/* Elemental Mines */
+.mine-hero{background:linear-gradient(125deg,#253965,#14243d 65%,#30234f);border:1px solid #6675b6;border-radius:18px;padding:20px;margin-bottom:15px}
+.mine-counter{font-size:clamp(23px,4.5vw,38px);font-weight:850;letter-spacing:.025em;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;color:#b6f5db;margin:8px 0}
+.mine-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:12px}.mine-tile{background:linear-gradient(145deg,#1c2b4b,#131c33);border:1px solid #3f567c;border-radius:14px;padding:15px}.mine-tile.locked{opacity:.73}.mine-progress{height:9px;border-radius:9px;background:#0c1529;overflow:hidden;margin:12px 0}.mine-progress>div{height:100%;background:linear-gradient(90deg,#4bd6ae,#9e8dff)}.mine-metric{font-variant-numeric:tabular-nums;color:#c7d7f7}.mine-hero .row{margin-top:12px}
+</style></head><body><div class="wrap"><header><div><h1>⚔️ Elemental Clash</h1><div class="muted">Forge your cards. Master the elements. Rise through the ranks.</div><div class="creator-credit">Created by Jack Vaughan</div></div><div id="stats" class="stats"></div></header><nav id="nav"></nav><main id="app"></main><div id="music-controls" style="background:#151e37;border:1px solid #526a99;border-radius:12px;padding:10px;box-shadow:0 5px 20px #0008;display:none;align-items:center;gap:8px;flex-wrap:wrap;max-width:100%"><button id="music-toggle" type="button" aria-label="Play background music">🎵 Play music</button><label style="font-size:12px">Volume <input id="music-volume" type="range" min="0" max="100" value="35" style="width:90px;vertical-align:middle"></label></div><footer class="muted tiny creator-footer"><strong>⚔️ Elemental Clash — Created by Jack Vaughan</strong><div style="margin:5px 0 9px">Developed with assistance from ChatGPT</div>Single-file game • Local progress is saved automatically • Firebase online rooms • Local progress saved on this device</footer></div><script>
+'use strict';
+// FIREBASE SETUP: Insert your Firebase configuration below and add the Firebase SDK/integration when deploying.
+// The local battle engine works offline. Online matchmaking, authentication and authoritative cloud saves require backend integration.
+const FIREBASE_CONFIG=null;
+window.statusFlash=(kind,msg)=>{
+ const box=document.createElement('div');box.className='status-overlay '+kind;
+ const text=document.createElement('span');text.textContent=(kind==='stun'?'⚡ ':'🌙 ')+msg+(kind==='sleep'?'  Zzz…':'');
+ box.appendChild(text);document.body.appendChild(box);setTimeout(()=>box.remove(),1500);
+};
+const E=['Fire','Water','Air','Earth','Spirit','Shadow'],EM=['🔥','💧','🌪️','🌿','✨','🌑'];
+const names=[['Ember Strike','Fireball','Flame Lash','Scorching Fang','Blazing Barrage','Inferno Spear','Molten Fury','Phoenix Talon','Hellfire Surge','Volcanic Wrath','Crimson Combustion','Solar Devastation','Magma Eruption','Cataclysmic Blaze','Apocalypse Inferno','Supernova Annihilation'],['Aqua Bolt','Tidal Slash','Frostbite','Riptide Crush','Glacial Spike','Whirlpool Strike','Ice Shatter','Tsunami Surge','Frozen Tempest','Abyssal Torrent',"Leviathan’s Fury",'Oceanic Rupture','Arctic Cataclysm','Maelstrom Devastation','Absolute Zero','Primordial Deluge'],['Wind Cutter','Gust Strike','Cyclone Blade','Razorwind','Sky Piercer','Tempest Rush','Tornado Fang','Thunderclap','Stormbreaker','Hurricane Assault',"Zephyr’s Wrath",'Lightning Vortex','Celestial Thunder','Atmospheric Rupture','Heavenly Tempest','Storm of Oblivion'],['Stone Fist','Thorn Whip','Rockslide','Boulder Crush','Earthen Spike','Vine Strangler','Seismic Slam','Granite Breaker',"Forest’s Wrath", "Titan’s Hammer",'Quaking Rupture','Ancient Root Fury','Mountain Collapse','Continental Shatter','Worldbreaker',"Gaia’s Cataclysm"],['Soul Spark','Spirit Lance','Spectral Touch','Phantom Strike','Astral Pulse','Ethereal Blade','Soulfire Burst',"Wraith’s Embrace",'Divine Judgement','Celestial Reckoning','Essence Shatter','Ancestral Fury','Sacred Obliteration','Astral Cataclysm','Eternal Soulstorm','Transcendent Ascension'],['Dark Slash','Shadow Fang','Nightfall Strike','Umbral Claw','Void Piercer','Dread Pulse','Eclipse Blade','Nightmare Grasp','Abyssal Reaper','Phantom Darkness','Oblivion Curse','Soul Devourer','Blackened Eclipse','Eternal Nightfall','Void Cataclysm','Endless Oblivion']];
+const rarity=['Common','Uncommon','Rare','Epic','Legendary'],roman=['I','II','III','IV','V'],bases=[10,11,12,13,14,15,16,17,18,20,22,24,26,27,29,30],mult=[1,3.4,13.4,66.7,666.7],prices=[100,150,220,300,400,550,700,900,1200,1600,2000,2600,3200,3800,4400,5000],forgePrices=[5000,50000,1000000,25000000];
+const shieldNames=[['Ember Ward','Tide Ward','Gale Ward','Stone Ward','Soul Ward','Dusk Ward','Steam Guard','Ashen Guard','Stormleaf Guard','Mire Guard','Spiritveil Guard','Twilight Guard','Wooden Guard','Stone Barrier','Copper Buckler','Bark Shell','Clay Bulwark','Ironwood Wall','Pebble Fortress','Bronze Bastion'],['Flame Ward','River Ward','Wind Ward','Root Ward','Astral Ward','Night Ward','Cinder Current','Scorched Grove','Mist Shroud','Dust Cyclone','Soulshade Barrier','Moonlit Canopy','Iron Fortress','Silver Guard','Reinforced Wall','Runic Bulwark','Guardian Plate','Tempered Bastion','Fortified Shell','Steel Rampart'],['Inferno Ward','Tidal Sanctuary','Tempest Ward','Granite Ward','Spectral Ward','Void Ward','Boiling Veil','Stormtide Ward','Earthen Tempest','Radiant Ember','Abyssal Current','Phantom Gale','Crystal Bulwark','Diamond Guard','Runestone Fortress','Enchanted Rampart','Adamant Wall','Prismatic Bastion','Titan Shell','Arcane Bulwark'],['Phoenix Ward','Abyssal Ward','Skybreaker Ward','Earthen Bastion','Celestial Ward','Eclipse Ward','Solar Tide Barrier','Wildfire Canopy','Hurricane Reef','Sacred Grove','Spirit Eclipse','Obsidian Cyclone','Celestial Aegis','Titanium Fortress','Mythic Rampart','Dragonplate Guard','Ancient Bulwark','Immortal Bastion','Starforged Wall','Royal Aegis'],['Eternal Flame Ward','Leviathan Ward','Heavenstorm Ward','Worldroot Ward','Divine Soul Ward','Endless Night Ward','Primordial Steamguard','Cosmic Tempest Ward','Apocalypse Canopy','Genesis Barrier','Eclipse Dominion','Eternal Stormveil','Divine Fortress','Eternal Aegis','Worldshield','Celestial Citadel',"Titan King’s Guard",'Infinity Bastion','Astral Fortress','Omnipotent Aegis']];
+const absorb=[[15,20,25,30,35,40,45,50],[60,75,90,110,130,150,175,200],[250,300,350,400,500,600,700,800],[1500,1800,2200,2600,3000,3500,4000,5000],[8000,10000,12000,15000,18000,20000,25000,30000]];
+const heals=[['Minor Remedy',15],['Healing Touch',25],['Vital Surge',50],["Nature’s Blessing",75],['Restoration Pulse',125],['Sacred Renewal',175],['Divine Recovery',500],['Phoenix Rebirth',2000],['Miracle of Life',8000],['Eternal Restoration',20000]];
+const pair=[[0,1],[0,3],[1,2],[2,3],[4,5],[2,5]];
+const cards=[];for(let r=0;r<5;r++){for(let e=0;e<6;e++)for(let i=0;i<16;i++)cards.push({id:`a${e}-${i}-${r}`,kind:'attack',name:names[e][i]+' '+roman[r],element:e,rarity:r,damage:Math.round(bases[i]*mult[r]),price:Math.round(prices[i]*[1,10,200,5000,100000][r]),bonus:r*.05});for(let i=0;i<20;i++){const type=i<6?'single':i<12?'dual':'absorb',targets=i<6?[i]:i<12?pair[i-6]:[],duration=type==='absorb'?([ [1,1,2,2,1,2,1,2],[2,2,3,2,3,2,3,3],[2,3,3,4,3,4,3,4],[3,4,4,5,4,5,5,5],[4,4,5,5,6,5,6,6] ][r][i-12]):Math.min(6,1+Math.min(2,r)+(i%2)+(r>=3?1:0));cards.push({id:`s${i}-${r}`,kind:'shield',name:shieldNames[r][i],rarity:r,type,targets,duration,absorb:type==='absorb'?absorb[r][i-12]:0,price:Math.round((150+i*65)*[1,10,200,5000,100000][r])})}for(let j=0;j<2;j++){let i=r*2+j;cards.push({id:`h${i}`,kind:'heal',name:heals[i][0],heal:heals[i][1],rarity:r,price:[100,200,1000,2000,8000,15000,60000,100000,400000,750000][i]})}}
+// Update 46: 60 new status attacks; original 590 collectible cards are untouched.
+const statusNames=[
+ [['Cinder Lock','Ember Lullaby'],['Tidal Shock','Deepwater Slumber'],
+  ['Thunder Snare','Cloud Dream'],['Seismic Stagger','Rootbound Rest'],
+  ['Soul Jolt','Astral Reverie'],['Nightmare Grip','Midnight Trance']]
+];
+for(let e=0;e<6;e++)for(let r=0;r<5;r++)for(let k=0;k<2;k++){
+ const status=k===0?'stun':'sleep';
+ const base=Math.round((k===0?15:13)*mult[r]*.8);
+ cards.push({id:`t${e}-${k}-${r}`,kind:'attack',name:statusNames[0][e][k]+' '+roman[r],
+ element:e,rarity:r,damage:base,bonus:r*.05,status,
+ price:Math.round((k===0?950:1150)*[1,10,200,5000,100000][r])});
+}
+// Update 48: 60 dedicated area cards, 6 elements x 5 rarities x 2 attack styles.
+const areaCardNames=[['Inferno Wave','Ashen Slumber'],['Tidal Surge','Dreaming Depths'],['Cyclone Burst','Drowsing Winds'],['Quake Wave','Sleeping Roots'],['Astral Nova','Tranquil Spirits'],['Void Eruption','Nightfall Veil']];
+for(let e=0;e<6;e++)for(let r=0;r<5;r++)for(let k=0;k<2;k++){
+ const sleep=k===1;
+ cards.push({id:`ao${e}-${k}-${r}`,kind:'attack',name:areaCardNames[e][k]+' '+roman[r],element:e,rarity:r,
+  damage:Math.max(1,Math.round((sleep?9:12)*mult[r])),bonus:r*.05,area:true,status:sleep?'sleep':null,
+  areaStatusChance:sleep?[.08,.12,.17,.22,.28][r]:0,
+  price:Math.round((sleep?1700:1400)*[1,10,200,5000,100000][r])});
+}
+const statusStrong=(c)=>c.status==='stun'?[2,3].includes(c.element):[1,4,5].includes(c.element);
+function statusChance(c){
+ const r=c.rarity||0;
+ return Math.min(.9,((c.status==='stun'?[25,35,45,55,65]:[15,25,35,45,55])[r]+(statusStrong(c)?10:0))/100);
+}
+function statusDescription(c){return c.status?`${c.status==='stun'?'⚡ Stun':'🌙 Sleep'}: ${Math.round(statusChance(c)*100)}% chance · ${c.status==='stun'?'1 bonus attack':'up to 2 bonus attacks'} · normal damage on failure`:''}
+function statusResolution(c,enemyFx,shieldBlocked,boss=false){
+ if(!c.status)return '';
+ if((enemyFx.immunity||0)>0||enemyFx.sleep>0||enemyFx.stun>0)return `${c.status.toUpperCase()} resisted — temporary immunity!`;
+ let chance=statusChance(c)*(shieldBlocked?.5:1)*(boss?.5:1);
+ if(Math.random()>=chance)return `${c.status.toUpperCase()} FAILED (${Math.round(chance*100)}% chance)`;
+ enemyFx.sleep=c.status==='sleep'?2:0;
+ enemyFx.stun=c.status==='stun'?1:0;
+ return `${c.status.toUpperCase()} SUCCESSFUL! ${c.status==='stun'?'1 extra attack':'Up to 2 extra attacks'}`;
+}
+function statusNextTurn(enemyFx,actorFx,actorWasAsleep){
+ // Immunity counts the recovering fighter's own actual turns.
+ if(enemyFx.immunity>0)enemyFx.immunity--;
+ if(actorFx.stun>0){actorFx.stun=0;actorFx.immunity=2;return true}
+ if(actorFx.sleep>0){
+   actorFx.sleep--;
+   if(actorFx.sleep===0||actorWasAsleep&&Math.random()<.4){actorFx.sleep=0;actorFx.immunity=2}
+   return true;
+ }
+ return false;
+}
+// Update 40: every one of the 480 attack cards has a tactical role, not just damage.
+// Same numbered attack within each element shares a role; the element changes its theme.
+const attackRoles=[
+ ['Lingering damage','Applies damage over time to the opponent.'],
+ ['Shield breaker','Deals extra damage to shields.'],
+ ['Life steal','Restores HP equal to part of damage dealt.'],
+ ['Critical strike','Has a chance to deal extra direct damage.'],
+ ['Piercing strike','Ignores part of absorption shields.'],
+ ['Weakening blow','Reduces the opponent’s next attack.'],
+ ['Battle focus','Boosts your next attack.'],
+ ['Barrier siphon','Converts part of damage dealt into your shield.'],
+ ['Finisher','Deals extra damage to wounded opponents.'],
+ ['Regeneration','Restores HP at the start of your next turn.'],
+ ['Shield harvest','Restores HP when hitting a shield.'],
+ ['Elemental charge','Boosts the next attack when you switch elements.'],
+ ['Disruption','Reduces the opponent’s next healing effect.'],
+ ['Retaliation guard','Adds protection after the attack.'],
+ ['Momentum','Increases damage with consecutive attacks.'],
+ ['Last stand','Deals extra damage while you are below half HP.']
+];
+const abilityTier=c=>1+Math.max(0,c.rarity||0);
+function abilityInfo(c){if(c.area)return `🌪️ AREA: Hits all enemies · ${c.areaStatusChance?'🌙 Sleep '+Math.round(c.areaStatusChance*100)+'% chance per target':'damage to every opponent'}`;if(c.status)return statusDescription(c);if(c.kind!=='attack')return '';const k=Number(c.id.split('-')[1])%16,t=abilityTier(c);const descriptions=[
+ `Burn/bleed: ${3*t} damage on the enemy's next turn`,
+ `+${20+5*t}% damage against shields`,
+ `Heal ${10+3*t}% of HP damage dealt`,
+ `${12+3*t}% chance of a ${150+10*t}% critical hit`,
+ `Ignore ${15+5*t}% of absorption protection`,
+ `Enemy's next attack −${10+3*t}%`,
+ `Your next attack +${8+3*t}%`,
+ `Gain a shield equal to ${15+5*t}% of HP damage dealt`,
+ `+${15+5*t}% damage against enemies below half HP`,
+ `Heal ${4*t} HP on your next turn`,
+ `Heal ${3*t} HP when you hit an enemy shield`,
+ `Your next attack +${10+4*t}% if you switch elements`,
+ `Enemy's next heal −${15+5*t}%`,
+ `Gain ${4*t} shield protection`,
+ `Consecutive attacks gain +${4*t}% damage (max 3 stacks)`,
+ `+${15+5*t}% damage while below half HP`
+ ];return descriptions[k]}
+function roleIndex(c){return c.status?-1:c.kind==='attack'?Math.max(0,Number(c.id.split('-')[1])||0)%16:-1}
+function effectsInit(){return {dot:0,regen:0,weak:0,focus:0,focusSwitch:false,healCut:0,momentum:0,stun:0,sleep:0,immunity:0}}
+function normalizeEffects(x){return Object.assign(effectsInit(),x||{})}
+function tickCombatEffects(b,side,write){const e=b.effects[side];if(e.dot>0){const n=Math.min(b.hp[side],e.dot);b.hp[side]-=n;write(`${side?'Opponent':'You'} suffer ${n} lingering damage`);e.dot=0}if(e.regen>0&&b.hp[side]>0){const n=Math.min(b.max[side]-b.hp[side],e.regen);b.hp[side]+=n;write(`${side?'Opponent':'You'} regenerate ${n} HP`);e.regen=0}}
+function applyAttackRole(b,c,side,damage,defence,write){const k=roleIndex(c),t=abilityTier(c),own=b.effects[side],enemy=b.effects[1-side];let bonus=0;
+ if(own.weak){damage=Math.round(damage*(1-own.weak));own.weak=0}
+ if(own.focus){const switched=b.elements[side]!==null&&b.elements[side]!==c.element;if(!own.focusSwitch||switched)damage=Math.round(damage*(1+own.focus));own.focus=0;own.focusSwitch=false}
+ if(k===3&&Math.random()<(12+3*t)/100){damage=Math.round(damage*(1.5+.1*t));write('Critical card ability!')}
+ if(k===8&&b.hp[1-side]<b.max[1-side]/2)damage=Math.round(damage*(1+(15+5*t)/100));
+ if(k===15&&b.hp[side]<b.max[side]/2)damage=Math.round(damage*(1+(15+5*t)/100));
+ if(k===14){own.momentum=Math.min(3,(own.momentum||0)+1);damage=Math.round(damage*(1+own.momentum*4*t/100))}else own.momentum=0;
+ if(k===1&&defence?.absorb>0)damage=Math.round(damage*(1+(20+5*t)/100));
+ return {damage:Math.max(0,damage),pierce:k===4?(15+5*t)/100:0}
+}
+function finishAttackRole(b,c,side,hpDamage,shieldDamage,write){const k=roleIndex(c),t=abilityTier(c),own=b.effects[side],enemy=b.effects[1-side];
+ if(k===0)enemy.dot+=3*t;
+ if(k===2)b.hp[side]=Math.min(b.max[side],b.hp[side]+Math.round(hpDamage*(10+3*t)/100));
+ if(k===5)enemy.weak=Math.max(enemy.weak,(10+3*t)/100);
+ if(k===6)own.focus=(8+3*t)/100;
+ if(k===7&&hpDamage>0)addRoleShield(b,side,Math.max(1,Math.round(hpDamage*(15+5*t)/100)));
+ if(k===9)own.regen+=4*t;
+ if(k===10&&shieldDamage>0)b.hp[side]=Math.min(b.max[side],b.hp[side]+3*t);
+ if(k===11){own.focus=(10+4*t)/100;own.focusSwitch=true}
+ if(k===12)enemy.healCut=Math.max(enemy.healCut,(15+5*t)/100);
+ if(k===13)addRoleShield(b,side,4*t);
+ write(`${c.name}: ${abilityInfo(c)}`)
+}
+function addRoleShield(b,side,amount){if(amount<=0)return;const existing=b.shields[side];if(existing?.absorb>0){existing.absorb+=amount;existing.name='Stacked shields';existing.targets=[]}else b.shields[side]={name:'Ability barrier',absorb:amount,targets:[],duration:1}}
+const trainingRewards=[5,10,15,20,30,40,50,65,80,100,125,150,200,250,300,400,500,600,750,900,1000];
+const trainingCosts=[100,250,500,1000,2000,4000,7500,12500,20000,30000,45000,65000,90000,125000,175000,250000,350000,500000,750000,1000000];
+const trainingReward=()=>trainingRewards[Math.min(20,upLevel('Training Mastery'))];
+const trainingCost=()=>trainingCosts[Math.min(19,upLevel('Training Mastery'))];
+const exclusiveCards=[
+{id:'achievement-phoenix',kind:'attack',name:'Phoenix Rebirth',element:0,rarity:3,damage:2200,bonus:.15,exclusive:true},
+{id:'achievement-dragon',kind:'attack',name:'Abyssal Dragon',element:5,rarity:4,damage:22000,bonus:.25,exclusive:true},
+{id:'achievement-guardian',kind:'shield',name:'Eternal Guardian',rarity:4,type:'absorb',targets:[],duration:6,absorb:35000,exclusive:true}];
+cards.push(...exclusiveCards);
+const achievements=[];
+const achievementGroups=[
+{key:'battle',label:'⚔️ Battles',metric:'onlineWins',thresholds:[1,2,3,5,7,10,15,20,30,40,50,75,100,150,200,300,400,500,750,1000]},
+{key:'cards',label:'🃏 Collection',metric:'uniqueCards',thresholds:[1,5,10,20,30,40,50,75,100,125,150,175,200,250,300,350,400,450,500,590]},
+{key:'hp',label:'❤️ HP & Upgrades',metric:'hp',thresholds:[500,1000,2000,5000,10000,15000,20000,30000,40000,50000,60000,70000,80000,90000,100000,120000,140000,160000,180000,200000]},
+{key:'wealth',label:'💰 Wealth & Training',metric:'totalEarned',thresholds:[1,10,50,100,500,1000,2500,5000,10000,25000,50000,100000,250000,500000,1000000,5000000,10000000,50000000,100000000,1000000000]},
+{key:'social',label:'🌐 Online Participation',metric:'onlineMatches',thresholds:[1,2,3,5,7,10,15,20,25,30,40,50,75,100,150,200,300,400,500,750]}];
+for(const group of achievementGroups)group.thresholds.forEach((target,i)=>achievements.push({id:group.key+'-'+i,group:group.label,metric:group.metric,target,title:group.key==='hp'?`Reach ${target.toLocaleString('en-GB')} HP`:group.key==='cards'?`Collect ${target} different cards`:group.key==='battle'?`Win ${target} online battles`:group.key==='wealth'?`Earn ${target.toLocaleString('en-GB')} total BP`:`Complete ${target} online matches`,bp:Math.round(Math.max(50,target*(group.key==='wealth'?.01:group.key==='hp'?.1:100))),card:group.key==='battle'&&target===100?'achievement-phoenix':group.key==='hp'&&target===200000?'achievement-guardian':group.key==='battle'&&target===750?'achievement-dragon':null}));
+// Fifty additional campaign achievements: 30 individual bosses, 6 kingdom clears,
+// and 14 milestones. Existing 100 achievements retain their original IDs.
+const campaignAchievementGroup={key:'campaign',label:'🏰 Six Kingdoms Campaign',metric:'campaignHighest',thresholds:[]};
+achievementGroups.push(campaignAchievementGroup);
+const campaignAchievementMilestones=[1,5,15,25,35,45,60,75,90,110,130,160,210,275];
+for(const level of campaignAchievementMilestones){
+ achievements.push({id:'campaign-milestone-'+level,group:campaignAchievementGroup.label,metric:'campaignHighest',target:level,title:`Clear campaign battle ${level}`,bp:Math.round(100+level*level*.65),card:null});
+}
+for(let level=10;level<=300;level+=10){
+ const bossName=['Ember Warden','Molten Knight','Flame Tyrant','Phoenix Lord','Inferno King','Tidal Sentinel','Deepwater Serpent','Drowned Admiral','Abyss Guardian','Abyss Leviathan','Sky Duelist','Tempest Rider','Thunderlord','Cyclone Titan','Storm Empress','Stone Guardian','Mountain Colossus','Forest Behemoth','Worldbreaker','Ancient Titan','Soul Keeper','Radiant Knight','Astral Oracle','Divine Arbiter','Celestial Guardian','Dusk Stalker','Nightmare Knight','Void Devourer','Dark Sovereign','Shadow Emperor'][level/10-1];
+ achievements.push({id:'campaign-boss-'+level,group:campaignAchievementGroup.label,metric:'campaignBoss',target:level,title:`Defeat ${bossName} (Battle ${level})`,bp:Math.round(250+level*level*1.25),card:null});
+}
+for(let kingdom=1;kingdom<=6;kingdom++){
+ const level=kingdom*50;
+ const kingdomName=['Fire','Water','Air','Earth','Spirit','Shadow'][kingdom-1];
+ achievements.push({id:'campaign-kingdom-'+kingdom,group:campaignAchievementGroup.label,metric:'campaignHighest',target:level,title:`Conquer the ${kingdomName} Kingdom`,bp:Math.round(1000+level*level*1.5),card:null});
+}
+function achievementValue(a){if(a.metric==='campaignHighest')return Number(state.campaign?.highest||0);if(a.metric==='campaignBoss')return state.campaign?.wins?.[a.target]?a.target:0;if(a.metric==='uniqueCards')return ownedCards().length;if(a.metric==='hp')return maxHP();return Number(state.stats[a.metric]||0)}
+function achievementMet(a){return achievementValue(a)>=a.target}
+function achievementScreen(){const claimed=achievements.filter(a=>state.achievements[a.id]).length;return `<div class="panel"><h2>🏆 Achievements</h2><p>${claimed}/${achievements.length} claimed · Earn BP and exclusive cards. Reset Progress removes all achievements and their exclusive cards.</p><p class="muted">Exclusive achievement cards cannot be purchased or forged. Each achievement is claimable once per game save.</p></div>`+achievementGroups.map(g=>`<div class="panel"><h3>${g.label}</h3><div class="grid">${achievements.filter(a=>a.group===g.label).map(a=>{let value=achievementValue(a),done=!!state.achievements[a.id],ready=achievementMet(a);return `<div class="card"><strong>${a.title}</strong><small>${Math.min(value,a.target).toLocaleString('en-GB')} / ${a.target.toLocaleString('en-GB')}</small><p>🎁 ${money(a.bp)} BP${a.card?' + exclusive card':''}</p><button data-action="claimAchievement" data-id="${a.id}" ${done||!ready?'disabled':''}>${done?'✓ Claimed':ready?'Claim reward':'Locked'}</button></div>`}).join('')}</div></div>`).join('')}
+const ranks=['Elemental Recruit','Elemental Novice','Spark Initiate','Apprentice','Battle Adept','Arcane Fighter','Elemental Disciple','Mystic Warrior','Rune Wielder','Elemental Knight','Storm Vanguard','Arcane Guardian','Flame Sentinel','Elemental Champion','Mystic Commander','Arcane Warlord','Dragonheart','Astral Conqueror','Elemental Overlord','Storm Sovereign','Void Reaper','Infernal Monarch','Celestial Ascendant','Primordial Titan','Eternal Warlord','Elemental Emperor','Cosmic Dominator','Astral Deity','Supreme Elementalist','Primordial Godslayer','Elemental Omnipotent'];
+const expReq=[100,140,190,250,330,450,610,820,1100,1490,2010,2710,3660,4950,6680,9020,12170,16430,22180,29950,40430,54580,73680,99470,134280,181280,244720,330380,446010,602110];
+const upgradeGroups=[['Health & Survival',[['Maximum HP',200],['Healing Power',30],['Healing Efficiency',25],['Emergency Recovery',20],['Last Stand',20],['Recovery Boost',25],['Vitality Mastery',35]]],['Attack & Damage',[['Attack Power',40],['Critical Chance',30],['Critical Damage',35],['Armour Piercing',30],['Shield Breaker',30],['Elemental Precision',25],['Combat Momentum',25]]],['Elemental Mastery',[...E.map(e=>[e+' Mastery',35]),['Elemental Resistance',40],['Elemental Advantage',30]]],['Shields & Defence',[['Shield Strength',40],['Shield Duration',30],['Shield Efficiency',25],['Shield Reinforcement',30],['Dual-Element Defence',25],['Shield Recovery',20],['Defensive Mastery',35]]],['Forging & Cards',[['Forge Efficiency',30],['Forge Mastery',30],['Card Collector',30],['Card Training',35],['Rarity Mastery',25],['Forge Expertise',25]]],['Economy & Progression',[['BP Earnings',40],['Victory Rewards',35],['EXP Boost',40],['Shop Discount',30],['Battle Rewards',35]]]];
+const upgrades=upgradeGroups.flatMap((g,gi)=>g[1].map(([name,max],i)=>({name,max,group:g[0],base:gi===0?100+i*65:gi===1?250+i*125:gi===2?200+i*75:gi===3?200+i*100:gi===4?500+i*300:300+i*300})));
+const intervals=[86400,43200,21600,10800,3600,1800,900,600,300,120,60,45,30,20,15,10,8,5,2,1];
+const fmt=n=>Math.floor(n).toLocaleString('en-GB');const money=n=>n>=1e12?(n/1e12).toFixed(2)+'T':n>=1e9?(n/1e9).toFixed(2)+'B':n>=1e6?(n/1e6).toFixed(2)+'M':Number(n).toLocaleString('en-GB',{minimumFractionDigits:0,maximumFractionDigits:2});const round5=n=>Math.round(n/5)*5;
+function fresh(){let owned={};for(let e=0;e<6;e++)for(let i=0;i<4;i++)owned[`a${e}-${i}-0`]=1;owned['h0']=1;owned['s12-0']=1;return{bp:0,exp:0,rank:1,owned,starterDefenceGiftV34:true,deck:[],campaign:{highest:0,wins:{},bossRewards:{},last:1},up:{},achievements:{},stats:{trainingWins:0,onlineWins:0,onlineMatches:0,totalEarned:0,forges:0,buys:0},vault:{interest:1,frequency:1,pending:0,last:Date.now(),fraction:0},mines:{levels:Array(30).fill(0),pending:0,last:Date.now(),auto:false,seconds:Array(30).fill(false)},wins:0,losses:0,lastWinDay:'',created:Date.now()}}
+let state;try{state=JSON.parse(localStorage.getItem('elemental-clash-v1'))||fresh()}catch{state=fresh()}state.campaign||={highest:0,wins:{},bossRewards:{},last:1};state.campaign.wins||={};state.campaign.bossRewards||={};state.vault||=(fresh().vault);state.up||={};state.owned||={};state.deck||=[];state.achievements||={};state.stats||={trainingWins:0,onlineWins:0,onlineMatches:0,totalEarned:0,forges:0,buys:0};state.mines||={levels:Array(30).fill(0),pending:0,last:Date.now(),auto:false,seconds:Array(30).fill(false)};state.mines.levels=Array.from({length:30},(_,i)=>Math.max(0,Math.min(100,Number(state.mines.levels?.[i])||0)));state.mines.pending=Math.max(0,Number(state.mines.pending)||0);if(!Number.isFinite(state.mines.last))state.mines.last=Date.now();state.mines.auto=!!state.mines.auto;state.mines.seconds=Array.from({length:30},(_,i)=>state.mines.seconds?.[i]===true);
+// Update 34: grant each existing player one free starter heal and shield, once only.
+// This never removes any cards or changes the shop catalog.
+if(!state.starterDefenceGiftV34){state.owned['h0']=(state.owned['h0']||0)+1;state.owned['s12-0']=(state.owned['s12-0']||0)+1;state.starterDefenceGiftV34=true;try{localStorage.setItem('elemental-clash-v1',JSON.stringify(state))}catch(e){console.warn('Starter gift save:',e)}}
+let tab='Home',battle=null,filter='All',rarityFilter='All',notice='';const app=document.getElementById('app');const byId=id=>cards.find(c=>c.id===id);const upLevel=n=>state.up[n]||0;const maxHP=()=>Math.round((150+Math.round(199850*upLevel('Maximum HP')/200))*(1+upLevel('Vitality Mastery')*.01));
+function vaultPayment(l){let n=10;for(let i=1;i<l;i++)n=Math.round(n*1.5);return n}function vaultTick(){
+  const v=state.vault,now=Date.now();
+  // Update 44: full payments only, not fractional BP every few hours.
+  // Existing uncollected BP is preserved. Start a clean payment cycle once
+  // when migrating from the previous continuous-accrual implementation.
+  if(v.paymentMode!=='full-payments-v44'){
+    v.paymentMode='full-payments-v44';
+    v.last=now;
+    v.fraction=0;
+    return;
+  }
+  if(!Number.isFinite(v.last)||v.last>now){v.last=now;return;}
+  const interval=intervals[v.frequency-1]*1000;
+  if(!Number.isFinite(interval)||interval<=0)return;
+  const elapsed=Math.min(now-v.last,604800000);
+  const payments=Math.floor(elapsed/interval);
+  if(payments>0){
+    v.pending+=payments*vaultPayment(v.interest);
+    v.last=now-(elapsed%interval);
+  }
+}function save(){localStorage.setItem('elemental-clash-v1',JSON.stringify(state));window.elementalCloudDirty?.();window.elementalLeaderboardChanged?.()}function message(t){notice=t;render()}
+function cardText(c){return `${c.kind==='attack'?EM[c.element]+' '+E[c.element]:c.kind==='shield'?'🛡️':'❤️'} ${c.name}`}
+function cardInfo(c){return c.kind==='attack'?`${c.damage} damage · ${rarity[c.rarity]} · +${Math.round(c.bonus*100)}% next attack · ✨ ${abilityInfo(c)}`:c.kind==='heal'?`Restore ${c.heal} HP · ${rarity[c.rarity]}`:`${c.type==='absorb'?'Absorb '+c.absorb+' damage':'Immune to '+c.targets.map(i=>E[i]).join(' + ')} · ${c.duration} turns · ${rarity[c.rarity]}`}
+function cardHTML(c,buttons=''){return `<div class="card"><strong>${cardText(c)}</strong><small>${cardInfo(c)}</small><div class="tiny muted">Owned: ${state.owned[c.id]||0}</div>${buttons}</div>`}
+function ownedCards(){return cards.filter(c=>state.owned[c.id]>0)}
+function deckValid(){if(state.deck.length!==30)return false;const counts={};for(const id of state.deck){counts[id]=(counts[id]||0)+1;if(counts[id]>Math.min(2,state.owned[id]||0))return false}return true}
+// First-visit, optional interactive walkthrough. Tutorial status is independent of game progress.
+const tutorialKey='elemental-clash-tutorial-v1';
+const tutorialSteps=[
+ {title:'Welcome to Elemental Clash',tab:'Home',body:'You begin with 24 Common attack cards, one Common healing card, one Common shield card and 0 BP. Your goal is to fight, collect stronger cards, improve your fighter and climb 31 ranks. Training is a safe place to practise. The 300-battle Campaign offers solo BP, EXP and boss rewards.',task:'Take a look at your starting stats and open your first training battle.',button:'⚔️ Go to training battle',next:'Battle'},
+ {title:'Try your first battle',tab:'Battle',body:'Tap Start Training Battle, then choose a card from your hand and tap Play card. Every turn, you may play one attack, shield or healing card. Your opponent adapts to your HP and cards.',task:'Start a battle and play a card. You can continue this guide at any time.',button:'🃏 Open training',next:'Battle'},
+ {title:'Learn elemental advantages',tab:'Battle',body:'Fire beats Earth and Shadow; Water beats Fire and Earth; Air beats Water and Spirit; Earth beats Air and Spirit; Spirit beats Fire and Shadow; Shadow beats Water and Air. Strong attacks gain 25% damage, weak attacks lose 25%. Switching attack elements can trigger a combo.',task:'Read the strengths and weaknesses guide beneath your battle cards.',button:'🌈 View elemental guide',next:'Battle'},
+ {title:'Understand BP and EXP',tab:'Ranks',body:'BP buys cards, upgrades and forging. Training victories earn your Training Mastery BP reward (starting at 0.10 BP), but no EXP. Verified online victories and losses earn BP and EXP. EXP increases your rank; the Ranks page shows what each promotion requires.',task:'Open Ranks and check the EXP needed for your next rank.',button:'🏆 Open ranks',next:'Ranks'},
+ {title:'Build your battle deck',tab:'Collection',body:'Your Collection contains every card you own. Select Add to deck to choose cards, up to two identical copies each. An online deck has 30 cards. Auto-build can fill a deck for you, and the game has a starter fallback while you are collecting.',task:'Try Auto-build deck or add a card manually.',button:'🃏 Open collection',next:'Collection'},
+ {title:'Buy cards and forge upgrades',tab:'Forge',body:'The Shop sells attack, shield and healing cards. The Forge combines two identical cards of the same rarity, plus BP, into one card of the next rarity. For example, two identical Common cards can become one Uncommon card for 5,000 BP.',task:'Explore the Forge, then visit the Shop whenever you have enough BP.',button:'🔨 Open forge',next:'Forge'},
+ {title:'Grow your fighter',tab:'Upgrades',body:'Upgrades increase your fighter’s strength, including maximum HP up to 200,000. Training Mastery increases the BP paid for bot victories. The Vault generates BP over time, even while you are away; collect it from the Vault tab.',task:'Browse Upgrades and the Vault when you are ready to invest BP.',button:'📈 Open upgrades',next:'Upgrades'},
+ {title:'Save progress and meet players',tab:'Profile',body:'Progress saves automatically on this browser, including for guests. For safer recovery, create an email account in Profile and enable cloud saving. Use Online for private or random battles, Social for friends and chat, and Achievements for extra goals.',task:'Open Profile to check your saving options. Never share your password.',button:'☁️ Open profile',next:'Profile'},
+ {title:'You are ready!',tab:'Home',body:'You now know the basics. Play training to learn combat, build your deck, then try online battles for EXP and bigger rewards. You can reopen Help / Tutorial from the navigation whenever you want.',task:'Enjoy Elemental Clash!',button:'🏠 Return home',next:'Home'}
+];
+let tutorialStep=0,tutorialActive=false;
+try{const old=JSON.parse(localStorage.getItem(tutorialKey)||'null');tutorialActive=!old&&!localStorage.getItem('elemental-clash-v1');tutorialStep=old?.step||0}catch{tutorialActive=true}
+function tutorialSave(completed=false){try{localStorage.setItem(tutorialKey,JSON.stringify({completed,step:tutorialStep}))}catch{}}
+function tutorialStart(){tutorialStep=0;tutorialActive=true;tutorialSave();tab='Help';render()}
+function tutorialClose(){tutorialActive=false;tutorialSave(true);render()}
+function tutorialNext(){if(tutorialStep>=tutorialSteps.length-1){tutorialClose();tab='Home';render();return}tutorialStep++;tutorialSave();tab='Help';render()}
+function tutorialBack(){tutorialStep=Math.max(0,tutorialStep-1);tutorialSave();tab='Help';render()}
+function tutorialCard(){const t=tutorialSteps[tutorialStep];return `<section class="tutorial-step" aria-label="Beginner tutorial"><div class="tutorial-kicker">🎓 BEGINNER TUTORIAL · STEP ${tutorialStep+1} OF ${tutorialSteps.length}</div><div class="tutorial-progress"><div style="width:${(tutorialStep+1)/tutorialSteps.length*100}%"></div></div><h2>${t.title}</h2><p>${t.body}</p><p><strong>Try this:</strong> ${t.task}</p><div class="row"><button class="primary" data-tutorial="visit">${t.button}</button><button data-tutorial="next">${tutorialStep===tutorialSteps.length-1?'✓ Finish tutorial':'✓ Got it · Next'}</button>${tutorialStep?'<button data-tutorial="back">← Back</button>':''}<button data-tutorial="skip">Skip tutorial</button></div></section>`}
+function tutorialPage(){return tutorialCard()+`<div class="panel"><h3>📚 Quick reference</h3><p><strong>Battle:</strong> Play one card per turn. Attacks damage, shields protect and healing restores HP.</p><p><strong>Campaign:</strong> 300 solo battles with bosses every 10 levels, BP and EXP, and reduced replay rewards.</p><p><strong>BP:</strong> Earn it in battles and from the Vault; spend it in Shop, Forge and Upgrades.</p><p><strong>EXP:</strong> Earn it from online matches to advance through 31 ranks.</p><p><strong>Collection:</strong> Build your 30-card online deck from cards you own.</p><p><strong>Account:</strong> Guests save locally; email accounts can use cloud saving.</p><p><strong>Social:</strong> Find players, chat and manage friends. <strong>Music:</strong> Change soundtrack settings in its own tab.</p></div>`}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-tutorial]');if(!b)return;const a=b.dataset.tutorial;if(a==='start')tutorialStart();if(a==='skip')tutorialClose();if(a==='next')tutorialNext();if(a==='back')tutorialBack();if(a==='visit'){tab=tutorialSteps[tutorialStep].next;render();const target=tab==='Battle'?document.querySelector('[data-action="start"],.element-guide'):null;target?.scrollIntoView({behavior:'smooth',block:'center'});}});
+
+// Elemental Mines — all economy constants centralized for future balancing.
+const MINE_NAMES=['Ember Quarry','Tidal Cavern','Zephyr Shaft','Verdant Excavation','Astral Hollow','Dusk Pit','Magma Forge','Glacial Grotto','Tempest Vein','Crystal Root','Spectral Depths','Umbral Rift','Phoenix Furnace','Leviathan Trench','Thunder Spire','Titan Bedrock','Celestial Sanctuary','Abyssal Chasm','Solar Core','Frozen Eternity','Hurricane Eye','Worldroot Heart','Ethereal Nexus','Void Dominion','Inferno Crown','Primordial Ocean','Skybreaker Summit','Gaia Citadel','Divine Expanse','Oblivion Abyss'];
+const MINE_ICONS=['🔥','💧','🌪️','🌿','✨','🌑'];
+const MINE_FIRST_PRICE=50,MINE_PURCHASE_MULT=5,MINE_FIRST_UPGRADE=5,MINE_UPGRADE_MULT=1.1,MINE_UPGRADE_TIER_MULT=3,MINE_RATE=.0001,MINE_RATE_TIER_MULT=1.5,MINE_LEVEL_RATE_MULT=1.01,MINE_AUTO_PRICE=1000,MINE_SECONDS_FIRST_PRICE=100,MINE_SECONDS_PRICE_MULT=1.5;
+function minePrice(i){return MINE_FIRST_PRICE*Math.pow(MINE_PURCHASE_MULT,i)}
+function mineUpgradePrice(i,level){return MINE_FIRST_UPGRADE*Math.pow(MINE_UPGRADE_TIER_MULT,i)*(i===0?1:0.5)*Math.pow(MINE_UPGRADE_MULT,level-1)}
+function mineSecondsPrice(i){return MINE_SECONDS_FIRST_PRICE*Math.pow(MINE_SECONDS_PRICE_MULT,i)}
+function mineRate(i,level){return level>0?MINE_RATE*Math.pow(MINE_RATE_TIER_MULT,i)*Math.pow(MINE_LEVEL_RATE_MULT,level-1)*(state.mines.seconds[i]?60:1):0} // BP per minute, converted to BP/second only for upgraded mines
+function mineTotalRate(){return state.mines.levels.reduce((sum,level,i)=>sum+mineRate(i,level),0)} // combined BP per minute
+function mineFmt(n){if(!Number.isFinite(n))return '—';if(Math.abs(n)>=1e15)return n.toExponential(4);return n.toLocaleString('en-GB',{minimumFractionDigits:8,maximumFractionDigits:8})}
+function mineCostFmt(n){if(n>=1e12)return n.toExponential(3);return money(n)}
+function miningTick(){const m=state.mines,now=Date.now();if(!Number.isFinite(m.last)||m.last>now){m.last=now;return}const elapsed=(now-m.last)/1000;if(elapsed<=0)return;m.last=now;const gained=mineTotalRate()*elapsed/60;if(!Number.isFinite(gained)||gained<=0)return;if(m.auto){state.bp+=gained;state.stats.totalEarned=(state.stats.totalEarned||0)+gained}else m.pending+=gained}
+function minesScreen(){const m=state.mines,rate=mineTotalRate(),count=m.levels.filter(Boolean).length;return `<div class="mine-hero"><h2>⛏️ Elemental Mines</h2><p class="muted">Build 30 elemental mines, each with 100 production levels. Mining continues offline, and unclaimed BP never expires.</p><div class="tiny muted">${m.auto?'AUTOMATIC COLLECTION ACTIVE · BP ADDED TO WALLET':'UNCLAIMED MINING WALLET'}</div><div class="mine-counter" id="mine-pending">${mineFmt(m.pending)} BP</div><div class="row"><span class="pill">⚡ <span id="mine-speed">${mineFmt(rate)}</span> BP/min total</span><span class="pill">📆 <span id="mine-daily">${mineFmt(rate*1440)}</span> BP/day</span><span class="pill">⛏️ ${count}/30 owned</span></div><div class="row"><button class="primary" data-mine-action="claim" ${m.auto||m.pending<=0?'disabled':''}>💰 Claim All BP</button>${m.auto?'<span class="pill good">✓ Permanent auto-collection unlocked</span>':`<button data-mine-action="auto" ${state.bp<MINE_AUTO_PRICE?'disabled':''}>⚙️ Unlock Auto-Collection — 1,000 BP</button>`}</div><p class="tiny muted">Manual claiming is free. Auto-collection costs 1,000 BP once. Earnings accumulate continuously, including offline, and display eight decimal places.</p></div><div class="panel"><h3>📊 Mine progression</h3><p class="muted">Each mine begins earning BP per minute. Purchase its separate permanent seconds upgrade at any level to earn the same displayed amount every second (60× faster). Each successive mine's seconds upgrade costs 50% more, starting at 100 BP. Production levels increase output by 1% and upgrade prices by 10% each level. Mines 2–30 have 50% lower starting upgrade prices. Reach Level 50 to unlock the next mine; new mines cost 5× as much and have 1.5× the previous mine's starting output.</p><div class="mine-grid">${MINE_NAMES.map((name,i)=>{const level=m.levels[i],owned=level>0,eligible=i===0||m.levels[i-1]>=50,cost=minePrice(i),upgrade=owned&&level<100?mineUpgradePrice(i,level):0,secondsCost=mineSecondsPrice(i),speed=m.seconds[i]?'sec':'min',icon=MINE_ICONS[i%6];return `<div class="mine-tile ${eligible?'':'locked'}"><h3>${icon} ${name}</h3><div class="tiny muted">Mine ${i+1} / 30 · ${owned?'Operating':eligible?'Available to purchase':'Locked'}</div><p><strong>Level ${level}/100</strong></p><div class="mine-progress"><div style="width:${level}%"></div></div><div class="mine-metric">⚡ ${mineFmt(mineRate(i,level)/(m.seconds[i]?60:1))} BP/${speed}</div><p class="tiny muted">Base output: ${mineFmt(MINE_RATE*Math.pow(MINE_RATE_TIER_MULT,i))} BP/min</p>${owned?`<div class="row">${m.seconds[i]?'<span class="pill good">✓ BP/second unlocked</span>':`<button data-mine-action="seconds" data-mine-index="${i}" ${state.bp<secondsCost?'disabled':''}>⏱️ Unlock BP/sec — ${mineCostFmt(secondsCost)} BP</button>`}</div>${level===100?'<button disabled>✓ MAX LEVEL</button>':`<button data-mine-action="upgrade" data-mine-index="${i}" ${state.bp<upgrade?'disabled':''}>⬆ Upgrade — ${mineCostFmt(upgrade)} BP</button>`}`:eligible?`<button data-mine-action="buy" data-mine-index="${i}" ${state.bp<cost?'disabled':''}>Unlock — ${mineCostFmt(cost)} BP</button>`:`<button disabled>🔒 Reach Level 50 on ${MINE_NAMES[i-1]}</button>`}</div>`}).join('')}</div></div>`}
+function mineAction(action,i){miningTick();const m=state.mines;if(action==='claim'){if(m.auto||m.pending<=0)return;const amount=m.pending;state.bp+=amount;state.stats.totalEarned=(state.stats.totalEarned||0)+amount;m.pending=0;message(`Claimed ${mineFmt(amount)} BP from your mines!`);return}if(action==='auto'){if(m.auto||state.bp<MINE_AUTO_PRICE)return;state.bp-=MINE_AUTO_PRICE;m.auto=true;if(m.pending>0){state.bp+=m.pending;state.stats.totalEarned=(state.stats.totalEarned||0)+m.pending;m.pending=0}message('Permanent automatic BP collection unlocked!');return}if(!Number.isInteger(i)||i<0||i>=30)return;if(action==='seconds'){if(m.levels[i]<1||m.seconds[i]||state.bp<mineSecondsPrice(i))return;state.bp-=mineSecondsPrice(i);m.seconds[i]=true;message(`${MINE_NAMES[i]} now mines BP every second!`);return}if(action==='buy'){if(m.levels[i]||i>0&&m.levels[i-1]<50||state.bp<minePrice(i))return;state.bp-=minePrice(i);m.levels[i]=1;message(`${MINE_NAMES[i]} unlocked!`);return}if(action==='upgrade'){const level=m.levels[i];if(level<1||level>=100)return;const cost=mineUpgradePrice(i,level);if(state.bp<cost)return;state.bp-=cost;m.levels[i]++;message(`${MINE_NAMES[i]} upgraded to Level ${m.levels[i]}!`);return}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-mine-action]');if(!b)return;mineAction(b.dataset.mineAction,Number(b.dataset.mineIndex));render()});
+setInterval(()=>{if(tab!=='Mines')return;miningTick();const el=document.getElementById('mine-pending');if(el)el.textContent=mineFmt(state.mines.pending)+' BP'},1000);
+
+function nav(){const tabs=['Home','Battle','Campaign','Collection','Shop','Forge','Upgrades','Vault','Mines','Ranks','Online','Team Battles','Leaderboards','Profile','Social','Achievements','Music','Help'];document.getElementById('nav').innerHTML=tabs.map(t=>`<button class="${tab===t?'primary':''}" data-tab="${t}">${t}</button>`).join('')}
+function render(){vaultTick();miningTick();nav();document.getElementById('stats').innerHTML=`<span class="pill">💰 ${mineFmt(state.bp)} BP</span><span class="pill">🏆 Rank ${state.rank}</span><span class="pill">✨ ${expProgress()}</span>`;let html=notice?`<div class="panel good">${notice}</div>`:'';notice='';if(tab==='Home')html+=home();if(tab==='Help')html+=tutorialPage();if(tutorialActive&&tab!=='Help')html=tutorialCard()+html;if(tab==='Collection')html+=collection();if(tab==='Shop')html+=shop();if(tab==='Forge')html+=forge();if(tab==='Upgrades')html+=upgradeScreen();if(tab==='Vault')html+=vaultScreen();if(tab==='Mines')html+=minesScreen();if(tab==='Ranks')html+=rankScreen();if(tab==='Battle')html+=battle?.mode==='campaign'?'<div class="panel"><h2>⚔️ Training</h2><p>You have a campaign battle open. Finish it or concede before training.</p><button data-tab="Campaign">Return to campaign</button></div>':battleScreen();if(tab==='Campaign')html+=campaignScreen();if(tab==='Online')html+=onlineScreen();if(tab==='Team Battles')html+=`<div class="panel team-hub"><h2>⚔️ Team Battles</h2><p class="muted">Play online against other teams or conquer all 300 campaign levels together.</p><div id="team-online-root">Connecting to Firebase…</div></div>`;if(tab==='Leaderboards')html+=`<div class="panel"><h2>🏆 Elemental Clash Leaderboards</h2><p>Automatic global rankings · Beta (client-reported stats).</p><div id="leaderboard-root">Loading leaderboard…</div></div>`;if(tab==='Profile')html+=`<div class="panel"><h2>👤 Player Profile & Cloud Save</h2><div id="profile-root">Connecting to Firebase…</div></div>`;if(tab==='Social')html+=`<div class="panel"><h2>🌍 Community & Friends</h2><div id="social-root">Connecting…</div></div>`;if(tab==='Achievements')html+=achievementScreen();if(tab==='Music')html+='<div class="panel"><h2>🎵 Music Settings</h2><p class="muted">Control the background soundtrack here. The music continues playing while you browse the game.</p></div>';app.innerHTML=html;const mc=document.getElementById('music-controls');if(mc)mc.style.display=tab==='Music'?'flex':'none';save();if(tab==='Online')window.renderOnline?.();if(tab==='Team Battles')window.renderTeamOnline?.();if(tab==='Leaderboards')window.renderLeaderboard?.();if(tab==='Profile')window.renderProfile?.();if(tab==='Social')window.renderSocial?.()}
+function home(){return `<div class="panel"><h2>Welcome to Elemental Clash</h2><p>Collect and forge cards, strengthen your fighter, and battle the training opponent for practice (Training Mastery BP per victory, no EXP). Your progress saves on this device.</p><div class="stats"><span class="pill">🃏 ${ownedCards().length} card types</span><span class="pill">⚔️ ${state.wins} wins</span><span class="pill">❤️ ${maxHP()} max HP</span><span class="pill">🏦 ${money(state.vault.pending)} BP waiting</span></div></div><div class="split"><div class="panel"><h3>⚔️ Training Battle</h3><p class="muted">Fight an AI opponent with real turns, shields, healing and elemental modifiers. Training wins earn ${trainingReward().toFixed(2)} BP and 0 EXP; losses earn nothing.</p><button data-tab="Battle" class="primary">Enter Battle</button></div><div class="panel"><h3>🏦 Offline Vault</h3><p class="muted">Earn BP automatically while away. Upgrade interest and payment speed.</p><button data-tab="Vault">Open Vault</button></div><div class="panel"><h3>⛏️ Elemental Mines</h3><p class="muted">Purchase and upgrade 30 mines to earn fractional BP while online or offline.</p><button data-tab="Mines">Open Mines</button></div></div><div class="panel"><h3>New game / saved progress</h3><p class="muted">New players begin with 0 BP. This browser may still have BP from an older saved game.</p><button data-action="resetSave">Start fresh (reset all progress)</button></div><div class="panel"><h3>Getting started</h3><p><button class="primary" data-tutorial="start">🎓 Start beginner tutorial</button></p><p>You own 24 Common attack cards. Visit Collection to build a 30-card deck after buying six additional cards from the Shop. The training battle also supports an automatic starter deck while you're collecting.</p></div>`}
+function deckPanel(){
+ const counts={};for(const id of state.deck)counts[id]=(counts[id]||0)+1;
+ const selected=Object.entries(counts).map(([id,n])=>{const c=byId(id);return c?`<div class="card"><strong>${cardText(c)}</strong><small>${cardInfo(c)}</small><div class="tiny">In deck: ${n} / ${Math.min(2,state.owned[id]||0)}</div><button data-action="removeDeck" data-id="${id}">Remove one</button></div>`:''}).join('');
+ return `<div class="panel"><h3>⚔️ Your online battle deck — ${state.deck.length}/30</h3><p class="muted">${deckValid()?'✅ Your custom 30-card deck is ready for private rooms and random matchmaking.':'Build a 30-card deck using cards you own. Until then, online battles use an automatic deck made from your owned cards, filling remaining slots with starter attacks.'} Each card keeps its actual rarity, damage, healing and shield effects.</p><div class="row"><button data-action="autoDeck">Auto-build from owned cards</button><button data-action="clearDeck">Clear deck</button><button data-tab="Shop">Get more cards</button></div>${selected?`<div class="grid">${selected}</div>`:'<p>No cards selected yet.</p>'}</div>`;
+}
+function collection(){let list=ownedCards().filter(c=>filter==='All'||c.kind===filter);return deckPanel()+`<div class="panel"><h2>🃏 Collection</h2><p class="muted">✨ Each attack card has its own combat ability. Lower-damage cards may burn, heal, pierce shields or boost later attacks. Abilities grow with rarity and appear on every card.</p><div class="row"><span>Deck: ${state.deck.length}/30 ${deckValid()?'✓ Ready':'· Incomplete'}</span><button data-action="autoDeck">Auto-build deck</button><button data-action="clearDeck">Clear deck</button><select id="filter"><option>All</option><option value="attack" ${filter==='attack'?'selected':''}>Attack</option><option value="shield" ${filter==='shield'?'selected':''}>Shield</option><option value="heal" ${filter==='heal'?'selected':''}>Healing</option></select></div><p class="muted">Up to two copies of an identical card and rarity may be placed in a deck.</p><div class="grid">${list.map(c=>cardHTML(c,`<button data-action="addDeck" data-id="${c.id}">Add to deck</button> <button data-action="removeDeck" data-id="${c.id}">Remove</button><div class="tiny">In deck: ${state.deck.filter(x=>x===c.id).length}</div>`)).join('')}</div></div>`}
+// Direct buying stays available at every rarity. Forging an owned duplicate pair
+// is at least 25% cheaper than purchasing the next rarity outright.
+// Update 45: individually scaled shop prices across all 590 cards.
+// Rarity establishes the floor; damage, protection/healing and card identity
+// differentiate cards within the same tier. Forge costs stay unchanged.
+function cardStrengthPremium(c){
+ if(c.area)return .3+(c.areaStatusChance||0)*.6;
+ if(c.status)return .16+(statusChance(c)*.28)+(c.status==='sleep'?.10:0);
+ if(c.kind==='attack'){
+   const k=roleIndex(c),t=abilityTier(c);
+   // Tactical value deliberately outweighs small damage increments.
+   const value=[.18,.09,.29,.13,.23,.19,.24,.16,.08,.22,.11,.28,.17,.20,.15,.07][k]||.1;
+   const power=Math.min(.12,Math.max(0,c.damage/(30*mult[c.rarity]))*.1);
+   return value+power+((c.element*7+k*3)%5)*.009;
+ }
+ if(c.kind==='shield')return .06+Math.min(.24,(c.absorb||c.duration*15)/(100*mult[c.rarity])*.18)+((c.targets||[]).length*.045);
+ return .1+Math.min(.22,c.heal/(100*mult[c.rarity])*.13);
+}
+const directPrice=c=>{
+  // Update 46: tactical value can outweigh raw damage, even for lower-damage cards.
+  // Keep direct purchases above the Forge price for the same next rarity.
+  if(c.kind==='attack'){
+    const tierBase=[260,7200,245000,6900000,150000000][c.rarity];
+    const premium=cardStrengthPremium(c);
+    const value=tierBase*(.75+premium);
+    const forgeFloor=c.rarity===0?0:Math.ceil(forgePrices[c.rarity-1]/.75/5)*5;
+    return Math.ceil(Math.max(value,forgeFloor)/5)*5;
+  }
+  const rarityFloor=c.rarity===0?c.price:Math.max(c.price,Math.ceil(forgePrices[c.rarity-1]/.75/5)*5);
+  return Math.ceil(rarityFloor*(1+cardStrengthPremium(c))/5)*5;
+};
+const shopCost=c=>Math.max(5,round5(directPrice(c)*(1-Math.min(.45,upLevel('Shop Discount')*.01+upLevel('Card Collector')*.005))));
+const forgeCost=c=>Math.max(5,round5(forgePrices[c.rarity]*(1-Math.min(.575,upLevel('Forge Efficiency')*.01+upLevel('Forge Mastery')*.005+upLevel('Forge Expertise')*.005))));
+function shop(){let list=cards.filter(c=>!c.exclusive).filter(c=>rarityFilter==='All'||(rarityFilter==='attack'?c.kind==='attack'&&!c.status:rarityFilter==='stun'||rarityFilter==='sleep'?c.kind==='attack'&&c.status===rarityFilter:c.kind===rarityFilter));return `<div class="panel"><h2>🛒 Card Shop</h2><p class="muted">Buy any of the five rarities directly, or save BP by forging two identical cards you already own. Forging is at least 25% cheaper than a direct higher-tier purchase before discounts. All 710 collectible cards are priced by rarity, damage, reliability and tactical abilities. Some lower-damage cards cost more. Forge costs are unchanged.</p><select id="rarityFilter"><option value="All">🌟 All</option><option value="attack" ${rarityFilter==='attack'?'selected':''}>⚔️ Attacks</option><option value="stun" ${rarityFilter==='stun'?'selected':''}>⚡ Stun</option><option value="sleep" ${rarityFilter==='sleep'?'selected':''}>🌙 Sleep</option><option value="shield" ${rarityFilter==='shield'?'selected':''}>🛡️ Shields</option><option value="heal" ${rarityFilter==='heal'?'selected':''}>❤️ Healing</option></select><div class="grid" style="margin-top:12px">${list.map(c=>cardHTML(c,`<button data-action="buy" data-id="${c.id}">Buy ${money(shopCost(c))} BP</button>`)).join('')}</div></div>`}
+// Healing cards advance through their existing ten-card progression.
+// Use the same rarity-based Forge cost schedule and Forge discounts as shields.
+function forgeNext(c){
+ if(!c)return null;
+ if(c.kind==='heal'){
+  const index=Number(c.id.slice(1));
+  return Number.isInteger(index)&&index>=0&&index<9?byId('h'+(index+1)):null;
+ }
+ return c.rarity<4?byId(c.id.replace(/-\d$/,`-${c.rarity+1}`)):null;
+}
+function healingForgeCost(c){
+ const tier=Math.min(c.rarity,forgePrices.length-1);
+ return Math.max(5,round5(forgePrices[tier]*(1-Math.min(.575,upLevel('Forge Efficiency')*.01+upLevel('Forge Mastery')*.005+upLevel('Forge Expertise')*.005))));
+}
+function forge(){let list=ownedCards().filter(c=>forgeNext(c));return `<div class="panel"><h2>🔨 Forge</h2><p class="muted">Combine two identical attack or shield cards into a higher-rarity card, or two identical healing cards into the next stronger healing card. Forging never fails.</p><div class="grid">${list.map(c=>{let next=forgeNext(c);let cost=c.kind==='heal'?healingForgeCost(c):forgeCost(c);return cardHTML(c,`<div class="tiny">Next: ${next.name}<br>Shop: ${money(shopCost(next))} BP · Forge: ${money(cost)} BP<br>Save ${money(Math.max(0,shopCost(next)-cost))} BP with two duplicates</div><button data-action="forge" data-id="${c.id}" ${(state.owned[c.id]<2||state.bp<cost)?'disabled':''}>Forge ${money(cost)} BP</button>`) }).join('')}</div></div>`}
+
+// Upgrade rules: each displayed benefit is applied to local training/campaign combat or economy.
+const upgradeRules={
+ 'Maximum HP':['Maximum fighter health',l=>fmt(150+Math.round(199850*l/200))+' HP'],
+ 'Healing Power':['Healing card strength',l=>`+${(Math.min(50,l*1.7)).toFixed(1)}%`],
+ 'Healing Efficiency':['Additional healing from cards',l=>`+${l}%`],
+ 'Emergency Recovery':['Extra healing when below 35% HP',l=>`+${l*2}%`],
+ 'Last Stand':['Damage reduction when below 35% HP',l=>`−${l}%`],
+ 'Recovery Boost':['Health regenerated after using a healing card',l=>`+${l*2} HP`],
+ 'Vitality Mastery':['Extra maximum HP',l=>`+${l*1}%`],
+ 'Attack Power':['Base attack-card damage',l=>`+${(Math.min(50,l*1.25)).toFixed(2)}%`],
+ 'Critical Chance':['Chance of an extra critical hit',l=>`+${Math.min(25,l*.8).toFixed(1)}%`],
+ 'Critical Damage':['Extra critical-hit multiplier',l=>`+${Math.min(75,l*2)}%`],
+ 'Armour Piercing':['Ignore enemy absorption shields',l=>`+${l}%`],
+ 'Shield Breaker':['Extra damage against absorption shields',l=>`+${l*2}%`],
+ 'Elemental Precision':['Extra damage on strong elemental matchups',l=>`+${l}%`],
+ 'Combat Momentum':['Bonus damage after switching attack elements',l=>`+${l}%`],
+ 'Elemental Resistance':['Reduce incoming elemental damage',l=>`−${Math.min(40,l)}%`],
+ 'Elemental Advantage':['Extra damage against disadvantaged elements',l=>`+${l}%`],
+ 'Shield Strength':['Absorption shield strength',l=>`+${Math.min(50,l*1.25).toFixed(2)}%`],
+ 'Shield Duration':['Additional shield duration',l=>`+${Math.min(2,Math.floor(l/15))} turns`],
+ 'Shield Efficiency':['Extra absorption shield strength',l=>`+${l}%`],
+ 'Shield Reinforcement':['Extra shield protection when played',l=>`+${l*3} points`],
+ 'Dual-Element Defence':['Reduce damage while protected by a dual-element shield',l=>`−${l}%`],
+ 'Shield Recovery':['Recover HP when a shield absorbs damage',l=>`+${l}% of blocked damage`],
+ 'Defensive Mastery':['Reduce all incoming damage',l=>`−${l*.5}%`],
+ 'Forge Efficiency':['Discount on forging costs',l=>`−${Math.min(30,l)}%`],
+ 'Forge Mastery':['Additional forge cost reduction',l=>`−${Math.min(15,l*.5)}%`],
+ 'Card Collector':['Discount on card purchases',l=>`−${Math.min(15,l*.5)}%`],
+ 'Card Training':['Bonus attack-card damage',l=>`+${l*.5}%`],
+ 'Rarity Mastery':['Extra damage per attack-card rarity tier',l=>`+${l*.25}% per tier`],
+ 'Forge Expertise':['Further forging discount',l=>`−${Math.min(12.5,l*.5)}%`],
+ 'BP Earnings':['Bonus BP from training and campaign victories',l=>`+${l}%`],
+ 'Victory Rewards':['Additional BP from winning campaign battles',l=>`+${l}%`],
+ 'EXP Boost':['Additional EXP from campaign wins',l=>`+${l}%`],
+ 'Shop Discount':['Discount on shop card prices',l=>`−${Math.min(30,l)}%`],
+ 'Battle Rewards':['Bonus BP and EXP from campaign victories',l=>`+${l}%`]
+};
+for(const e of E)upgradeRules[e+' Mastery']=[`Extra ${e} attack damage`,l=>`+${Math.min(25,l*.5).toFixed(1)}%`];
+const upgradeValue=(name,level=upLevel(name))=>upgradeRules[name]?.[1](level)||'—';
+const upgradeMultiplier=(names)=>names.reduce((m,n)=>m*(1+upLevel(n)/100),1);
+function upgradeCost(u){return u.name==='Maximum HP'?Math.round(250*Math.pow(1.12,upLevel(u.name))):round5(u.base*Math.pow(1.4,upLevel(u.name)))}function upgradeScreen(){return `<div class="panel"><h2>🥊 Training Mastery</h2><p>Level ${upLevel('Training Mastery')}/20 · ${trainingReward().toFixed(2)} BP per training win · 0 EXP</p><button data-action="trainingMastery" ${upLevel('Training Mastery')>=20||state.bp<trainingCost()?'disabled':''}>${upLevel('Training Mastery')>=20?'MAX':`Upgrade — ${money(trainingCost())} BP`}</button><p class="muted tiny">The final upgrade costs 1,000,000,000 BP. Training never earns EXP or first-win bonuses.</p></div><div class="panel"><h2>📈 Upgrades</h2><p class="muted">HP has 200 levels up to 200,000. Training Mastery has 20 levels; other upgrade costs rise 40% per level.</p></div>${upgradeGroups.map(g=>`<div class="panel"><h3>${g[0]}</h3><div class="grid">${g[1].map(([name,max])=>{let u=upgrades.find(x=>x.name===name),l=upLevel(name),cost=upgradeCost(u);return `<div class="card"><strong>${name}</strong><small>Level ${l}/${max}</small><p class="tiny muted">${upgradeRules[name]?.[0]||"Upgrade benefit"}</p><p class="tiny good">Current: ${upgradeValue(name,l)}${l<max?` → Next: ${upgradeValue(name,l+1)}`:" · MAX"}</p><div><button data-action="upgrade" data-id="${name}" ${l>=max||state.bp<cost?'disabled':''}>${l>=max?'MAX':money(cost)+' BP'}</button></div></div>`}).join('')}</div></div>`).join('')}`}
+function vaultCost(which){let v=state.vault,l=v[which];return round5((which==='interest'?250:500)*Math.pow(which==='interest'?1.8:2.5,l-1))}function vaultScreen(){let v=state.vault,p=vaultPayment(v.interest),sec=intervals[v.frequency-1];return `<div class="panel"><h2>🏦 BP Vault</h2><p class="muted">Awards full BP payments only when the payment timer completes, including while offline. Up to seven days can accumulate between visits.</p><div class="stats"><span class="pill">💰 ${money(v.pending)} BP waiting</span><span class="pill">⏱️ Every ${sec>=3600?sec/3600+' hours':sec>=60?sec/60+' minutes':sec+' seconds'}</span><span class="pill">📈 ${money(p)} BP/payment</span></div><p><button class="primary" data-action="collect">Collect ${money(v.pending)} BP</button></p><div class="grid"><div class="card"><strong>Interest Amount</strong><p>Level ${v.interest}/50</p><p>${money(p)} BP per payment</p><button data-action="vaultInterest" ${v.interest>=50||state.bp<vaultCost('interest')?'disabled':''}>${v.interest>=50?'MAX':`Upgrade ${money(vaultCost('interest'))} BP`}</button></div><div class="card"><strong>Payment Frequency</strong><p>Level ${v.frequency}/20</p><p>${sec} seconds per payment</p><button data-action="vaultFrequency" ${v.frequency>=20||state.bp<vaultCost('frequency')?'disabled':''}>${v.frequency>=20?'MAX':`Upgrade ${money(vaultCost('frequency'))} BP`}</button></div></div><h3>Projected earnings</h3><div class="stats"><span class="pill">Second: ${money(p/sec)} BP</span><span class="pill">Minute: ${money(p*60/sec)} BP</span><span class="pill">Hour: ${money(p*3600/sec)} BP</span><span class="pill">Day: ${money(p*86400/sec)} BP</span></div></div>`}
+function expProgress(){let req=expReq[state.rank-1]||0;return state.rank>=31?'MAX RANK':`${fmt(state.exp)} / ${fmt(req)} EXP to next rank (${Math.max(0,req-state.exp).toLocaleString('en-GB')} remaining)`}
+function rankScreen(){return `<div class="panel"><h2>🏆 Ranks</h2><p>Current: <strong>${state.rank}. ${ranks[state.rank-1]}</strong></p><p class="muted">The table below shows the EXP needed to <strong>reach</strong> each rank from the previous rank. Rank 31 is the maximum rank, but you still need 602,110 EXP at Rank 30 to unlock it. EXP is earned from match results and damage, carries over when you rank up, and you can advance at most one rank per completed battle.</p><p><strong>${expProgress()}</strong></p><div style="height:12px;background:#263450;border-radius:12px;overflow:hidden"><div style="height:100%;background:#75b7f9;width:${state.rank===31?100:Math.min(100,100*state.exp/expReq[state.rank-1])}%"></div></div><div class="row" style="font-weight:bold;padding:9px 7px;border-bottom:2px solid #52648b"><span style="min-width:45px">Rank</span><span style="flex:1">Title</span><span>EXP to reach this rank</span></div>${ranks.map((name,i)=>`<div class="row" style="padding:7px;border-bottom:1px solid #293a5a;${i===state.rank-1?'background:#263c62;border-radius:6px;':''}"><span style="min-width:45px">${i+1}</span><span style="flex:1">${name}${i===30?' 🏆':''}</span><span class="muted">${i===0?'Starting rank':fmt(expReq[i-1])+' EXP'}${i===30?' · MAX RANK':''}</span></div>`).join('')}</div>`}
+
+// UPDATE 47: playable local team-battle prototype. Online 1v1 is unchanged.
+// This mode runs on one device; remote co-op requires a separate authenticated
+// multiplayer room schema and matching Firestore security rules.
+let teamGame=null,teamA=2,teamB=2,teamMode='versus',teamLevel=1,teamTarget=0;
+const teamIcons=['🔥','💧','🌪️','🌿','✨','🌑'];
+// Team-mode-only test cards; these do not alter the 650-card collection or saved inventory.
+const teamSupportCards=[...Array.from({length:6},(_,e)=>({id:'team-ward-'+e,name:teamIcons[e]+' Party Ward',kind:'shield',type:'single',rarity:1,targets:[e],duration:2,absorb:0,price:0})),{id:'team-aegis',name:'Party Aegis',kind:'shield',type:'absorb',rarity:1,targets:[],duration:2,absorb:65,price:0},{id:'team-heal',name:'Party Renewal',kind:'heal',rarity:1,heal:35,price:0}];
+cards.push(...teamSupportCards);
+function teamCardPool(){const owned=ownedCards().filter(c=>c.kind==='attack'||c.kind==='heal'||c.kind==='shield');return [...(owned.length?owned:cards.slice(0,26)),...teamSupportCards,...teamSupportCards]}
+function teamNewFighter(side,index,ai){
+ const hp=side===1&&teamMode==='campaign'?Math.round(campaignHp(teamLevel)*(1+.22*(teamA-1)) / teamB):maxHP();
+ const pool=teamCardPool(),picked=[];for(let k=0;k<30;k++)picked.push(pool[Math.floor(Math.random()*pool.length)].id);
+ return {side,index,name:side===0?`Hero ${index+1}`:teamMode==='campaign'?`Campaign Enemy ${index+1}`:`Rival ${index+1}`,hp,max:hp,hand:picked.slice(0,5),deck:picked.slice(5),discard:[],shield:0,elementShield:null,fx:{stun:0,sleep:0,immunity:0},ai};
+}
+function teamStart(){
+ const p=[];for(let i=0;i<teamA;i++)p.push(teamNewFighter(0,i,false));for(let i=0;i<teamB;i++)p.push(teamNewFighter(1,i,teamMode==='campaign'));
+ teamGame={p,side:0,acted:[],round:1,log:[teamMode==='campaign'?`Co-op campaign stage ${teamLevel} started.`:'Team battle started.'],winner:null};
+ teamTarget=teamA;render();
+}
+function teamNext(){const g=teamGame;if(!g||g.winner!==null)return;
+ const living=s=>g.p.map((p,i)=>({p,i})).filter(x=>x.p.side===s&&x.p.hp>0);
+ for(const side of [0,1])if(!living(side).length){g.winner=1-side;g.log.unshift((1-side===0?'Team A':'Team B')+' wins!');render();return;}
+ const eligible=living(g.side).filter(x=>!g.acted.includes(x.i));
+ if(!eligible.length){g.side=1-g.side;g.acted=[];if(g.side===0)g.round++;}
+ const current=living(g.side).filter(x=>!g.acted.includes(x.i))[0];
+ if(current?.p.fx.stun||current?.p.fx.sleep){
+  const f=current.p.fx;
+  if(f.stun){f.stun=0;f.immunity=2;g.log.unshift(current.p.name+' misses a turn (stunned).')}
+  else{f.sleep--;g.log.unshift(current.p.name+' misses a turn (asleep).');if(f.sleep===0||Math.random()<.4){f.sleep=0;f.immunity=2;g.log.unshift(current.p.name+' wakes up.')}}
+  g.acted.push(current.i);teamNext();return;
+ }
+ if(current?.p.fx.immunity>0)current.p.fx.immunity--;
+ if(current?.p.ai){setTimeout(()=>teamAI(),250)}
+}
+function teamCurrent(){if(!teamGame)return null;return teamGame.p.map((p,i)=>({p,i})).find(x=>x.p.side===teamGame.side&&x.p.hp>0&&!teamGame.acted.includes(x.i))}
+function teamAct(cardIndex,targetIndex){const g=teamGame,cur=teamCurrent();if(!g||g.winner!==null||!cur)return;
+ const a=cur.p,c=byId(a.hand[cardIndex]);if(!c)return;
+ const other=g.p[targetIndex];if(c.kind==='attack'&&(!other||other.side===a.side||other.hp<=0))return;
+ a.hand.splice(cardIndex,1);a.discard.push(c.id);
+ const log=t=>g.log.unshift(t);
+ if(c.kind==='attack'){
+  let dmg=c.damage,blocked=0;
+  if(other.elementShield?.element===c.element){const reduction=other.elementShield.reduction||0;dmg=Math.max(0,Math.round(dmg*(1-reduction)));other.elementShield.turns--;if(other.elementShield.turns<=0)other.elementShield=null;}
+  if(other.shield>0){blocked=Math.min(dmg,other.shield);other.shield-=blocked;dmg-=blocked;}
+  other.hp=Math.max(0,other.hp-dmg);log(`${a.name} used ${c.name} on ${other.name}: ${dmg} damage${blocked?' ('+blocked+' blocked)':''}.`);
+  if(c.status&&other.hp>0&&!other.fx.immunity&&!other.fx.stun&&!other.fx.sleep){let chance=statusChance(c)*(dmg===0?.5:1)*(teamMode==='campaign'&&teamLevel%10===0?.5:1);
+   if(Math.random()<chance){other.fx[c.status]=c.status==='stun'?1:2;log(`${other.name} is ${c.status==='stun'?'stunned':'asleep'}!`);window.statusFlash?.(c.status,`${other.name} ${c.status==='stun'?'stunned':'asleep'}!`)}else log(`${other.name} resisted ${c.status}.`);
+  }
+ }else if(c.kind==='heal'){
+  const amount=Math.max(1,c.heal||10);
+  for(const p of g.p.filter(x=>x.side===a.side&&x.hp>0))p.hp=Math.min(p.max,p.hp+amount);
+  log(`${a.name} healed the whole party by up to ${amount} HP.`);
+ }else{
+  const amount=c.absorb||Math.round(a.max*.12),elem=c.targets?.[0]??(c.element??0);
+  for(const p of g.p.filter(x=>x.side===a.side&&x.hp>0)){
+   if(c.type==='absorb')p.shield+=amount;
+   else p.elementShield={element:elem,reduction:.4,turns:2};
+  }
+  log(`${a.name} protected the entire party with ${c.type==='absorb'?amount+' absorption':'40% '+teamIcons[elem]+' damage reduction'}.`);
+ }
+ if(!a.deck.length){a.deck=[...a.discard];a.discard=[]}if(a.deck.length)a.hand.push(a.deck.shift());
+ g.acted.push(cur.i);
+ // Disabled fighters skip their upcoming individual action.
+ teamNext();render();
+}
+function teamAI(){const g=teamGame,cur=teamCurrent();if(!cur||!cur.p.ai||g.winner!==null)return;
+ if(cur.p.fx.stun||cur.p.fx.sleep){if(cur.p.fx.stun)cur.p.fx.stun=0;else{cur.p.fx.sleep--;if(cur.p.fx.sleep===0||Math.random()<.4)cur.p.fx.sleep=0;}if(!cur.p.fx.stun&&!cur.p.fx.sleep)cur.p.fx.immunity=2;g.log.unshift(cur.p.name+' misses a turn.');g.acted.push(cur.i);teamNext();render();return;}
+ const foes=g.p.map((p,i)=>({p,i})).filter(x=>x.p.side!==cur.p.side&&x.p.hp>0);if(!foes.length){teamNext();return}
+ const idx=cur.p.hand.findIndex(id=>byId(id)?.kind==='attack');const target=foes[Math.floor(Math.random()*foes.length)];
+ teamAct(Math.max(0,idx),target.i);
+}
+function teamScreen(){const g=teamGame;if(!g)return `<div class="panel"><h2>⚔️ Update 47 — Team Battles</h2><p class="muted">Playable local team battle prototype. Friends on different devices cannot join this mode yet. The existing online 1v1 remains available separately.</p><label>Battle type <select id="team-mode"><option value="versus" ${teamMode==='versus'?'selected':''}>Local team versus</option><option value="campaign" ${teamMode==='campaign'?'selected':''}>Co-op campaign test (AI enemies)</option></select></label><div class="row"><label>Team A players <select id="team-a">${[1,2,3,4].map(n=>`<option ${n===teamA?'selected':''}>${n}</option>`).join('')}</select></label><label>Team B / enemies <select id="team-b">${[1,2,3,4].map(n=>`<option ${n===teamB?'selected':''}>${n}</option>`).join('')}</select></label></div><label>Campaign stage <input id="team-level" type="number" min="1" max="300" value="${teamLevel}"></label><p class="tiny muted">Each fighter has separate HP, cards and shields. Party healing affects every living ally. Shields can protect everyone against an element or absorb damage. Campaign difficulty scales with team size. No live campaign rewards are awarded in this prototype.</p><button class="primary" data-team="start">Start team battle</button></div>`;
+ const current=teamCurrent(),active=current?.p,foes=g.p.map((p,i)=>({p,i})).filter(x=>x.p.side!==g.side&&x.p.hp>0);
+ const playerCards=active?.hand.map((id,i)=>{const c=byId(id);return `<div class="card"><strong>${cardText(c)}</strong><small>${cardInfo(c)}</small><button data-team="play" data-card="${i}" ${c.kind==='attack'&&!foes.length?'disabled':''}>${c.kind==='attack'?'Attack selected target':c.kind==='heal'?'Heal whole party':'Shield whole party'}</button></div>`}).join('')||'';
+ return `<div class="panel"><h2>${teamMode==='campaign'?'🏰 Co-op Campaign':'⚔️ Team Battle'} · Round ${g.round}</h2><p class="muted">${g.winner===null?`Team ${g.side===0?'A':'B'} to act · ${active?.name||'Waiting'}`:`🏆 Team ${g.winner===0?'A':'B'} wins!`}</p><div class="row"><button data-team="reset">End battle</button></div><div class="split">${[0,1].map(side=>`<div class="card"><strong>Team ${side===0?'A':'B'}</strong>${g.p.map((p,i)=>({p,i})).filter(x=>x.p.side===side).map(({p,i})=>`<p>${p.hp>0?'❤️':'💀'} ${p.name}: ${p.hp}/${p.max} HP · 🛡️ ${p.shield}${p.elementShield?' · '+teamIcons[p.elementShield.element]+' protection':''}${p.fx.sleep?' · 🌙 Sleep':''}${p.fx.stun?' · ⚡ Stun':''}</p>`).join('')}</div>`).join('')}</div>${g.winner===null?`<h3>Target</h3><select id="team-target">${foes.map(x=>`<option value="${x.i}" ${x.i===teamTarget?'selected':''}>${x.p.name} (${x.p.hp} HP)</option>`).join('')}</select><h3>${active?.name||'Fighter'}'s cards</h3>${playerCards}`:''}<h3>Battle log</h3><div class="log">${g.log.slice(0,30).map(t=>`<p>${String(t).replace(/</g,'&lt;')}</p>`).join('')}</div></div>`;
+}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-team]');if(!b)return;const action=b.dataset.team;if(action==='start'){teamMode=document.getElementById('team-mode').value;teamA=+document.getElementById('team-a').value;teamB=+document.getElementById('team-b').value;teamLevel=Math.max(1,Math.min(300,+document.getElementById('team-level').value||1));teamStart()}if(action==='reset'){teamGame=null;render()}if(action==='play'){const target=+document.getElementById('team-target')?.value;teamAct(+b.dataset.card,target)}});
+function onlineScreen(){return deckPanel()+`<div class="panel"><h2>🌐 Online Multiplayer (Security Beta)</h2><p class="muted">Play live turn-based matches with your own collected cards and saved deck against a friend or a random opponent. Both players need to open the game from a hosted HTTPS website. Online battles award rank-scaled BP and EXP to this browser for testing. Switching attack elements grants a 10% combo bonus. These rewards are NOT cheat-proof or cloud-synced.</p><div id="online-root"><p>Connecting to Firebase…</p></div></div>`}
+if(tab==='Team Battles')queueMicrotask(()=>window.renderTeamOnline?.());window.elementalMaxHP=()=>maxHP();window.elementalCurrentRank=()=>state.rank;window.elementalCardLookup=id=>byId(id);window.elementalCardDetails=c=>cardInfo(c);window.elementalLeaderboardStats=()=>({rank:state.rank,solo:state.campaign.highest,coop:Number(localStorage.getItem('elemental-coop-best-level')||0),wins:state.stats.onlineWins||0});window.elementalOnlineDeck=()=>deckValid()?[...state.deck]:buildDeck();window.elementalCoopLevel=()=>state.campaign.highest+1;window.elementalAwardCoop=(level,bp,xp,receipt)=>{const key='elemental-coop-receipts-v49';let ledger={};try{ledger=JSON.parse(localStorage.getItem(key)||'{}')}catch{}if(ledger[receipt])return false;ledger[receipt]=true;localStorage.setItem(key,JSON.stringify(ledger));const coopFirstKey='elemental-coop-first-clears';let coopClears={};try{coopClears=JSON.parse(localStorage.getItem(coopFirstKey)||'{}')}catch{}const first=!coopClears[level];coopClears[level]=(coopClears[level]||0)+1;localStorage.setItem(coopFirstKey,JSON.stringify(coopClears));state.campaign.wins[level]=(state.campaign.wins[level]||0)+1;localStorage.setItem('elemental-coop-best-level',String(Math.max(level,Number(localStorage.getItem('elemental-coop-best-level')||0))));state.campaign.highest=Math.max(state.campaign.highest,level);state.campaign.last=level;state.bp+=bp;state.exp+=xp;state.stats.totalEarned=(state.stats.totalEarned||0)+bp;while(state.rank<31&&state.exp>=expReq[state.rank-1]){state.exp-=expReq[state.rank-1];state.rank++}if(level%10===0&&first){const tier=campaignRarity(level),element=Math.floor((level-1)/50),card=cards.find(x=>x.kind==='attack'&&x.element===element&&x.rarity===tier&&x.id===`a${element}-${(level/10-1)%16}-${tier}`);if(card){state.owned[card.id]=(state.owned[card.id]||0)+1;state.campaign.bossRewards[level]=card.id}}save();window.elementalPublishLeaderboard?.();render();return true};window.elementalAwardOnline=(bp,xp,won=false)=>{state.bp+=bp;state.exp+=xp;state.stats.onlineMatches=(state.stats.onlineMatches||0)+1;if(won)state.stats.onlineWins=(state.stats.onlineWins||0)+1;state.stats.totalEarned=(state.stats.totalEarned||0)+bp;if(state.rank<31&&state.exp>=expReq[state.rank-1]){state.exp-=expReq[state.rank-1];state.rank++}save();window.elementalPublishLeaderboard?.();render()};
+function buildDeck(){let list=[];for(const c of ownedCards())for(let j=0;j<Math.min(2,state.owned[c.id]);j++)list.push(c.id);return list.slice(0,30)}
+function rand(arr){return arr[Math.floor(Math.random()*arr.length)]}
+// Adaptive training uses the player's actual battle deck and maximum HP.
+// The bot gets the same card pool shuffled independently, so it scales naturally
+// from starter Commons through upgraded Legendaries, shields and healing cards.
+function startBattle(){if(battle&&!battle.over)return message('Finish or concede your current battle first.');let deck=deckValid()?[...state.deck]:buildDeck();if(deck.length<5){message('You need at least five owned cards.');return}const hp=maxHP();const aiDeck=shuffle([...deck]);const strength=deck.reduce((sum,id)=>{let c=byId(id);return sum+(c?(c.kind==='attack'?c.damage:c.kind==='heal'?c.heal:c.absorb||0):0)},0)/deck.length;battle={hp:[hp,hp],max:[hp,hp],shields:[null,null],elements:[null,null],effects:[effectsInit(),effectsInit()],buff:[0,0],decks:[shuffle([...deck]),aiDeck],discards:[[],[]],hands:[[],[]],turn:0,round:1,log:[`Adaptive training: both fighters have ${fmt(hp)} HP. The bot uses cards matched to your deck (average power ${fmt(strength)}).`],damage:0,over:false};for(let i=0;i<10;i++){draw(0);draw(1)}render()}
+
+// 300-stage offline campaign. Save only completed stages, not an in-progress battle.
+const campaignKingdoms=[['🔥','Fire Kingdom','Inferno King'],['💧','Water Kingdom','Abyss Leviathan'],['🌪️','Air Kingdom','Storm Empress'],['🌿','Earth Kingdom','Ancient Titan'],['✨','Spirit Kingdom','Celestial Guardian'],['🌑','Shadow Kingdom','Shadow Emperor']];
+const campaignBosses=['Ember Warden','Molten Knight','Flame Tyrant','Phoenix Lord','Inferno King','Tidal Sentinel','Deepwater Serpent','Drowned Admiral','Abyss Guardian','Abyss Leviathan','Sky Duelist','Tempest Rider','Thunderlord','Cyclone Titan','Storm Empress','Stone Guardian','Mountain Colossus','Forest Behemoth','Worldbreaker','Ancient Titan','Soul Keeper','Radiant Knight','Astral Oracle','Divine Arbiter','Celestial Guardian','Dusk Stalker','Nightmare Knight','Void Devourer','Dark Sovereign','Shadow Emperor'];
+function campaignEnemyName(level){const i=Math.floor((level-1)/50),k=campaignKingdoms[i];return level%10===0?'👑 '+campaignBosses[level/10-1]:k[0]+' '+['Scout','Warrior','Champion','Guardian','Elite'][Math.floor((level-1)%10/2)]}
+function campaignHp(level){const stops=[[1,150],[50,2500],[100,12000],[150,35000],[200,75000],[250,140000],[300,200000]];let j=1;while(j<stops.length&&level>stops[j][0])j++;const a=stops[j-1],b=stops[Math.min(j,stops.length-1)];let hp=Math.round(a[1]+(b[1]-a[1])*(level-a[0])/(b[0]-a[0]));return Math.round(hp*(level%10===0?1.25:1))}
+function campaignRarity(level){return Math.min(4,Math.floor((level-1)/60))}
+function campaignReward(level,first){const boss=level%10===0;const bp=Math.round((35+level*level*.36)*(boss?2.5:1)*(first?1:.12));const xp=Math.round((20+level*level*.12)*(boss?2.2:1)*(first?1:.15));return {bp:Math.max(1,bp),xp:Math.max(1,xp)}}
+function campaignDeck(level){const r=campaignRarity(level),kingdom=Math.floor((level-1)/50),boss=level%10===0;let result=[];const attackPool=cards.filter(c=>c.kind==='attack'&&c.rarity===r&&!c.exclusive&&!c.status&&!c.area),shields=cards.filter(c=>c.kind==='shield'&&c.rarity===r&&!c.exclusive),healing=cards.filter(c=>c.kind==='heal'&&c.rarity===r&&!c.exclusive);
+ const controlPool=cards.filter(c=>c.kind==='attack'&&c.rarity===r&&c.element===kingdom&&(c.status==='stun'||c.status==='sleep')&&!c.area);
+ for(let i=0;i<30;i++){let pick;
+ if(i%10===7&&shields.length)pick=shields[(level+i)%shields.length];
+ else if(i%10===9&&healing.length)pick=healing[(level+i)%healing.length];
+ else if((i%10===3||i%10===6)&&controlPool.length)pick=controlPool[(i===3||i===13||i===23?0:1)%controlPool.length];
+ else{let e=(kingdom+(i%7===0?i:0))%6;const pool=attackPool.filter(c=>c.element===e);pick=pool[(level*7+i*11)%pool.length]}
+ result.push(pick.id)}return shuffle(result)}
+function startCampaign(level){const c=state.campaign;if(!Number.isInteger(level)||level<1||level>300||level>c.highest+1)return message('Defeat the previous campaign battle to unlock this level.');if(battle&&!battle.over)return message('Finish or concede your current battle first.');const deck=deckValid()?[...state.deck]:buildDeck();if(deck.length<5)return message('You need at least five owned cards.');const enemyHp=campaignHp(level),hp=maxHP(),boss=level%10===0;const enemyDeck=campaignDeck(level);battle={mode:'campaign',campaignLevel:level,campaignAttackMult:(.85+level/170)*(boss?1.18:1),hp:[hp,enemyHp],max:[hp,enemyHp],shields:[null,null],elements:[null,null],effects:[effectsInit(),effectsInit()],buff:[0,0],decks:[shuffle([...deck]),enemyDeck],discards:[[],[]],hands:[[],[]],turn:0,round:1,log:[`${campaignEnemyName(level)} challenges you! ${fmt(enemyHp)} HP · ${rarity[campaignRarity(level)]} enemy cards${boss?' · BOSS BONUS':''}.`],damage:0,over:false};c.last=level;for(let i=0;i<10;i++){draw(0);draw(1)}tab='Campaign';campaignView='battle';render()}
+function finishCampaign(b,winner){const level=b.campaignLevel,c=state.campaign,first=!c.wins[level];if(winner!==0){b.rewardSummary='Defeat or draw: no BP or EXP. Improve your cards, shields, HP and strategy, then retry.';log('Campaign attempt ended. No rewards.');return}const reward=campaignReward(level,first);reward.bp=Math.max(1,Math.round(reward.bp*upgradeMultiplier(['BP Earnings','Victory Rewards','Battle Rewards'])));reward.xp=Math.max(1,Math.round(reward.xp*upgradeMultiplier(['EXP Boost','Battle Rewards'])));state.bp=Math.round((Number(state.bp)+reward.bp)*100)/100;state.stats.totalEarned=(state.stats.totalEarned||0)+reward.bp;state.exp+=reward.xp;let rankUps=0;while(state.rank<31&&state.exp>=expReq[state.rank-1]){state.exp-=expReq[state.rank-1];state.rank++;rankUps++}c.wins[level]=(c.wins[level]||0)+1;c.highest=Math.max(c.highest,level);let cardTextReward='';if(level%10===0&&first){const tier=campaignRarity(level),element=Math.floor((level-1)/50);const card=cards.find(x=>x.kind==='attack'&&x.element===element&&x.rarity===tier&&x.id===`a${element}-${(level/10-1)%16}-${tier}`);if(card){state.owned[card.id]=(state.owned[card.id]||0)+1;cardTextReward=' · 🃏 '+card.name;c.bossRewards[level]=card.id}}b.rewardSummary=`+${money(reward.bp)} BP · +${fmt(reward.xp)} EXP${rankUps?' · 🏆 '+rankUps+' rank-up(s)':''}${cardTextReward}${first?' · First-clear reward':' · Replay reward (reduced)'}`;log('Campaign victory! '+b.rewardSummary);save();window.elementalPublishLeaderboard?.()}
+let campaignView='map';
+function campaignScreen(){const c=state.campaign,level=battle?.mode==='campaign'?battle.campaignLevel:Math.min(300,c.highest+1),active=battle?.mode==='campaign'&&!battle.over;const cleared=Object.keys(c.wins).length;const kingdom=Math.floor((level-1)/50),k=campaignKingdoms[kingdom];const next=Math.min(300,c.highest+1);const section=Math.floor((next-1)/50);return `<div class="panel"><h2>🏰 Campaign — The Six Kingdoms</h2><div class="row"><button class="${campaignView==='map'?'primary':''}" data-action="campaignMap">🗺️ Campaign map</button>${battle?.mode==='campaign'?'<button class="'+(campaignView==='battle'?'primary':'')+'" data-action="campaignBattle">⚔️ '+(battle.over?'Battle result':'Return to current battle')+'</button>':''}</div><p>300 battles · 30 bosses · Solo BP and EXP · Rewards and progress save automatically on this device (and with cloud saving when enabled).</p><div class="battle-banner"><strong>${cleared}/300 battles cleared</strong><div class="bar"><div style="width:${cleared/3}%"></div></div><p>Next challenge: <b>${next}/300 — ${campaignEnemyName(next)}</b></p></div><div class="grid">${campaignKingdoms.map(([icon,name,boss],i)=>{let done=Math.max(0,Math.min(50,c.highest-i*50));return `<div class="card"><strong>${icon} ${name}</strong><small>${done}/50 cleared · Final boss: ${boss}</small><div class="bar"><div style="width:${done*2}%"></div></div></div>`}).join('')}</div><p class="muted">Enemies increase in HP, card rarity and attack strength. Every tenth battle is a tougher boss. First victories earn full BP and EXP; replays earn reduced rewards. Bosses grant a collectible card on their first defeat. Solo campaign enemies can use Stun and Sleep; the training bot cannot.</p>${active?'<p>⚔️ A campaign battle is in progress. Use Return to current battle above.</p>':`<button class="primary" data-action="campaignStart" data-id="${next}">${c.highest>=300?'Replay final battle':'⚔️ Fight Battle '+next}</button>`}</div>${battle?.mode==='campaign'&&campaignView==='battle'?battleScreen():''}${campaignView==='battle'&&battle?.mode==='campaign'?'':`<div class="panel"><h3>🗺️ Choose an unlocked battle</h3><p class="muted">Replay earlier battles for practice and smaller rewards. Locked stages cannot be skipped.</p><div class="row">${Array.from({length:300},(_,i)=>i+1).filter(n=>n>=Math.max(1,next-19)&&n<=Math.min(300,next+10)).map(n=>`<button data-action="campaignStart" data-id="${n}" ${n>next||active?'disabled':''} class="${n===next?'primary':''}" title="${campaignEnemyName(n)}">${n%10===0?'👑 ':''}${n}${c.wins[n]?' ✓':''}</button>`).join('')}</div><p class="tiny muted">Use the previous levels list for replay. Bosses appear every 10 battles.</p><details><summary>All 300 battles</summary><div class="row">${Array.from({length:300},(_,i)=>i+1).map(n=>`<button data-action="campaignStart" data-id="${n}" ${n>next||active?'disabled':''}>${n%10===0?'👑 ':''}${n}${c.wins[n]?' ✓':''}</button>`).join('')}</div></details></div>`}`}
+function draw(side){let b=battle;if(!b.decks[side].length&&b.discards[side].length){b.decks[side]=shuffle([...b.discards[side]]);b.discards[side]=[];log(`${side===0?'Your':'Opponent'} discard pile reshuffled`)}if(b.decks[side].length&&b.hands[side].length<10)b.hands[side].push(b.decks[side].shift())}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
+function chooseAiCard(){let b=battle,hand=b.hands[1],hpRatio=b.hp[1]/b.max[1],enemyElement=b.elements[0],best=0,bestScore=-Infinity;hand.forEach((id,i)=>{let c=byId(id);if(!c)return;let score=Math.random()*Math.max(2,b.max[0]*.005)*(b.mode==='campaign'?Math.max(.08,1-b.campaignLevel/340):1);if(c.kind==='attack'){// Score element matchups without consuming random critical rolls or writing battle logs.
+ let advantage=enemyElement===null?1:strongAgainst[c.element].includes(enemyElement)?1.25:weakAgainst[c.element].includes(enemyElement)?.75:1;
+ let combo=b.elements[1]!==null&&b.elements[1]!==c.element?1.10:1;
+ let damage=c.damage*(1+b.buff[1])*advantage*combo;
+ if(b.shields[0]){if(b.shields[0].targets?.includes(c.element))damage=0;else damage=Math.max(0,damage-b.shields[0].absorb)}
+ score+=damage*(1+(roleIndex(c)===0?.15:roleIndex(c)===2?.12:roleIndex(c)===4&&b.shields[0]?.absorb>0?.3:0));if(damage>=b.hp[0])score+=b.max[0]*2;
+ if(b.mode==='campaign'&&c.status&&b.effects[0].immunity<=0&&b.effects[0].stun<=0&&b.effects[0].sleep<=0){
+  score+=Math.max(12,b.max[0]*.11)*statusChance(c)*(damage>0?1:.5);
+ }
+ }else if(c.kind==='heal'){let heal=Math.min(c.heal,b.max[1]-b.hp[1]);score+=heal*(hpRatio<.35?2.2:hpRatio<.7?1.25:.45)}else{let block=b.shields[1]?-1:1;let targetBonus=enemyElement!==null&&c.targets?.includes(enemyElement)?b.max[1]*.2:0;score+=block*(Math.min(c.absorb,b.max[1]*.35)*(hpRatio<.45?1.1:.6)+targetBonus)}if(score>bestScore){bestScore=score;best=i}});return best}
+function log(t){battle.log.unshift(t)}function effectiveDamage(c,side){let b=battle,enemy=1-side,damage=c.damage*(1+b.buff[side]);let attackBonus=side===0?Math.min(.5,upLevel('Attack Power')*.0125)+upLevel('Card Training')*.005+(c.rarity||0)*upLevel('Rarity Mastery')*.0025:0;if(side===0){attackBonus+=Math.min(.25,upLevel(E[c.element]+' Mastery')*.005);if(Math.random()<Math.min(.25,upLevel('Critical Chance')*.008)){damage*=1.25+Math.min(.75,upLevel('Critical Damage')*.02);log('Critical strike!')}}damage*=1+attackBonus;if(b.elements[side]!==null&&b.elements[side]!==c.element){damage*=1.10+(side===0?upLevel('Combat Momentum')*.01:0);log('Elemental combo! Switching elements adds 10% damage.')}let enemyElement=b.elements[enemy];if(enemyElement!==null){let strong=[[3,5],[0,3],[1,4],[2,4],[0,5],[1,2]];let weak=[[1,4],[2,5],[3,5],[0,1],[2,3],[0,4]];damage*=strong[c.element].includes(enemyElement)?1.25+(side===0?(upLevel('Elemental Precision')+upLevel('Elemental Advantage'))*.01:0):weak[c.element].includes(enemyElement)?.75:1}if(enemy===0){damage*=1-Math.min(.4,upLevel('Elemental Resistance')*.01);damage*=1-upLevel('Defensive Mastery')*.005;if(b.hp[0]/b.max[0]<.35)damage*=1-upLevel('Last Stand')*.01;if(b.shields[0]?.targets?.length===2)damage*=1-upLevel('Dual-Element Defence')*.01;}return Math.max(1,Math.round(damage))}
+function playCard(side,index){let b=battle;if(!b||b.over||b.turn!==side)return;let id=b.hands[side][index],c=byId(id);if(!c)return;
+ b.effects||=[effectsInit(),effectsInit()];b.hands[side].splice(index,1);b.discards[side].push(id);let enemy=1-side;
+ if(c.kind==='attack'){
+ let d=effectiveDamage(c,side),shield=b.shields[enemy];if(side===1&&b.mode==='campaign')d=Math.max(1,Math.round(d*b.campaignAttackMult));
+ const role=applyAttackRole(b,c,side,d,shield,log);d=role.damage;if(side===0&&shield?.absorb>0)d=Math.round(d*(1+upLevel('Shield Breaker')*.02));let absorbed=0;
+ if(shield){if(shield.targets?.includes(c.element)){log(`${c.name} blocked completely by ${shield.name}!`);d=0}else if(shield.absorb>0){const piercing=Math.min(d,Math.round(d*Math.min(.95,role.pierce+(side===0?upLevel('Armour Piercing')*.01:0))));const blockable=d-piercing;absorbed=Math.min(blockable,shield.absorb);shield.absorb-=absorbed;d=blockable-absorbed+piercing;if(enemy===0&&absorbed>0)b.hp[0]=Math.min(b.max[0],b.hp[0]+Math.round(absorbed*upLevel('Shield Recovery')/100));log(`${shield.name} absorbs ${absorbed} damage`);if(shield.absorb<=0){log(`${shield.name} breaks!`);b.shields[enemy]=null}}}
+ let actualDamage=Math.min(b.hp[enemy],d);b.hp[enemy]=Math.max(0,b.hp[enemy]-actualDamage);if(side===0)b.damage+=actualDamage;
+ log(`${side===0?'You':'Opponent'} use ${c.name} for ${actualDamage} HP damage`);b.elements[side]=c.element;b.buff[side]=c.bonus;
+ finishAttackRole(b,c,side,actualDamage,absorbed,log);
+ if(c.status && !(side===1&&b.mode!=='campaign')){const blocked=actualDamage===0;const boss=b.mode==='campaign'&&b.campaignLevel%10===0&&enemy===1;
+   const outcome=statusResolution(c,b.effects[enemy],blocked,boss);log(outcome);
+   if(outcome.includes('SUCCESSFUL'))window.statusFlash?.(c.status,outcome);
+ }
+ }else if(c.kind==='heal'){
+ let heal=Math.round(c.heal*(side===0?(1+Math.min(.5,upLevel('Healing Power')*.017))*(1+upLevel('Healing Efficiency')*.01)*(b.hp[0]/b.max[0]<.35?1+upLevel('Emergency Recovery')*.02:1):1)),before=b.hp[side];heal=Math.round(heal*(1-b.effects[side].healCut));b.effects[side].healCut=0;b.hp[side]=Math.min(b.max[side],b.hp[side]+heal+(side===0?upLevel('Recovery Boost')*2:0));log(`${side===0?'You':'Opponent'} heal ${b.hp[side]-before} HP`)
+ }else{const added=Math.round(c.absorb*(side===0?(1+Math.min(.5,upLevel('Shield Strength')*.0125))*(1+upLevel('Shield Efficiency')*.01):1));const bonusShield=side===0?upLevel('Shield Reinforcement')*3:0;const shieldAdded=added+bonusShield;const previous=b.shields[side];if(shieldAdded>0&&previous?.absorb>0){previous.absorb+=shieldAdded;previous.name='Stacked shields';previous.targets=[];log(`${side===0?'You':'Opponent'} stack ${c.name}: +${added} protection (${previous.absorb} total)`)}else{b.shields[side]={name:c.name,targets:c.targets,absorb:shieldAdded,duration:c.duration+(side===0?Math.min(2,Math.floor(upLevel('Shield Duration')/15)):0)};log(`${side===0?'You':'Opponent'} activate ${c.name}`)}}
+ if(b.hp[enemy]<=0){finish(side);return}
+ if(b.shields[enemy]&&!(b.shields[enemy].absorb>0)){b.shields[enemy].duration--;if(b.shields[enemy].duration<=0){log(`${b.shields[enemy].name} expires`);b.shields[enemy]=null}}
+ let extra=false,enemyFx=b.effects[enemy];
+ if(enemyFx.stun>0){enemyFx.stun=0;enemyFx.immunity=2;extra=true;log('⚡ Opponent stunned — free attack!')}
+ else if(enemyFx.sleep>0){
+   enemyFx.sleep--;
+   extra=true;
+   if(enemyFx.sleep===0||Math.random()<.4){enemyFx.sleep=0;enemyFx.immunity=2;log('🌙 Opponent wakes up after this free attack!')}
+   else log('🌙 Opponent stays asleep — another free attack!');
+ }
+ b.turn=extra?side:enemy;
+ b.round++;
+ if(!extra&&b.effects[enemy].immunity>0)b.effects[enemy].immunity--;
+ tickCombatEffects(b,b.turn,log);if(b.hp[enemy]<=0){finish(side);return}
+ draw(enemy);if(b.round>60){finish(b.hp[0]/b.max[0]===b.hp[1]/b.max[1]?-1:b.hp[0]/b.max[0]>b.hp[1]/b.max[1]?0:1);return}
+ if(!b.hands[enemy].length){draw(enemy);if(!b.hands[enemy].length){finish(b.hp[0]>=b.hp[1]?0:1);return}}
+ render();if(b.turn===1)setTimeout(()=>{if(battle===b&&!b.over&&b.turn===1)playCard(1,chooseAiCard())},450)
+}
+function finish(winner){let b=battle;if(!b||b.over)return;b.over=true;b.winner=winner;if(b.mode==='campaign'){finishCampaign(b,winner);render();return;}if(winner===0){let reward=Math.round(trainingReward()*(1+upLevel('BP Earnings')*.01)*100)/100;state.bp=Math.round((Number(state.bp)+reward)*100)/100;state.stats.trainingWins=(state.stats.trainingWins||0)+1;state.stats.totalEarned=(state.stats.totalEarned||0)+reward;log(`Victory! Training reward: +${reward.toFixed(2)} BP, 0 EXP. No damage or daily bonus.`)}else{log(`${winner===1?'Defeat!':'Draw!'} Training reward: 0 BP, 0 EXP.`)}render()}
+const strongAgainst=[[3,5],[0,3],[1,4],[2,4],[0,5],[1,2]];
+const weakAgainst=[[1,4],[2,5],[3,5],[0,1],[2,3],[0,4]];
+function elementGuide(){return `<section class="element-guide"><h3>📖 Element Strengths & Weaknesses</h3><p class="muted">Attack element compared with the defender's active element. Strong = +25% damage, weak = −25%, neutral = normal damage.</p><div class="matchup-grid">${E.map((name,i)=>{const neutral=E.map((_,j)=>j).filter(j=>j!==i&&!strongAgainst[i].includes(j)&&!weakAgainst[i].includes(j));return `<div class="matchup-card"><strong>${EM[i]} ${name}</strong><div class="matchup-good">▲ Beats: ${strongAgainst[i].map(j=>EM[j]+' '+E[j]).join(', ')}</div><div class="matchup-bad">▼ Weak to: ${weakAgainst[i].map(j=>EM[j]+' '+E[j]).join(', ')}</div><div class="matchup-neutral">● Neutral: ${neutral.map(j=>EM[j]+' '+E[j]).join(', ')||'None'}</div></div>`}).join('')}</div><p class="tiny muted">Your active element changes when you play an elemental attack. A player with no active element takes neutral damage. Shields can still block attacks independently of these matchups.</p></section>`}
+function matchupFor(element,defender){if(defender===null)return {label:'NEUTRAL · opponent has no active element',cls:'neutral'};if(strongAgainst[element].includes(defender))return {label:'STRONG vs '+EM[defender]+' '+E[defender]+' (+25%)',cls:'advantage'};if(weakAgainst[element].includes(defender))return {label:'WEAK vs '+EM[defender]+' '+E[defender]+' (−25%)',cls:'disadvantage'};return {label:'NEUTRAL vs '+EM[defender]+' '+E[defender],cls:'neutral'}}
+function battleTactics(b){let target=b.elements[1],own=b.elements[0];return `<section class="tactic"><strong>🎯 Battle Matchup Advisor</strong><div>Opponent active element: <b>${target===null?'None (neutral)':EM[target]+' '+E[target]}</b></div><div>Your active element: <b>${own===null?'None (neutral)':EM[own]+' '+E[own]}</b></div>${target===null?'<p class="muted tiny">No active opponent element yet. Attacks currently have neutral matchups.</p>':`<p class="advantage tiny">Best elements: ${E.map((e,i)=>strongAgainst[i].includes(target)?EM[i]+' '+e:null).filter(Boolean).join(', ')}</p><p class="disadvantage tiny">Disadvantaged elements: ${E.map((e,i)=>weakAgainst[i].includes(target)?EM[i]+' '+e:null).filter(Boolean).join(', ')}</p>`}<p class="muted tiny">Shields may block damage regardless of elemental advantage.</p></section>`}
+function battleScreen(){if(battle?.mode==='campaign'&&tab!=='Campaign'&&!battle.over)return '<div class="panel"><h2>🏰 Campaign battle in progress</h2><p>Finish or concede the campaign battle before starting training.</p><button data-tab="Campaign">Return to campaign battle</button></div>';if(battle?.mode==='campaign'&&tab!=='Campaign'&&battle.over)battle=null;if(!battle)return `<div class="panel"><h2>⚔️ Training Battle</h2><p>Battle an adaptive computer opponent that matches your maximum HP and uses cards comparable to your current deck. It chooses elemental counters, shields, healing and combos as you grow stronger. Training awards BP based on Training Mastery and 0 EXP. Switching attack elements between turns grants a 10% combo damage bonus.</p><button class="primary" data-action="start">Start Training Battle</button>${elementGuide()}</div>`;let b=battle;return `<div class="panel"><div class="row" style="justify-content:space-between"><h2>${b.mode==='campaign'?'🏰 Campaign · Battle '+b.campaignLevel:'⚔️ Training Battle'}</h2>${b.mode==='campaign'?'': '<button data-action="restart">New Battle</button>'}</div><div class="split">${[1,0].map(i=>`<div class="card"><strong>${i?(b.mode==='campaign'?campaignEnemyName(b.campaignLevel):'🤖 Adaptive Training Bot'):'🧙 Your Fighter'}</strong><div>${fmt(b.hp[i])} / ${fmt(b.max[i])} HP</div><div class="bar health-bar ${i===0?'health-ally':'health-enemy'}"><div style="width:${Math.max(0,b.hp[i]/b.max[i]*100)}%"></div></div><div class="tiny">${b.shields[i]?'🛡️ '+b.shields[i].name+' ('+(b.shields[i].absorb>0?fmt(b.shields[i].absorb)+' protection remaining':b.shields[i].duration+' turns')+')':'No shield'} · ${b.elements[i]===null?'Neutral':EM[b.elements[i]]+' '+E[b.elements[i]]} ${b.effects?.[i]?.stun?' · ⚡ STUNNED':''}${b.effects?.[i]?.sleep?' · 💤 ASLEEP':''}${b.effects?.[i]?.immunity?' · 🛡️ Control immunity '+b.effects[i].immunity:''}</div></div>`).join('')}</div><div class="battle-banner"><strong>${b.over?(b.winner===0?'🏆 Victory!':b.winner===1?'💔 Defeat':'🤝 Draw'):(b.turn===0?'✨ Your turn':'🤖 Opponent thinking…')}</strong><div class="tiny muted">Turn ${Math.min(60,b.round)} of 60 · Your draw pile: ${b.decks[0].length} · Discard: ${b.discards[0].length}</div></div>${battleTactics(b)}${b.over?`<div class="panel good"><h2>${b.mode==='campaign'?'🏰 Campaign result':b.winner===0?'🏆 Training victory!':'⚔️ Training complete'}</h2>${b.mode==='campaign'?`<p>${b.rewardSummary||'No rewards.'}</p>${b.winner===0&&b.campaignLevel<300?'<button class="primary" data-action="campaignNext">Next battle →</button>':''}`:`<p><strong>+${b.winner===0?trainingReward().toFixed(2):'0.00'} BP</strong> · <strong>+0 EXP</strong></p><p>Training is for practice.</p>`}</div>`:''}<div class="battle-actions">${b.over?(b.mode==='campaign'?'<button data-action="campaignMap">🗺️ Campaign map</button>':'<button class="primary" data-action="restart">Play again</button>'):'<button data-action="concede">Concede battle (no rewards)</button>'}</div><div class="grid">${b.hands[0].map((id,i)=>{let c=byId(id);return `<div class="card battle-card"><strong>${cardText(c)}</strong><small>${cardInfo(c)}</small>${c.kind==='attack'?`<div class="card-tip ${matchupFor(c.element,b.elements[1]).cls}">${matchupFor(c.element,b.elements[1]).label}</div>`:''}<div><button data-action="play" data-id="${i}" ${b.over||b.turn!==0?'disabled':''}>Play card</button></div></div>`}).join('')}</div>${elementGuide()}<h3>Battle Log</h3><div class="log">${b.log.map(x=>`<div>${x}</div>`).join('')}</div></div>`}
+function handle(action,id){vaultTick();miningTick();if(action==='resetSave'){campaignView='map';if(!confirm('Start a completely new game with 0 BP? This permanently resets your BP, cards, ranks, campaign, upgrades, vault and battle progress on this browser.'))return;state=fresh();battle=null;tab='Home';localStorage.removeItem('elemental-coop-best-level');localStorage.removeItem('elemental-coop-first-clears');localStorage.removeItem('elemental-coop-receipts-v49');window.elementalLeaderboardReset?.();save();return message('New game started with 0 BP, 24 attack cards, one healing card and one shield card.')}if(action==='trainingMastery'){if(upLevel('Training Mastery')>=20||state.bp<trainingCost())return message('Not enough BP or maximum Training Mastery reached');state.bp-=trainingCost();state.up['Training Mastery']=upLevel('Training Mastery')+1;return message(`Training Mastery increased! Now ${trainingReward().toFixed(2)} BP per training win.`)}if(action==='claimAchievement'){let a=achievements.find(x=>x.id===id);if(!a||state.achievements[id]||!achievementMet(a))return message('Achievement not ready or already claimed');state.achievements[id]=true;state.bp+=a.bp;if(a.card){state.owned[a.card]=(state.owned[a.card]||0)+1}return message(`Achievement claimed: ${a.title}! +${money(a.bp)} BP${a.card?' and exclusive card!':''}`)}if(action==='buy'){let c=byId(id);if(!c||c.exclusive)return message('Card unavailable');let cost=shopCost(c);if(state.bp<cost)return message('Not enough BP');state.bp-=cost;state.owned[id]=(state.owned[id]||0)+1;state.stats.buys=(state.stats.buys||0)+1;return message(`Purchased ${c.name}`)}if(action==='forge'){let c=byId(id),next=forgeNext(c),cost=c?.kind==='heal'?healingForgeCost(c):c?forgeCost(c):Infinity;if(!c||!next||state.bp<cost||(state.owned[id]||0)<2)return message('Cannot forge this card');state.bp-=cost;state.owned[id]-=2;state.owned[next.id]=(state.owned[next.id]||0)+1;state.stats.forges=(state.stats.forges||0)+1;state.deck=state.deck.filter(x=>x!==id);return message(`Forged ${next.name}!`)}if(action==='addDeck'){if(state.deck.length>=30||state.deck.filter(x=>x===id).length>=Math.min(2,state.owned[id]||0))return message('Deck full or copy limit reached');state.deck.push(id)}if(action==='removeDeck'){let i=state.deck.indexOf(id);if(i>=0)state.deck.splice(i,1)}if(action==='clearDeck')state.deck=[];if(action==='autoDeck')state.deck=buildDeck();if(action==='upgrade'){let u=upgrades.find(x=>x.name===id);if(!u||upLevel(id)>=u.max||state.bp<upgradeCost(u))return;state.bp-=upgradeCost(u);state.up[id]=upLevel(id)+1}if(action==='collect'){state.bp+=state.vault.pending;state.vault.pending=0}if(action==='vaultInterest'){if(state.vault.interest<50&&state.bp>=vaultCost('interest')){state.bp-=vaultCost('interest');state.vault.interest++}}if(action==='vaultFrequency'){if(state.vault.frequency<20&&state.bp>=vaultCost('frequency')){state.bp-=vaultCost('frequency');state.vault.frequency++}}if(action==='concede'){if(battle&&!battle.over){battle.over=true;battle.winner=1;battle.conceded=true;log('You conceded the battle. No BP or EXP awarded.');}return render()}if(action==='restart'&&battle&&!battle.over)return message('Concede your current battle before starting a new one.');if(action==='campaignMap'){campaignView='map';return render()}if(action==='campaignBattle'){campaignView='battle';return render()}if(action==='campaignStart')return startCampaign(Number(id));if(action==='campaignNext')return startCampaign(Math.min(300,(battle?.campaignLevel||0)+1));if(action==='start'||action==='restart')return startBattle();if(action==='play')return playCard(0,Number(id));render()}
+document.addEventListener('click',e=>{let t=e.target.closest('[data-tab],[data-action]');if(!t)return;if(t.dataset.tab){tab=t.dataset.tab;if(tab==='Campaign')campaignView='map';if(tab==='Battle'&&battle?.mode==='campaign'&&battle.over)battle=null;render()}else handle(t.dataset.action,t.dataset.id)});document.addEventListener('change',e=>{if(e.target.id==='filter'){filter=e.target.value;render()}if(e.target.id==='rarityFilter'){rarityFilter=e.target.value;render()}});document.addEventListener('visibilitychange',()=>{if(!document.hidden){vaultTick();miningTick();render()}else{miningTick();save()}});window.addEventListener('beforeunload',()=>{vaultTick();miningTick();save()});setInterval(()=>{vaultTick();if(tab==='Vault'||tab==='Home'||tab==='Mines')render();else{miningTick();save()}},10000);render();
+</script><script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js';
+import { getAuth, signInAnonymously, onAuthStateChanged, EmailAuthProvider, linkWithCredential, signInWithEmailAndPassword } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, runTransaction, serverTimestamp, collection, query, where, limit, getDocs, deleteDoc, addDoc, orderBy, updateDoc } from 'https://www.gstatic.com/firebasejs/11.10.0/firebase-firestore.js';
+const firebaseConfig = {
+  apiKey: 'AIzaSyCKr09ttcCCqUz74kZxrjVecAQIOYAxCSg',
+  authDomain: 'elemental-clash-a4fb7.firebaseapp.com',
+  projectId: 'elemental-clash-a4fb7',
+  storageBucket: 'elemental-clash-a4fb7.firebasestorage.app',
+  messagingSenderId: '289571400029',
+  appId: '1:289571400029:web:495b263433475ab367a0b4'
+};
+const appFB=initializeApp(firebaseConfig), auth=getAuth(appFB), db=getFirestore(appFB);
+let profile=null,cloudEnabled=false,cloudTimer=null,cloudBusy=false,history=[],profileNotice='';
+const savedRoomKey='elemental-clash-active-room';
+const profileName=()=>profile?.name||'Elemental Fighter';
+function safeName(s){return String(s||'').trim().replace(/[<>]/g,'').slice(0,24)}
+// A username is claimed by a Firestore transaction, not by searching a limited directory.
+const usernameKey=name=>safeName(name).normalize('NFKC').toLowerCase().replace(/\s+/g,' ');
+const usernameDoc=key=>doc(db,'usernames',encodeURIComponent(key));
+async function claimUsername(name){
+ if(!uid)throw Error('Sign in before saving a username.');
+ const clean=safeName(name),key=usernameKey(clean);
+ if(clean.length<2||key.length<2)throw Error('Username must contain at least 2 characters.');
+ if(!/^[\p{L}\p{N}_ .-]+$/u.test(clean))throw Error('Use letters, numbers, spaces, underscores, dots or hyphens.');
+ const pref=doc(db,'profiles',uid),nextRef=usernameDoc(key);
+ await runTransaction(db,async tx=>{
+  const [ps,ns]=await Promise.all([tx.get(pref),tx.get(nextRef)]);
+  const previous=ps.exists()?ps.data():{};
+  const oldKey=previous.usernameKey||'';
+  const oldRef=oldKey&&oldKey!==key?usernameDoc(oldKey):null;
+  const oldSnap=oldRef?await tx.get(oldRef):null;
+  if(ns.exists()&&ns.data().uid!==uid)throw Error('That username is already taken. Please choose another.');
+  // Legacy profiles have no reservation. Their names are not silently claimed.
+  tx.set(nextRef,{uid,name:clean,claimedAt:serverTimestamp()},{merge:true});
+  tx.set(pref,{name:clean,usernameKey:key,history:history.slice(0,30)},{merge:true});
+  if(oldRef&&oldSnap?.exists()&&oldSnap.data().uid===uid)tx.delete(oldRef);
+ });
+ profile={...profile,name:clean,usernameKey:key};
+ leaderboardSchedule();window.renderProfile?.();
+}
+
+async function loadProfile(){
+ if(!uid)return;
+ const snap=await getDoc(doc(db,'profiles',uid));
+ profile=snap.exists()?snap.data():{name:'Elemental Fighter',createdAt:Date.now(),history:[]};
+ history=Array.isArray(profile.history)?profile.history.slice(0,30):[];
+ cloudEnabled=!!profile.cloudEnabled;
+ window.renderProfile?.();
+}
+async function persistProfile(extra={}){
+ if(!uid)return;
+ profile={...profile,...extra,history:history.slice(0,30)};
+ await setDoc(doc(db,'profiles',uid),profile,{merge:true});
+ window.renderProfile?.();
+}
+function cloudPayload(){const raw=window.elementalExportSave?.();return raw?JSON.parse(raw):null}
+async function uploadSave(){
+ if(!uid||!cloudEnabled||cloudBusy)return;
+ const payload=cloudPayload();if(!payload)return;
+ cloudBusy=true;
+ try{await setDoc(doc(db,'saves',uid),{data:JSON.stringify(payload),updatedAt:serverTimestamp()});profileNotice='Cloud save uploaded successfully.'}
+ catch(e){profileNotice='Cloud save failed: '+e.message}
+ finally{cloudBusy=false;window.renderProfile?.()}
+}
+async function downloadSave(){
+ if(!uid)return;
+ const snap=await getDoc(doc(db,'saves',uid));
+ if(!snap.exists())throw Error('No cloud save exists for this account yet.');
+ if(!confirm('Replace this device’s progress with your cloud save? Your current local progress will be overwritten.'))return;
+ const data=JSON.parse(snap.data().data);
+ if(!window.elementalImportSave?.(data))throw Error('Cloud save format is invalid.');
+ profileNotice='Cloud save loaded. Your game progress has been restored.';
+ window.renderProfile?.();
+}
+window.elementalCloudDirty=()=>{if(!cloudEnabled||!uid)return;clearTimeout(cloudTimer);cloudTimer=setTimeout(uploadSave,5000)};
+window.renderProfile=()=>{
+ const root=$('profile-root');if(!root)return;
+ const user=auth.currentUser;
+ const escp=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ root.innerHTML=`<p class="muted">${escp(profileNotice||'Cloud saves are optional. Your existing local progress stays on this device until you choose to upload it.')}</p>
+ <p><strong>Username:</strong> ${escp(profileName())} · <strong>Account:</strong> ${user?.isAnonymous?'Guest (device only)':'Email account'}</p>
+ <p class="tiny muted">Usernames are unique regardless of capitalisation. Existing players must claim their name once to reserve it.</p><div class="row"><input id="profile-name" maxlength="24" placeholder="Choose a unique username" value="${escp(profileName())}"><button data-profile="name">Save name</button></div>
+ ${user?.isAnonymous?`<h3>Keep your progress across devices</h3><p class="muted">Create an email/password account to use on your other device. Use an email you control and a unique password (at least 6 characters).</p><div class="row"><input id="account-email" type="email" autocomplete="email" placeholder="Email"><input id="account-password" type="password" autocomplete="new-password" placeholder="Password"><button data-profile="register">Create account</button><button data-profile="login">Sign in to existing account</button></div>`:'<p class="good">✓ Signed in with an email account. Use the same email on your other device.</p>'}
+ <h3>☁️ Cloud saving</h3><p class="muted">Cloud saving is ${cloudEnabled?'ON':'OFF'}. Enable it to automatically upload progress. To retrieve progress on a new device, sign in and select Download cloud save. Never download an older save over newer progress.</p>
+ <div class="row"><button data-profile="enable">${cloudEnabled?'Disable automatic upload':'Enable automatic upload'}</button><button data-profile="upload">Upload current progress</button><button data-profile="download">Download cloud save</button></div>
+ <h3>🏆 Online statistics</h3><p>Matches recorded: ${history.length} · Wins: ${history.filter(x=>x.result==='Win').length} · Losses: ${history.filter(x=>x.result==='Loss').length} · Draws: ${history.filter(x=>x.result==='Draw').length}</p>
+ <h3>📜 Recent online battles</h3>${history.length?history.map(x=>`<div class="card tiny">${escp(x.result)} · ${escp(x.code)} · ${new Date(x.time).toLocaleString()} · +${x.bp||0} BP · +${x.xp||0} EXP</div>`).join(''):'<p class="muted">No completed online matches recorded yet.</p>'}
+ <p class="tiny muted">Beta: profile statistics and cloud saves can be edited by their owner; competitive anti-cheat is not implemented.</p>`;
+};
+window.elementalExportSave=()=>localStorage.getItem('elemental-clash-v1');
+window.elementalImportSave=data=>{if(!data||typeof data!=='object'||!data.owned||!data.vault||!Array.isArray(data.deck))return false;localStorage.setItem('elemental-clash-v1',JSON.stringify(data));location.reload();return true};
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('[data-profile]');if(!b)return;
+ try{
+ const action=b.dataset.profile;
+ if(action==='name'){const name=safeName($('profile-name')?.value);await claimUsername(name);profileNotice='Unique username saved.';socialPublish().catch(()=>{})}
+ if(action==='enable'){cloudEnabled=!cloudEnabled;await persistProfile({cloudEnabled});profileNotice=cloudEnabled?'Automatic cloud upload enabled.':'Automatic cloud upload disabled.';if(cloudEnabled)await uploadSave()}
+ if(action==='upload'){await setDoc(doc(db,'saves',uid),{data:window.elementalExportSave(),updatedAt:serverTimestamp()});profileNotice='Current progress uploaded to cloud.'}
+ if(action==='download')await downloadSave();
+ if(action==='register'||action==='login'){
+  const email=$('account-email')?.value.trim(),password=$('account-password')?.value;
+  if(!email||!password)throw Error('Enter your email and password.');
+  if(action==='register'){await linkWithCredential(auth.currentUser,EmailAuthProvider.credential(email,password));profileNotice='Account created. You can now sign in on another device.'}
+  else{if(!confirm('Sign in to your existing account? Your current device progress stays local until you choose Download cloud save.'))return;await signInWithEmailAndPassword(auth,email,password);profileNotice='Signed in. Select Download cloud save to restore progress from another device.'}
+ }
+ }catch(err){profileNotice=err.message||String(err)}
+ window.renderProfile?.();
+});
+
+let uid=null, roomCode='', room=null, unsubscribe=null, busy=false, info='Signing in…';
+const $=id=>document.getElementById(id);
+const esc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const codeChars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+const code=()=>{const a=new Uint32Array(7);crypto.getRandomValues(a);return Array.from(a,n=>codeChars[n%codeChars.length]).join('')};
+const mine=()=>room?.host===uid?0:room?.guest===uid?1:-1;
+let queueUnsub=null, searching=false, searchToken=0, claimedRoom='', rewardText='';
+const rewardsKey='elemental-clash-online-rewards-v1';
+function rewardLedger(){try{return JSON.parse(localStorage.getItem(rewardsKey))||{}}catch{return {}}}
+function onlineReward(r,code){if(!r||r.status!=='finished'||!r.guest||!uid)return;const side=r.host===uid?0:r.guest===uid?1:-1;if(side<0)return;const ledger=rewardLedger();if(ledger[code]){rewardText=ledger[code];return}const conceded=r.lastAction?.kind==='concede';if(conceded){rewardText='Conceded match: no online rewards (anti-farming test rule).';ledger[code]=rewardText;localStorage.setItem(rewardsKey,JSON.stringify(ledger));return}const damage=Math.max(0,Math.floor(Number(r.damageDealt?.[side]||0)/10));const win=r.winner===side;const rank=Number(window.elementalCurrentRank?.()||1);
+ const tier=rank<=5?0:rank<=10?1:rank<=15?2:rank<=20?3:rank<=25?4:rank<=30?5:6;
+ const bases=[100,250,750,2500,10000,50000,100000];
+ const base=bases[tier],bp=(win?base:Math.max(20,Math.round(base*.2)))+Math.min(win?50:10,damage);
+ const xp=(win?30:10)+Math.min(100,damage*2);window.elementalAwardOnline?.(bp,xp,win);
+ if(!history.some(x=>x.code===code)){history.unshift({code,result:r.winner===-1?'Draw':win?'Win':'Loss',time:Date.now(),bp,xp});history=history.slice(0,30);persistProfile().catch(e=>console.warn('Battle history:',e))}
+ rewardText=`Online battle reward: +${bp} BP and +${xp} EXP (local testing only).`;ledger[code]=rewardText;localStorage.setItem(rewardsKey,JSON.stringify(ledger))}
+
+const el=['🔥','💧','🌪️','🌿','✨','🌑'];
+const strong=[[3,5],[0,3],[1,4],[2,4],[0,5],[1,2]], weak=[[1,4],[2,5],[3,5],[0,1],[2,3],[0,4]];
+const cardLookup=id=>window.elementalCardLookup?.(id);
+const starter=()=>{
+ let ids=window.elementalOnlineDeck?.()||[];
+ ids=ids.filter(id=>cardLookup(id));
+ if(!ids.length)ids=Array.from({length:24},(_,i)=>`a${Math.floor(i/4)}-${i%4}-0`);
+ // A completed, valid custom deck is used unchanged. A partial owned-card
+ // deck is filled only for beta testing while a player builds their collection.
+ const result=ids.slice(0,30);
+ const fallback=Array.from({length:24},(_,i)=>`a${Math.floor(i/4)}-${i%4}-0`);
+ let j=0;while(result.length<30)result.push(fallback[(j++)%fallback.length]);
+ return result;
+};
+const mix=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const card=id=>cardLookup(id);
+const label=c=>c.kind==='attack'?el[c.element]+' '+c.name:c.kind==='shield'?'🛡️ '+c.name:'❤️ '+c.name;
+const rarityNames=['Common','Uncommon','Rare','Epic','Legendary'];
+const onlineAbility=c=>{
+ const k=Number(c.id?.split('-')[1]||0)%16,t=1+(c.rarity||0);
+ return [
+ `Lingering damage: ${3*t} next turn`, `Shield breaker: +${20+5*t}% vs shields`,
+ `Life steal: ${10+3*t}% of HP damage`, `Critical: ${12+3*t}% chance of ${150+10*t}% damage`,
+ `Pierce: ignore ${15+5*t}% absorption`, `Weakening: enemy attack −${10+3*t}%`,
+ `Focus: next attack +${8+3*t}%`, `Barrier siphon: ${15+5*t}% HP damage becomes shield`,
+ `Finisher: +${15+5*t}% vs wounded`, `Regenerate ${4*t} HP next turn`,
+ `Shield harvest: heal ${3*t} when hitting shield`, `Charge: +${10+4*t}% next switched attack`,
+ `Disrupt: next enemy heal −${15+5*t}%`, `Retaliation guard: gain ${4*t} shield`,
+ `Momentum: +${4*t}% per stack, max 3`, `Last stand: +${15+5*t}% below half HP`
+ ][k]};
+const detail=c=>{const tier=rarityNames[c.rarity]||'Common';if(c.kind==='attack')return `${tier} · ${el[c.element]} · ${c.damage} damage · ${c.status?statusDescription(c):onlineAbility(c)}`;if(c.kind==='heal')return `${tier} · Restore ${c.heal} HP`;return c.type==='absorb'?`${tier} · Absorb ${c.absorb} damage`:`${tier} · Immune to ${c.targets.map(x=>el[x]).join(' + ')}`};
+const onlineFx=p=>{p.effects=Object.assign({dot:0,regen:0,weak:0,focus:0,focusSwitch:false,healCut:0,momentum:0,stun:0,sleep:0,immunity:0},p.effects||{});return p.effects};
+const onlineShield=(p,n)=>{if(n<=0)return;if(p.shield?.absorb>0){p.shield.absorb+=n;p.shield.name='Stacked shields';p.shield.targets=[]}else p.shield={name:'Ability barrier',absorb:n,targets:[],duration:1}};
+// Average card strength for beta matchmaking; uses existing queue fields, so no rule changes.
+const deckPower=ids=>{const vals=ids.map(id=>card(id)).filter(Boolean).map(c=>c.kind==='attack'?c.damage:c.kind==='heal'?c.heal*.6:(c.absorb||10)*.5);return vals.length?vals.reduce((a,b)=>a+b,0)/vals.length:0};
+const newPlayer=ids=>{let pile=mix(ids);return {deck:pile.slice(10),hand:pile.slice(0,10),discard:[],shield:null,element:-1,buff:0,maxHP:Math.max(150,Number(window.elementalMaxHP?.()||150)),status:null,effects:{dot:0,regen:0,weak:0,focus:0,focusSwitch:false,healCut:0,momentum:0,stun:0,sleep:0,immunity:0}}};
+const show=()=>{
+ const root=$('online-root');if(!root)return;
+ const head=`<p class="muted">${esc(info)}</p><p class="tiny muted">Your player ID: ${esc(uid?uid.slice(0,12)+'…':'Not signed in')}</p>`;
+ if(!uid){root.innerHTML=head;return}
+ if(!roomCode){root.innerHTML=head+`${localStorage.getItem(savedRoomKey)?'<div class="battle-banner"><strong>Previous online battle found</strong><p><button data-online="resume">Reconnect to battle</button></p></div>':''}<div class="row"><button class="primary" data-online="create">Create private room</button><input id="join-code" maxlength="7" placeholder="7-character room code" aria-label="Room code"><button data-online="join">Join room</button></div><div class="battle-banner"><h3>🎲 Random matchmaking</h3><p>Search for another player with a similar deck strength (within 20%, accounting for HP). Private rooms remain unrestricted.</p><button class="primary" data-online="${searching?'cancelSearch':'find'}">${searching?'Cancel search':'Find random opponent'}</button>${searching?'<p>Searching for an opponent…</p>':''}</div><p class="tiny muted">Online beta: your saved custom 30-card deck is used in both private and random matches. If it is incomplete, starter attacks fill the remaining slots. Online wins award rank-scaled BP (100–100,000 base), losses give 20% of that amount, and both earn EXP. Rewards are local beta rewards. Rewards can be manipulated and are not secure or cloud-saved.</p>`;return}
+ if(!room){root.innerHTML=head+`<p>Room ${esc(roomCode)}: loading…</p><button data-online="leave">Leave room</button>`;return}
+ const side=mine();if(side<0){root.innerHTML=head+'<p class="bad">You are not signed in as a participant in this room.</p><button data-online="leave">Leave room</button>';return}const waiting=!room.guest,ended=room.status==='finished',myTurn=room.turn===side;
+ const hp=room.hp||[150,150],max=room.max||[150,150],active=room.active||[-1,-1],players=room.players||[],me=players[side],opp=players[1-side];
+ const onlineOutcome=ended?`<div class="battle-banner"><h2>${room.winner===side?'🏆 Victory!':room.winner===-1?'🤝 Draw':'⚔️ Battle complete'}</h2><p>${esc(rewardText||'Battle finished. Rewards are being calculated.')}</p><p class="tiny">Check your Rank and Achievements tabs for progression.</p></div>`:'';
+ const myHand=me?.hand||[];
+ root.innerHTML=head+onlineOutcome+`<div class="battle-banner"><strong>Room code: ${esc(roomCode)}</strong><p>${waiting?'Waiting for a friend to join…':ended?(room.winner===-1?'Draw!':room.winner===side?'🏆 You won!':'💔 You lost!'):myTurn?'✨ Your turn':'⏳ Opponent’s turn'}</p>${ended?`<p class="good">${esc(rewardText)}</p>`:''}<button data-online="copy">Copy room code</button> <button data-online="leave">Leave room</button> ${!waiting&&!ended?'<button data-online="concede">Concede (no rewards)</button>':''}</div>`+
+ (waiting?'':`<div class="split"><div class="card"><strong>🧙 You</strong><p>${hp[side]} / ${max[side]} HP</p><div class="bar health-bar health-ally"><div style="width:${hp[side]/max[side]*100}%"></div></div><small>Active: ${active[side]===-1?'None':el[active[side]]} · ${me?.shield?'🛡️ '+esc(me.shield.name)+' ('+(me.shield.absorb>0?me.shield.absorb+' protection remaining':me.shield.duration+' turns')+')':'No shield'} · Status: ${esc(Object.entries(me?.effects||{}).filter(([k,v])=>v&&k!=='momentum'&&k!=='focusSwitch').map(([k,v])=>k+': '+v).join(', ')||'none')}</small></div><div class="card"><strong>⚔️ Opponent</strong><p>${hp[1-side]} / ${max[1-side]} HP</p><div class="bar health-bar health-enemy"><div style="width:${hp[1-side]/max[1-side]*100}%"></div></div><small>Active: ${active[1-side]===-1?'None':el[active[1-side]]} · ${opp?.shield?'🛡️ '+esc(opp.shield.name)+' ('+(opp.shield.absorb>0?opp.shield.absorb+' protection remaining':opp.shield.duration+' turns')+')':'No shield'} · Status: ${esc(Object.entries(opp?.effects||{}).filter(([k,v])=>v&&k!=='momentum'&&k!=='focusSwitch').map(([k,v])=>k+': '+v).join(', ')||'none')}</small></div></div><p class="tiny muted">Turn ${room.move+1} · Your draw pile ${me?.deck.length||0} · Discard ${me?.discard.length||0} · Opponent hand ${opp?.hand.length||0}</p><h3>Your hand</h3><div class="grid">${myHand.map((id,i)=>{const c=card(id);return c?`<div class="card"><strong>${esc(label(c))}</strong><small>${esc(detail(c))}</small>${c.kind==='attack'?`<div class="card-tip">${active[1-side]===-1?'NEUTRAL · opponent has no active element':strong[c.element].includes(active[1-side])?'▲ STRONG (+25%)':weak[c.element].includes(active[1-side])?'▼ WEAK (−25%)':'NEUTRAL matchup'}</div>`:''}<p><button data-online="attack" data-index="${i}" ${ended||!myTurn||busy?'disabled':''}>Play card</button></p></div>`:''}).join('')}</div><h3>Battle log</h3><div class="log">${(room.log||[]).map(t=>`<div>${esc(t)}</div>`).join('')}</div>`);
+};
+window.renderOnline=show;
+const listen=c=>{if(unsubscribe)unsubscribe();localStorage.setItem(savedRoomKey,c);roomCode=c;room=null;show();unsubscribe=onSnapshot(doc(db,'rooms',c),snap=>{if(!snap.exists()){info='Room no longer exists';localStorage.removeItem(savedRoomKey);roomCode='';room=null;unsubscribe?.();unsubscribe=null}else{room=snap.data();info='Connected to live Firestore room';if(room.status==='finished')onlineReward(room,c)}show()},err=>{info='Firestore error: '+err.message;show()})};
+async function create(){const c=code(),host=newPlayer(starter());await setDoc(doc(db,'rooms',c),{host:uid,guest:null,status:'waiting',turn:0,hp:[host.maxHP,host.maxHP],max:[host.maxHP,host.maxHP],active:[-1,-1],players:[host,null],log:['Room created. Waiting for a friend.'],winner:-1,move:0,lastAction:null,damageDealt:[0,0],createdAt:serverTimestamp()});listen(c)}
+async function join(){const c=($('join-code')?.value||'').trim().toUpperCase();if(!/^[A-Z2-9]{7}$/.test(c))throw Error('Enter a valid 7-character room code');const guest=newPlayer(starter());await runTransaction(db,async tx=>{const ref=doc(db,'rooms',c),snap=await tx.get(ref);if(!snap.exists())throw Error('Room not found');const r=snap.data();if(r.host===uid||r.guest===uid)return;if(r.guest||r.status!=='waiting')throw Error('Room is full or no longer waiting');tx.update(ref,{guest:uid,status:'playing',hp:[r.max?.[0]||150,guest.maxHP],max:[r.max?.[0]||150,guest.maxHP],players:[r.players[0],guest],log:['Both players joined. Host attacks first.',...(r.log||[])]})});listen(c)}
+const drawCard=p=>{if(!p.deck.length&&p.discard.length){p.deck=mix(p.discard);p.discard=[]}if(p.deck.length&&p.hand.length<10)p.hand.push(p.deck.shift())};
+async function attack(i){if(!roomCode)return;const c=roomCode;await runTransaction(db,async tx=>{const ref=doc(db,'rooms',c),snap=await tx.get(ref);if(!snap.exists())throw Error('Room no longer exists');const r=snap.data(),side=r.host===uid?0:r.guest===uid?1:-1;if(side<0||r.status!=='playing'||r.turn!==side)throw Error('Not your turn');if(!Number.isInteger(i)||i<0||i>=r.players[side].hand.length)throw Error('Invalid card position');const players=JSON.parse(JSON.stringify(r.players)),me=players[side],foe=players[1-side],id=me.hand[i],played=card(id);if(!played)throw Error('Invalid card');const hp=[...r.hp],active=[...r.active],other=1-side,damageDealt=[...(r.damageDealt||[0,0])];me.hand.splice(i,1);me.discard.push(id);let msg='';
+ const myFx=onlineFx(me),foeFx=onlineFx(foe),t=1+(played.rarity||0),k=played.status?-1:played.kind==='attack'?Number(id.split('-')[1])%16:-1;
+ if(played.kind==='attack'){
+ let damage=Math.round(played.damage*(1+(me.buff||0)));const combo=active[side]>=0&&active[side]!==played.element;
+ if(combo)damage=Math.round(damage*1.10);
+ if(active[other]>=0)damage=Math.max(1,Math.round(damage*(strong[played.element].includes(active[other])?1.25:weak[played.element].includes(active[other])?.75:1)));
+ if(myFx.weak){damage=Math.round(damage*(1-myFx.weak));myFx.weak=0}
+ if(myFx.focus){if(!myFx.focusSwitch||combo)damage=Math.round(damage*(1+myFx.focus));myFx.focus=0;myFx.focusSwitch=false}
+ if(k===3&&Math.random()<(12+3*t)/100)damage=Math.round(damage*(1.5+.1*t));
+ if(k===8&&hp[other]<r.max[other]/2)damage=Math.round(damage*(1+(15+5*t)/100));
+ if(k===15&&hp[side]<r.max[side]/2)damage=Math.round(damage*(1+(15+5*t)/100));
+ if(k===14){myFx.momentum=Math.min(3,myFx.momentum+1);damage=Math.round(damage*(1+myFx.momentum*4*t/100))}else myFx.momentum=0;
+ if(k===1&&foe.shield?.absorb>0)damage=Math.round(damage*(1+(20+5*t)/100));
+ let absorbed=0;
+ if(foe.shield){if(foe.shield.targets?.includes(played.element))damage=0;else if(foe.shield.absorb>0){const pierce=k===4?Math.round(damage*(15+5*t)/100):0;absorbed=Math.min(Math.max(0,damage-pierce),foe.shield.absorb);damage-=absorbed;foe.shield.absorb-=absorbed;if(foe.shield.absorb<=0)foe.shield=null}}
+ damage=Math.max(0,damage);const actual=Math.min(hp[other],damage);hp[other]=Math.max(0,hp[other]-damage);damageDealt[side]+=actual;active[side]=played.element;me.buff=played.bonus||0;
+ if(k===0)foeFx.dot+=3*t;
+ if(k===2)hp[side]=Math.min(r.max[side],hp[side]+Math.round(actual*(10+3*t)/100));
+ if(k===5)foeFx.weak=Math.max(foeFx.weak,(10+3*t)/100);
+ if(k===6)myFx.focus=(8+3*t)/100;
+ if(k===7&&actual>0)onlineShield(me,Math.max(1,Math.round(actual*(15+5*t)/100)));
+ if(k===9)myFx.regen+=4*t;
+ if(k===10&&absorbed>0)hp[side]=Math.min(r.max[side],hp[side]+3*t);
+ if(k===11){myFx.focus=(10+4*t)/100;myFx.focusSwitch=true}
+ if(k===12)foeFx.healCut=Math.max(foeFx.healCut,(15+5*t)/100);
+ if(k===13)onlineShield(me,4*t);
+ msg=`${side===0?'Host':'Guest'} used ${played.name} for ${actual} damage · ${played.status?statusDescription(played):onlineAbility(played)}`;
+ if(played.status){const outcome=statusResolution(played,foeFx,actual===0,false);msg+=' · '+outcome;}
+ 
+ }
+ else if(played.kind==='heal'){const healed=Math.min(Math.round(played.heal*(1-myFx.healCut)),r.max[side]-hp[side]);myFx.healCut=0;hp[side]+=healed;msg=`${side===0?'Host':'Guest'} healed ${healed} HP`}
+ else {{const added=played.absorb||0;if(added>0&&me.shield?.absorb>0){me.shield.absorb+=added;me.shield.name='Stacked shields';me.shield.targets=[];msg=`${side===0?'Host':'Guest'} stacked ${played.name}: +${added} protection (${me.shield.absorb} total)`}else{me.shield={name:played.name,targets:played.targets||[],absorb:shieldAdded,duration:played.duration};msg=`${side===0?'Host':'Guest'} activated ${played.name}`}}}
+ if(foe.shield&&!(foe.shield.absorb>0)){foe.shield.duration--;if(foe.shield.duration<=0)foe.shield=null}
+ // Start-of-turn effects trigger for the incoming player, just like local training/campaign.
+ if(foeFx.dot>0){const dot=Math.min(hp[other],foeFx.dot);hp[other]-=dot;msg+=`; lingering damage ${dot}`;foeFx.dot=0}
+ if(foeFx.regen>0&&hp[other]>0){const regen=Math.min(r.max[other]-hp[other],foeFx.regen);hp[other]+=regen;msg+=`; regeneration ${regen}`;foeFx.regen=0}
+ let extra=false;
+ if(foeFx.stun>0){foeFx.stun=0;foeFx.immunity=2;extra=true;msg+=' · ⚡ Bonus turn: opponent stunned'}
+ else if(foeFx.sleep>0){
+   foeFx.sleep--;extra=true;
+   if(foeFx.sleep===0||Math.random()<.4){foeFx.sleep=0;foeFx.immunity=2;msg+=' · 🌙 Opponent wakes after bonus turn'}
+   else msg+=' · 🌙 Opponent stays asleep';
+ }
+ if(!extra&&foeFx.immunity>0)foeFx.immunity--;
+ drawCard(me);const ended=hp[other]===0||r.move>=119;const winner=hp[other]===0?side:r.move>=119?(hp[0]/r.max[0]===hp[1]/r.max[1]?-1:hp[0]/r.max[0]>hp[1]/r.max[1]?0:1):-1;
+ tx.update(ref,{hp,active,players,damageDealt,turn:ended?side:extra?side:other,status:ended?'finished':'playing',winner,move:(r.move||0)+1,lastAction:{side,cardId:id,kind:played.kind,index:i,previousMove:r.move},log:[msg,...(r.log||[])].slice(0,35)})})}
+
+async function cancelSearch(){searchToken++;searching=false;queueUnsub?.();queueUnsub=null;try{await deleteDoc(doc(db,'matchmaking',uid))}catch(e){console.warn('Queue cleanup:',e)}info='Matchmaking cancelled';show()}
+async function findRandom(){if(searching)return;searching=true;const token=++searchToken;info='Looking for a random opponent…';show();try{
+ const q=query(collection(db,'matchmaking'),where('status','==','waiting'),limit(15));const snap=await getDocs(q);const myPower=deckPower(starter())*Math.sqrt(Math.max(150,Number(window.elementalMaxHP?.()||150))/150);
+ const candidates=snap.docs.filter(d=>{
+  if(d.id===uid||d.data().createdAt?.toMillis?.()<=Date.now()-10*60*1000)return false;
+  const other=d.data().player;
+  const otherPower=deckPower([...(other?.hand||[]),...(other?.deck||[])])*Math.sqrt(Math.max(150,Number(other?.maxHP||150))/150);
+  return otherPower>0&&Math.abs(otherPower-myPower)/Math.max(otherPower,myPower)<=.2;
+ });
+ for(const candidate of candidates){if(token!==searchToken)return;const c=code(),host=newPlayer(starter()),guestId=candidate.id;
+ try{await runTransaction(db,async tx=>{const queueRef=doc(db,'matchmaking',guestId),roomRef=doc(db,'rooms',c),qSnap=await tx.get(queueRef),rSnap=await tx.get(roomRef);if(!qSnap.exists()||qSnap.data().status!=='waiting'||qSnap.data().createdAt?.toMillis?.()<Date.now()-10*60*1000||rSnap.exists())throw Error('Opponent no longer waiting');const guest=qSnap.data().player;if(!guest||!Array.isArray(guest.hand))throw Error('Invalid waiting opponent');tx.set(roomRef,{host:uid,guest:guestId,status:'playing',turn:0,hp:[host.maxHP,guest.maxHP],max:[host.maxHP,guest.maxHP],active:[-1,-1],players:[host,guest],log:['Random match found. Host attacks first.'],winner:-1,move:0,lastAction:null,damageDealt:[0,0],createdAt:serverTimestamp()});tx.update(queueRef,{status:'matched',room:c})});searching=false;queueUnsub?.();queueUnsub=null;listen(c);return}catch(e){console.warn('Matchmaking candidate skipped',e)}}
+ if(token!==searchToken)return;
+ await deleteDoc(doc(db,'matchmaking',uid)).catch(()=>{});await setDoc(doc(db,'matchmaking',uid),{status:'waiting',room:'',player:newPlayer(starter()),createdAt:serverTimestamp()});
+ if(token!==searchToken){await deleteDoc(doc(db,'matchmaking',uid));return}
+ queueUnsub=onSnapshot(doc(db,'matchmaking',uid),snap=>{if(token!==searchToken)return;if(snap.exists()&&snap.data().status==='matched'&&snap.data().room){searching=false;queueUnsub?.();queueUnsub=null;deleteDoc(doc(db,'matchmaking',uid)).catch(()=>{});listen(snap.data().room)}},e=>{info='Matchmaking permissions error: '+e.message;searching=false;show()});show()
+ }catch(e){searching=false;info='Matchmaking failed: '+e.message;show()}}
+
+async function concede(){if(!roomCode)return;await runTransaction(db,async tx=>{const ref=doc(db,'rooms',roomCode),snap=await tx.get(ref);if(!snap.exists())throw Error('Room not found');const r=snap.data(),side=r.host===uid?0:r.guest===uid?1:-1;if(side<0||r.status!=='playing')throw Error('No active match');tx.update(ref,{status:'finished',winner:1-side,lastAction:{side,kind:'concede',previousMove:r.move},log:[`${side===0?'Host':'Guest'} conceded.`,...(r.log||[])].slice(0,35)})})}
+document.addEventListener('click',async e=>{const b=e.target.closest('[data-online]');if(!b||busy)return;const action=b.dataset.online;try{if(action==='copy'){await navigator.clipboard.writeText(roomCode);info='Room code copied';show();return}if(action==='leave'){localStorage.removeItem(savedRoomKey);unsubscribe?.();unsubscribe=null;roomCode='';room=null;info='Left room (match remains in Firestore)';show();return}busy=true;if(action==='resume'){const last=localStorage.getItem(savedRoomKey);if(last)listen(last)}if(action==='find')await findRandom();if(action==='cancelSearch')await cancelSearch();if(action==='create')await create();if(action==='join')await join();if(action==='attack')await attack(Number(b.dataset.index));if(action==='concede')await concede()}catch(err){console.error(err);info=err.code==='permission-denied'?'Firestore rejected this move. Make sure you published the Update 14 rules.':err.message||String(err);show()}finally{busy=false;show()}});
+
+// SOCIAL BETA: global 24h history, opt-in public directory, private DM, friends and safety.
+let socialTab='global',socialPeer='',socialPeople=[],socialGlobal=[],socialDM=[],socialFriends=[],socialRequests=[],socialBlocked=new Set(),socialMsg='',socialUnsubs=[],socialLastSeen=0;
+const socialEsc=t=>String(t??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+const mySocialName=()=>safeName(profileName())||'Elemental Fighter';
+const socialUserRef=id=>doc(db,'socialUsers',id);
+const socialConv=(a,b)=>[a,b].sort().join('_');
+const socialRecent=x=>{const d=x?.toDate?.()||new Date(x||0);return d.getTime()>Date.now()-24*3600000};
+const socialTime=x=>x?.toDate?.()?.toLocaleString?.()||'Just now';
+const socialActive=p=>p?.lastSeen?.toDate?.()?.getTime?.()>Date.now()-120000;
+const socialNote=t=>{socialMsg=t;window.renderSocial?.()};
+async function socialPublish(){
+ if(!uid||!profile)return;
+ await setDoc(socialUserRef(uid),{name:mySocialName(),rank:window.elementalRank?.()||1,lastSeen:serverTimestamp(),visible:true},{merge:true});
+}
+async function socialLoadDirectory(){
+ if(!uid)return;
+ try{
+ const [users,req1,req2,blocks]=await Promise.all([
+  getDocs(query(collection(db,'socialUsers'),limit(80))),
+  getDocs(query(collection(db,'friendRequests'),where('to','==',uid),limit(80))),
+  getDocs(query(collection(db,'friendRequests'),where('from','==',uid),limit(80))),
+  getDocs(collection(db,'socialUsers',uid,'blocks'))]);
+ socialPeople=users.docs.map(d=>({id:d.id,...d.data()})).filter(x=>x.id!==uid);
+ socialRequests=[...req1.docs,...req2.docs].map(d=>({id:d.id,...d.data()}));
+ socialFriends=socialRequests.filter(x=>x.status==='accepted').map(x=>x.from===uid?x.to:x.from);
+ socialBlocked=new Set(blocks.docs.map(d=>d.id));
+ }catch(e){socialMsg='Directory error: '+e.message}
+ window.renderSocial?.();
+}
+function socialListen(){
+ for(const u of socialUnsubs)u();socialUnsubs=[];
+ if(!uid)return;
+ socialUnsubs.push(onSnapshot(query(collection(db,'globalChat'),orderBy('createdAt','desc'),limit(100)),snap=>{
+  socialGlobal=snap.docs.map(d=>({id:d.id,...d.data()})).filter(x=>socialRecent(x.createdAt));
+  window.renderSocial?.();
+ },e=>socialNote('Global chat: '+e.message)));
+ if(socialPeer){
+  socialUnsubs.push(onSnapshot(query(collection(db,'conversations',socialConv(uid,socialPeer),'messages'),orderBy('createdAt','desc'),limit(100)),snap=>{
+   socialDM=snap.docs.map(d=>({id:d.id,...d.data()}));window.renderSocial?.();
+  },e=>socialNote('Private messages: '+e.message)));
+ }
+}
+window.renderSocial=()=>{
+ const root=document.getElementById('social-root');if(!root)return;
+ const online=socialPeople.filter(socialActive).length;
+ const peer=socialPeople.find(p=>p.id===socialPeer);
+ const entries=(socialTab==='dm'?socialDM:socialGlobal).filter(m=>!socialBlocked.has(m.from)).slice().reverse();
+ root.innerHTML=`<p class="muted">${socialEsc(socialMsg||'Public chat lasts 24 hours. Private messages are retained unless deleted. Be respectful and do not share personal information.')}</p>
+ <div class="row"><button data-social="view" data-value="global">🌍 Global chat</button><button data-social="view" data-value="players">🟢 Players (${online} active)</button><button data-social="view" data-value="friends">👥 Friends (${socialFriends.length})</button><button data-social="view" data-value="dm">💬 Messages</button></div>
+ ${socialTab==='global'||socialTab==='dm'?`<h3>${socialTab==='global'?'Global Chat · Last 24 hours':peer?'Private chat with '+socialEsc(peer.name):'Private messages'}</h3>
+ ${socialTab==='dm'?`<p class="muted">Select a player in Players or Friends to open a conversation. You can message anyone who hasn't blocked you.</p>`:''}
+ <div class="log" style="max-height:350px;overflow:auto">${entries.length?entries.map(m=>`<div class="card tiny"><strong>${socialEsc(m.fromName||'Player')}</strong> · ${socialEsc(socialTime(m.createdAt))}<p>${socialEsc(m.text)}</p>${m.from===uid?`<button data-social="delete" data-value="${socialEsc(m.id)}">Delete my message</button>`:`<button data-social="report" data-value="${socialEsc(m.id)}">Report</button>`}</div>`).join(''):'<p class="muted">No messages here yet.</p>'}</div>
+ ${(socialTab==='global'||socialPeer)?`<form id="social-send-form" class="row"><input id="social-text" maxlength="500" placeholder="Write a message (max 500 characters)" required><button type="submit">Send</button></form>`:''}
+ `:''}
+ ${socialTab==='players'||socialTab==='friends'?`<div class="row"><input id="social-search" placeholder="Search usernames" maxlength="24"><button data-social="refresh">Refresh list</button></div>
+ <p class="muted">Online means active in the past two minutes. Showing up to 80 registered players.</p>
+ <div id="social-players">${socialPeople.filter(p=>socialTab==='players'||socialFriends.includes(p.id)).map(p=>`<div class="card"><strong>${socialActive(p)?'🟢':'⚫'} ${socialEsc(p.name||'Player')}</strong> · Rank ${Number(p.rank)||1}
+ <div class="row"><button data-social="message" data-value="${socialEsc(p.id)}">Message</button>${socialFriends.includes(p.id)?'<span>✓ Friends</span>':`<button data-social="friend" data-value="${socialEsc(p.id)}">Add friend</button>`}<button data-social="block" data-value="${socialEsc(p.id)}">${socialBlocked.has(p.id)?'Unblock':'Block'}</button></div></div>`).join('')||'<p>No players found yet.</p>'}</div>
+ ${socialRequests.filter(x=>x.to===uid&&x.status==='pending').map(x=>`<div class="card">Friend request from ${socialEsc(socialPeople.find(p=>p.id===x.from)?.name||'Player')} <button data-social="accept" data-value="${socialEsc(x.id)}">Accept</button><button data-social="decline" data-value="${socialEsc(x.id)}">Decline</button></div>`).join('')}
+ `:''}
+ <p class="tiny muted">Beta community tools. Reports are saved for the site owner to review; automated moderation and push notifications are not included.</p>`;
+};
+document.addEventListener('submit',async e=>{
+ if(e.target.id!=='social-send-form')return;e.preventDefault();
+ const inp=document.getElementById('social-text'),message=inp?.value.trim();
+ if(!message||!uid)return;
+ if(message.length>500)return socialNote('Message too long.');
+ const now=Date.now();if(now-socialLastSeen<2500)return socialNote('Wait a moment before sending again.');
+ socialLastSeen=now;
+ try{
+ const data={from:uid,fromName:mySocialName(),text:message,createdAt:serverTimestamp()};
+ if(socialTab==='global')await addDoc(collection(db,'globalChat'),data);
+ else if(socialPeer&&!socialBlocked.has(socialPeer))await addDoc(collection(db,'conversations',socialConv(uid,socialPeer),'messages'),{...data,to:socialPeer});
+ inp.value='';socialMsg='';
+ }catch(err){socialNote('Could not send: '+err.message)}
+});
+document.addEventListener('click',async e=>{
+ const b=e.target.closest('[data-social]');if(!b||!uid)return;
+ const action=b.dataset.social,id=b.dataset.value;
+ try{
+ if(action==='view'){socialTab=id;if(id!=='dm')socialPeer='';socialListen();await socialLoadDirectory();return}
+ if(action==='refresh'){await socialLoadDirectory();return}
+ if(action==='message'){socialPeer=id;socialTab='dm';socialDM=[];socialListen();window.renderSocial?.();return}
+ if(action==='friend'){
+  if(id===uid)throw Error('Cannot add yourself.');
+  await setDoc(doc(db,'friendRequests',uid+'_'+id),{from:uid,to:id,status:'pending',createdAt:serverTimestamp()});
+  socialNote('Friend request sent.');
+ }
+ if(action==='accept'||action==='decline'){
+  const request=socialRequests.find(x=>x.id===id);if(!request||request.to!==uid)throw Error('Not your request.');
+  await updateDoc(doc(db,'friendRequests',id),{status:action==='accept'?'accepted':'declined'});
+ }
+ if(action==='block'){
+  const ref=doc(db,'socialUsers',uid,'blocks',id);
+  if(socialBlocked.has(id))await deleteDoc(ref);else await setDoc(ref,{createdAt:serverTimestamp()});
+ }
+ if(action==='delete'){
+  const ref=socialTab==='global'?doc(db,'globalChat',id):doc(db,'conversations',socialConv(uid,socialPeer),'messages',id);
+  await deleteDoc(ref);
+ }
+ if(action==='report'){
+  const m=(socialTab==='global'?socialGlobal:socialDM).find(x=>x.id===id);
+  if(!m)throw Error('Message not found');
+  await addDoc(collection(db,'reports'),{reporter:uid,messageId:id,reportedUser:m.from,reason:'User reported message',messageText:String(m.text).slice(0,500),createdAt:serverTimestamp()});
+  socialNote('Report submitted for review.');
+ }
+ await socialLoadDirectory();
+ }catch(err){socialNote('Social action failed: '+err.message)}
+});
+setInterval(()=>{if(uid&&profile){socialPublish().catch(()=>{});if(document.getElementById('social-root'))socialLoadDirectory()}},60000);
+window.elementalRank=()=>Number(document.querySelector('#stats .pill:nth-child(2)')?.textContent?.match(/\d+/)?.[0])||1;
+
+
+// Update 47: networked multi-player rooms (separate from original 1v1 rooms).
+// All moves use Firestore transactions; a player can act only on their assigned turn.
+let teamRoomCode='',teamRoom=null,teamUnsub=null,teamError='',teamBusy=false;const coopLedgerKey='elemental-coop-receipts-v49';
+const teamRef=c=>doc(db,'teamRooms',c);
+const teamPlayer=(id,team)=>({uid:id,name:safeName(profileName()),team,hp:Math.max(150,Number(window.elementalMaxHP?.()||150)),maxHP:Math.max(150,Number(window.elementalMaxHP?.()||150)),shield:0,ward:null,hand:window.elementalOnlineDeck?.()?.slice(0,30)||[],stun:0,sleep:0,immune:0,activeElement:null,alive:true});
+const teamAlive=(r,team)=>r.players.filter(p=>p.team===team&&p.hp>0);
+const teamMembers=r=>r.players.filter(p=>p.uid===uid);
+const teamCode=()=>code();
+const teamCopy=r=>JSON.parse(JSON.stringify(r));
+const teamNext=(r,current)=>{
+ const alive=r.players.map((p,i)=>p.hp>0?i:-1).filter(i=>i>=0);
+ if(!alive.length)return -1;
+ const opposing=alive.filter(i=>r.players[i].team!==r.players[current].team);
+ const same=alive.filter(i=>r.players[i].team===r.players[current].team);
+ const pool=opposing.length?opposing:same;
+ const prior=r.lastByTeam?.[r.players[pool[0]].team]??-1;
+ return pool.find(i=>i>prior)??pool[0];
+};
+const teamLog=(r,msg)=>{r.log=[...(r.log||[]),msg].slice(-30)};
+function teamWin(r){
+ if(r.mode==='coop'){
+  if(!teamAlive(r,0).length){r.status='finished';r.winner=1;return}
+  if(r.bossHP<=0){r.status='finished';r.winner=0;r.completedLevel=r.level;r.rewardBP=Math.round((120+r.level*22)*(r.level%10===0?2:1));r.rewardXP=Math.round((30+r.level*5)*(r.level%10===0?2:1));return}
+ }else{
+  const a=teamAlive(r,0).length,b=teamAlive(r,1).length;
+  if(!a||!b){r.status='finished';r.winner=a?0:1}
+ }
+}
+// Update 68: Team PvP rewards, claimed once per finished room on this device.
+const teamPvpRewardsKey='elemental-team-pvp-rewards-v68';
+let teamPvpRewardText='';
+function teamPvpReward(r){
+ if(!r||r.mode!=='pvp'||r.status!=='finished'||!uid||!r.players.some(p=>p.uid===uid))return;
+ const receipt=teamRoomCode+':'+uid;
+ let ledger={};try{ledger=JSON.parse(localStorage.getItem(teamPvpRewardsKey)||'{}')}catch{}
+ if(ledger[receipt]){teamPvpRewardText=ledger[receipt];return}
+ const mine=r.players.find(p=>p.uid===uid),win=mine.team===r.winner;
+ // Actual room participants, not the configured maximum slots.
+ const myCount=r.players.filter(p=>p.team===mine.team).length;
+ const opponentCount=r.players.filter(p=>p.team!==mine.team).length;
+ if(!opponentCount||!myCount||![0,1].includes(r.winner))return;
+ const rank=Number(window.elementalCurrentRank?.()||1);
+ const tier=rank<=5?0:rank<=10?1:rank<=15?2:rank<=20?3:rank<=25?4:rank<=30?5:6;
+ const base=[100,250,750,2500,10000,50000,100000][tier];
+ const multiplier=win?1+0.5*Math.max(0,opponentCount-myCount):1;
+ const bp=Math.round((win?base:Math.max(20,Math.round(base*.2)))*multiplier);
+ const xp=Math.round((win?30:10)*multiplier);
+ window.elementalAwardOnline?.(bp,xp,win);
+ teamPvpRewardText=`${win?'🏆 Team victory':'⚔️ Team defeat'}: +${bp.toLocaleString()} BP and +${xp} EXP${multiplier>1?' (outnumbered victory ×'+multiplier.toFixed(1)+')':''}.`;
+ ledger[receipt]=teamPvpRewardText;localStorage.setItem(teamPvpRewardsKey,JSON.stringify(ledger));
+}
+function teamCoopReward(r){
+ if(!r||r.mode!=='coop'||r.status!=='finished'||r.winner!==0||!r.players.some(p=>p.uid===uid))return;
+ const receipt=teamRoomCode+':'+r.level+':'+uid;
+ try{const ledger=JSON.parse(localStorage.getItem(coopLedgerKey)||'{}');if(ledger[receipt])return}catch{}
+ let clears={};try{clears=JSON.parse(localStorage.getItem('elemental-coop-first-clears')||'{}')}catch{}
+ const first=!clears[r.level],bp=first?(r.rewardBP||0):Math.max(1,Math.round((r.rewardBP||0)*.12)),xp=first?(r.rewardXP||0):Math.max(1,Math.round((r.rewardXP||0)*.15));
+ window.elementalAwardCoop?.(r.level,bp,xp,receipt);
+}
+async function teamAdvance(){
+ await runTransaction(db,async tx=>{
+  const ref=teamRef(teamRoomCode),snap=await tx.get(ref);
+  if(!snap.exists())throw Error('Room missing');
+  const r=teamCopy(snap.data());
+  if((r.owner||r.host)!==uid||r.mode!=='coop'||r.status!=='finished'||r.winner!==0)throw Error('Only the host can advance after victory');
+  if(r.level>=300)throw Error('All 300 campaign levels completed!');
+  r.level++;r.status='waiting';r.winner=-1;r.completedLevel=null;
+  const baseHP=Math.round(150+r.level*32);
+  r.bossHP=baseHP;r.bossMax=baseHP;r.enemyBase=Math.round(10+r.level*2.2);r.bossElement=Math.floor((r.level-1)/50);r.bossShield=0;r.bossStun=0;r.bossSleep=0;r.bossImmune=0;
+  r.players=r.players.map(p=>({...p,hp:p.maxHP,shield:0,ward:null,stun:0,sleep:0,immune:0}));
+  r.turn=0;r.move=0;r.lastByTeam={0:-1,1:-1};
+  r.log=[`Campaign level ${r.level} ready! Host: start the next battle.`];
+  tx.set(ref,r);
+ });
+}
+async function teamResetCoop(){
+ // A reset changes only the shared room's campaign state; personal rewards,
+ // owned cards, BP, EXP, and solo progress are deliberately untouched.
+ await runTransaction(db,async tx=>{
+  const ref=teamRef(teamRoomCode),snap=await tx.get(ref);
+  if(!snap.exists())throw Error('Co-op room no longer exists');
+  const r=teamCopy(snap.data());
+  if(r.mode!=='coop')throw Error('Reset is only available in co-op campaign rooms');
+  if((r.owner||r.host)!==uid)throw Error('Only the campaign owner can reset the co-op campaign');
+  r.level=1;r.status='waiting';r.winner=-1;r.completedLevel=null;
+  r.rewardBP=0;r.rewardXP=0;
+  r.bossHP=182;r.bossMax=182;r.enemyBase=Math.round(10+1*2.2);r.enemyMultiplier=1;r.bossElement=0;r.bossShield=0;r.bossStun=0;r.bossSleep=0;r.bossImmune=0;
+  r.players=r.players.map(p=>({...p,hp:p.maxHP,alive:true,shield:0,ward:null,stun:0,sleep:0,immune:0}));
+  r.turn=0;r.move=0;r.lastByTeam={0:-1,1:-1};
+  r.log=['🔄 The host restarted the shared co-op campaign at Level 1. Personal progress and rewards are unchanged.'];
+  tx.set(ref,r);
+ });
+}
+async function teamExitRoom(){
+ const code=teamRoomCode;if(!code||!uid)return;
+ await runTransaction(db,async tx=>{
+  const ref=teamRef(code),snap=await tx.get(ref);if(!snap.exists())return;
+  const r=teamCopy(snap.data()),idx=r.players.findIndex(p=>p.uid===uid);if(idx<0)return;
+  const departing=r.players[idx];
+  if(r.mode==='coop' && (r.owner||r.host)===uid){
+    // Owner's slot stays reserved so the campaign can be resumed later.
+    r.ownerOnline=false;
+    r.status='paused';
+    teamLog(r,departing.name+' (campaign owner) left. Campaign locked until they return.');
+    tx.set(ref,r);return;
+  }
+  r.players.splice(idx,1);teamLog(r,departing.name+' left the room.');
+  if(!r.players.length){tx.delete(ref);return;}
+  else{
+   if(r.mode!=='coop'&&r.host===uid){r.host=r.players[0].uid;teamLog(r,r.players[0].name+' is now host.');}
+   if(r.status==='playing'){r.status='paused';teamLog(r,'⏸ Battle paused: a player left.');}
+   if(r.turn===idx||r.turn>=r.players.length)r.turn=0;
+   else if(r.turn>idx)r.turn--;
+   r.lastByTeam={0:-1,1:-1};
+  }tx.set(ref,r);
+ });
+}
+async function teamResume(){
+ await runTransaction(db,async tx=>{
+  const ref=teamRef(teamRoomCode),snap=await tx.get(ref);if(!snap.exists())throw Error('Room missing');
+  const r=teamCopy(snap.data());if((r.mode==='coop'?(r.owner||r.host):r.host)!==uid||r.status!=='paused')throw Error('Only the host/campaign owner can resume.');
+  if(r.mode==='coop'&&(!r.ownerOnline||r.players.length<2))throw Error('The campaign owner must be online with at least one teammate.');
+  if(r.mode==='pvp'&&(!r.players.some(p=>p.team===0)||!r.players.some(p=>p.team===1)))throw Error('Both teams need players.');
+  r.status='playing';r.turn=Math.max(0,r.players.findIndex(p=>p.hp>0));teamLog(r,'▶ Battle resumed.');tx.set(ref,r);
+ });
+}
+function coopEnemyCard(r){
+ const tier=campaignRarity(r.level),kingdom=Math.floor((r.level-1)/50),move=r.move||0;
+ const attacks=cards.filter(c=>c.kind==='attack'&&c.rarity===tier&&!c.exclusive&&c.element===kingdom);
+ const controls=attacks.filter(c=>c.status==='stun'||c.status==='sleep');
+ const shields=cards.filter(c=>c.kind==='shield'&&c.rarity===tier&&!c.exclusive);
+ const heals=cards.filter(c=>c.kind==='heal'&&c.rarity===tier&&!c.exclusive);
+ // Deterministic selection for Firestore transaction retries.
+ if(move%4===2&&controls.length)return controls[(r.level+Math.floor(move/4))%controls.length];
+ if(move%9===7&&r.bossHP<r.bossMax*.7&&heals.length)return heals[(r.level+move)%heals.length];
+ if(move%7===5&&shields.length)return shields[(r.level+move)%shields.length];
+ return attacks[(r.level*3+move*7)%attacks.length];
+}
+function coopElementMultiplier(attacker,defender){
+ if(attacker===null||attacker===undefined||defender===null||defender===undefined)return 1;
+ return strongAgainst[attacker]?.includes(defender)?1.25:weakAgainst[attacker]?.includes(defender)?.75:1;
+}
+function coopEnemyBrief(r){
+ const element=Math.min(5,Math.floor((r.level-1)/50));
+ return {element,name:campaignEnemyName(r.level),icon:EM[element],label:E[element],rarity:rarity[campaignRarity(r.level)]};
+}
+function coopCardAdvice(c,r){
+ if(c.kind==='heal')return 'Heals your entire party';
+ if(c.kind==='shield')return 'Protects your entire party';
+ const element=r.bossElement??coopEnemyBrief(r).element;
+ return matchupFor(c.element,element).label+' · This matchup affects co-op damage';
+}
+function coopBestCard(me,r){
+ const cardsInHand=(me.hand||[]).map(id=>window.elementalCardLookup?.(id)).filter(Boolean);
+ if(r.players.some(p=>p.hp<p.maxHP*.55)){
+  const healing=cardsInHand.find(c=>c.kind==='heal');
+  if(healing)return healing.name+' — party members need healing';
+ }
+ const attack=cardsInHand.filter(c=>c.kind==='attack').sort((a,b)=>(b.damage||0)-(a.damage||0))[0];
+ return attack?attack.name+' — highest listed base damage in your hand':'No attack available';
+}
+function teamUI(){
+ const root=document.getElementById('team-online-root');if(!root)return;
+ const e=esc;
+ if(!uid){root.innerHTML='<p>Signing in…</p>';return}
+ if(!teamRoomCode){
+ root.innerHTML=`<div class="team-choice-grid"><label class="team-choice"><input type="radio" name="team-battle-type" value="pvp" checked><span class="team-choice-content"><strong>⚔️ Team PvP</strong><small>Fight other players · 1v1 to 4v4</small></span></label><label class="team-choice"><input type="radio" name="team-battle-type" value="coop"><span class="team-choice-content"><strong>🏰 Co-op Campaign</strong><small>2–4 players total · start at Level 1</small></span></label></div>
+ <div class="team-setup"><h3>Create a room</h3><div class="team-settings"><div id="team-cap-wrap"><div class="row"><label>Team A players<select id="team-a-size">${[1,2,3,4].map(n=>`<option value="${n}" ${n===2?'selected':''}>${n} player${n>1?'s':''}</option>`).join('')}</select></label><label>Team B players<select id="team-b-size">${[1,2,3,4].map(n=>`<option value="${n}" ${n===4?'selected':''}>${n} player${n>1?'s':''}</option>`).join('')}</select></label></div><p id="team-match-preview" class="muted">2v4 · Team A: +30% HP, +20% attack damage</p></div></div><input id="team-mode" type="hidden" value="pvp"><button class="primary" data-teamnet="create">＋ Create Online Room</button></div>
+ <div class="team-join"><h3>Join a friend's room</h3><div class="row"><input id="team-code" maxlength="7" placeholder="7-character room code" aria-label="Room code" autocomplete="off"><button data-teamnet="join">Join Room</button></div></div>
+ <p class="tiny bad" role="status">${e(teamError)}</p>`;return
+ }
+ if(!teamRoom){root.innerHTML=`<p>Connecting to ${e(teamRoomCode)}… ${e(teamError)}</p><button data-teamnet="leave">Leave room</button>`;return}
+ const r=teamRoom,idx=r.players.findIndex(p=>p.uid===uid),me=r.players[idx],turn=r.turn===idx;
+ const players=r.players.map((p,i)=>`<div class="team-fighter"><strong>${p.team===0?'🔵':'🔴'} ${e(p.name)} ${p.uid===uid?'(You)':''}</strong><div class="team-hp"><div class="team-hp-fill ${p.team===me?.team?'health-fill-ally':'health-fill-enemy'}" style="width:${Math.min(100,Math.max(0,100*p.hp/Math.max(1,p.maxHP)))}%"></div></div><p>❤️ ${Math.max(0,p.hp)} / ${p.maxHP} HP ${p.hp<=0?'💀':''}</p><small>🛡️ Shield ${p.shield||0}${p.ward?' · Ward '+e(p.ward.element)+' '+p.ward.reduction*100+'%':''}${p.stun?' · ⚡ Stunned':''}${p.sleep?' · 💤 Asleep':''}${p.immune?' · Immunity '+p.immune:''}${p.activeElement!=null?' · '+EM[p.activeElement]+' '+E[p.activeElement]:' · No active element'}</small></div>`).join('');
+ const options=r.mode==='coop'?`<option value="boss">👹 Campaign enemy</option>`:r.players.map((p,i)=>p.team!==me?.team&&p.hp>0?`<option value="${i}">${e(p.name)} (${p.hp} HP)</option>`:'').join('');
+ const allies=r.players.map((p,i)=>p.team===me?.team&&p.hp>0?`<option value="${i}">${e(p.name)}</option>`:'').join('');
+ const myCards=(me?.hand||[]).map((id,i)=>{
+  const c=window.elementalCardLookup?.(id);if(!c)return '';
+  const type=c.kind==='heal'?'💚 Party healing':c.kind==='shield'?'🛡️ Party protection':c.area?'🌪️ Area attack':'⚔️ Attack';
+  const description=window.elementalCardDetails?.(c)||`${c.damage||0} damage`;
+  const targetPlayer=r.mode==='pvp'?r.players[Number(document.getElementById('team-target')?.value)]||r.players.find(p=>p.team!==me?.team&&p.hp>0):null;
+  const matchInfo=c.kind==='attack'?(r.mode==='pvp'&&targetPlayer?matchupFor(c.element,targetPlayer.activeElement??null):r.mode==='coop'?matchupFor(c.element,coopEnemyBrief(r).element??null):null):null;
+  const teamEffect=c.kind==='heal'?'Heals every living teammate (including you).':c.kind==='shield'?'Protects every living teammate (including you).':c.area?'Damages every living opponent.':'Damages the enemy selected above.';
+  return `<div class="team-hand-card card battle-card"><strong>${e(c.kind==='attack'?EM[c.element]+' '+E[c.element]+' '+c.name:c.name)}</strong><small>${e(description)}</small><div class="tiny muted">${e(teamEffect)}</div>${matchInfo?`<div class="card-tip ${matchInfo.cls}">${e(matchInfo.label)}</div>`:''}${r.mode==='coop'?`<div class="tiny muted" style="margin-top:7px">💡 ${e(coopCardAdvice(c,r))}</div>`:''}<button data-teamnet="play" data-i="${i}" ${!turn||r.status!=='playing'||teamBusy?'disabled':''}>Play card</button></div>`;
+ }).join('');
+
+ root.innerHTML=`<div class="battle-banner"><strong>Room ${e(teamRoomCode)} · ${r.mode==='coop'?'Co-op campaign level '+r.level:'Team PvP'}</strong><p>${r.status==='waiting'?'Waiting for players':r.status==='paused'?(r.mode==='coop'&&!r.ownerOnline?'🔒 Campaign owner offline — progress locked':'⏸ Battle paused — a player left'):r.status==='finished'?'Battle finished — '+(r.winner===me?.team?'Victory!':'Defeat'):turn?'✨ Your turn':'⏳ Waiting for another player'}</p><button data-teamnet="copy">Copy code</button> <button data-teamnet="leave">Leave room</button> ${r.status==='paused'&&(r.mode==='coop'?(r.owner||r.host):r.host)===uid?'<button data-teamnet="resume">▶ Resume Battle</button>':''} ${(r.mode==='coop'?(r.owner||r.host):r.host)===uid&&r.status==='waiting'?'<button data-teamnet="start">Start battle</button>':''}${r.mode==='coop'&&(r.owner||r.host)===uid?'<button data-teamnet="reset-coop" style="border-color:#e0a0a0">↺ Reset Co-op Campaign</button>':''}${r.mode==='coop'&&r.status==='finished'&&r.winner===0&&(r.owner||r.host)===uid&&r.level<300?'<button data-teamnet="next">Next campaign level ➜</button>':''}</div>
+ ${r.mode==='coop'?`<div class="coop-party"><strong>🤝 Your party (${r.players.length}/4 players)</strong><div class="coop-party-names">${r.players.map(p=>`<span>${p.uid===(r.owner||r.host)?'🔑 ':''}${e(p.name)}${p.uid===uid?' (You)':''}</span>`).join('')}</div></div>`:`<p>🔵 Team A: ${r.players.filter(p=>p.team===0).length}/${r.teamASize||r.cap} · 🔴 Team B: ${r.players.filter(p=>p.team===1).length}/${r.teamBSize||r.cap}</p>`}
+ ${r.mode==='pvp'&&r.status==='finished'?`<div class="battle-banner"><strong>🏆 Team PvP rewards</strong><p>${e(teamPvpRewardText||'Calculating rewards…')}</p><small>Equal teams earn standard 1v1 base rewards. Outnumbered winners earn +50% per extra opposing player. Actual participants count, not empty slots.</small></div>`:''}
+ ${r.mode==='pvp'?`<p class="muted">⚖️ ${((r.teamASize||r.cap)===(r.teamBSize||r.cap))?'Equal teams — no handicap':`Team ${(r.teamASize||r.cap)<(r.teamBSize||r.cap)?'A':'B'} gets +${15*Math.abs((r.teamASize||r.cap)-(r.teamBSize||r.cap))}% HP and +${10*Math.abs((r.teamASize||r.cap)-(r.teamBSize||r.cap))}% attack damage.`}</p>`:''}${r.mode==='coop'&&r.status==='finished'&&r.winner===0?`<p>🏆 Co-op victory! First clear: ${r.rewardBP||0} BP + ${r.rewardXP||0} EXP${r.level%10===0?' + a collectible boss card':''}. Replay: ${Math.max(1,Math.round((r.rewardBP||0)*.12))} BP + ${Math.max(1,Math.round((r.rewardXP||0)*.15))} EXP. Each player receives rewards based on their own first-clear history.</p>`:''}${r.mode==='coop'?`<p><div class="coop-enemy-heading"><strong>👹 ${e(coopEnemyBrief(r).name)}</strong><span>${coopEnemyBrief(r).icon} ${coopEnemyBrief(r).label} Kingdom · ${coopEnemyBrief(r).rarity} tier</span></div><div class="team-hp team-boss-hp"><div class="team-hp-fill health-fill-enemy" style="width:${Math.min(100,Math.max(0,100*r.bossHP/Math.max(1,r.bossMax)))}%"></div></div><strong>${Math.max(0,r.bossHP)} / ${r.bossMax} HP</strong> · Damage ×${r.enemyMultiplier} · 🛡️ Enemy shield ${r.bossShield||0} ${r.bossSleep?' · 💤 Asleep':''}${r.bossStun?' · ⚡ Stunned':''}<div class="coop-info">Element theme: ${coopEnemyBrief(r).icon} ${coopEnemyBrief(r).label}. Enemy uses elemental attack, Stun, Sleep, shield and healing cards. Stun makes a player miss 1 turn; Sleep up to 2. Recovering grants 2 turns of immunity. Elemental matchups change damage by ±25%.</div></p>`:''}
+ ${r.mode==='coop'?`<p class="muted">🔑 Campaign owner: ${e(r.players.find(p=>p.uid===(r.owner||r.host))?.name||'Owner')} · ${r.ownerOnline?'Online':'Offline — campaign locked'}</p>`:''}<h3>👥 Fighters</h3><div class="team-fighters">${players}</div>
+ ${r.status==='playing'&&me?`<div class="team-target-help"><strong>🎯 Who will your card affect?</strong><p>Choose an enemy for a normal attack. Area attacks hit all enemies automatically. Healing and shield cards protect your entire party, so you do not need to select an ally.</p><label>Enemy to attack <select id="team-target">${options}</select></label></div><h3>🃏 Your cards</h3>${r.mode==='coop'?`<div class="coop-info">💡 Suggested card: ${e(coopBestCard(me,r))}. Basic guidance, not a full tactical prediction.</div>`:''}<div class="team-hand">${myCards}</div>`:''}
+ <h3>Battle log</h3><div class="log">${(r.log||[]).map(x=>`<div>${e(x)}</div>`).join('')}</div><p class="tiny muted">${e(teamError)}</p>`;
+}
+document.addEventListener('change',event=>{if(event.target.matches('#team-a-size, #team-b-size')){const a=Number(document.getElementById('team-a-size')?.value||2),b=Number(document.getElementById('team-b-size')?.value||4),gap=Math.abs(a-b),who=a===b?'No handicap':`Team ${a<b?'A':'B'}: +${15*gap}% HP, +${10*gap}% attack damage`;document.getElementById('team-match-preview').textContent=`${a}v${b} · ${who}`;}});
+document.addEventListener('change',event=>{if(event.target.matches('input[name="team-battle-type"]')){const coop=event.target.value==='coop';const mode=document.getElementById('team-mode');if(mode)mode.value=coop?'coop':'pvp';const cap=document.getElementById('team-cap-wrap'),level=document.getElementById('team-level-wrap');if(cap)cap.hidden=coop;if(level)level.hidden=!coop;}});
+window.renderTeamOnline=teamUI;
+const teamListen=c=>{
+ teamUnsub?.();teamRoomCode=c;teamRoom=null;teamPvpRewardText='';teamUI();
+ teamUnsub=onSnapshot(teamRef(c),snap=>{if(!snap.exists()){teamError='Room not found';teamRoom=null}else{teamRoom=snap.data();teamError='';teamCoopReward(teamRoom);teamPvpReward(teamRoom)}teamUI()},err=>{teamError=err.message;teamUI()});
+};
+async function teamCreate(){
+ const mode=document.getElementById('team-mode')?.value||'pvp',teamASize=mode==='pvp'?Number(document.getElementById('team-a-size')?.value||2):4,teamBSize=mode==='pvp'?Number(document.getElementById('team-b-size')?.value||4):0,cap=Math.max(teamASize,teamBSize),level=1;
+ const c=teamCode(),p=teamPlayer(uid,0);
+ const scale={1:[1,1],2:[1.8,1.25],3:[2.6,1.5],4:[3.4,1.75]};
+ const baseHP=Math.round(150+level*32),baseDmg=Math.round(10+level*2.2);
+ await setDoc(teamRef(c),{host:uid,owner:uid,ownerOnline:true,mode,cap,teamASize,teamBSize,level,players:[p],status:'waiting',turn:0,move:0,lastByTeam:{0:-1,1:-1},bossHP:baseHP,bossMax:baseHP,enemyBase:baseDmg,enemyMultiplier:1,bossElement:Math.floor((level-1)/50),bossShield:0,bossStun:0,bossSleep:0,bossImmune:0,log:['Room created. Invite friends with the room code.'],winner:-1,createdAt:serverTimestamp()});
+ teamListen(c);
+}
+async function teamJoin(){
+ const c=(document.getElementById('team-code')?.value||'').trim().toUpperCase();
+ if(!/^[A-Z2-9]{7}$/.test(c))throw Error('Enter a valid seven-character room code.');
+ await runTransaction(db,async tx=>{
+ const ref=teamRef(c),snap=await tx.get(ref);if(!snap.exists())throw Error('Room not found');
+ const r=snap.data();
+ if(r.players.some(p=>p.uid===uid)){
+   if(r.mode==='coop'&&(r.owner||r.host)===uid&&!r.ownerOnline){
+     tx.update(ref,{ownerOnline:true,log:[...(r.log||[]),'🔑 Campaign owner returned.'].slice(-30)});
+   }
+   return;
+ }
+ if(r.status!=='waiting'&&r.status!=='paused')throw Error('This match is not accepting players');
+ const a=r.players.filter(p=>p.team===0).length,b=r.players.filter(p=>p.team===1).length;
+ const aCap=r.mode==='coop'?4:(r.teamASize||r.cap),bCap=r.mode==='coop'?0:(r.teamBSize||r.cap);
+ if(a>=aCap&&b>=bCap)throw Error('Room is full');
+ const team=r.mode==='coop'?0:a>=aCap?1:b>=bCap?0:a/aCap<=b/bCap?0:1;
+ tx.update(ref,{players:[...r.players,teamPlayer(uid,team)],log:[...r.log,`${safeName(profileName())} joined Team ${team?'B':'A'}`].slice(-30)});
+ });teamListen(c);
+}
+async function teamStart(){
+ await runTransaction(db,async tx=>{
+ const ref=teamRef(teamRoomCode),snap=await tx.get(ref),r=snap.data();
+ if((r.mode==='coop'?(r.owner||r.host):r.host)!==uid||r.status!=='waiting')throw Error('Only the host/campaign owner can start.');
+ if(r.mode==='coop'&&(!r.ownerOnline||r.players.length<2))throw Error('The campaign owner must be online with at least one teammate.');
+ if(r.mode==='pvp'){
+ const a=r.players.filter(p=>p.team===0).length,b=r.players.filter(p=>p.team===1).length;
+ if(a!==(r.teamASize||r.cap)||b!==(r.teamBSize||r.cap))throw Error(`Waiting for all players: Team A ${a}/${r.teamASize||r.cap}, Team B ${b}/${r.teamBSize||r.cap}`);
+ }
+ const n=r.players.length,scales={1:[1,1],2:[1.8,1.25],3:[2.6,1.5],4:[3.4,1.75]},[hp,dmg]=scales[Math.min(4,n)];
+ r.bossHP=Math.round(r.bossHP*hp);r.bossMax=r.bossHP;r.enemyMultiplier=dmg;
+ // PvP handicap: smaller teams receive modest HP and attack boosts; 1v1 and even teams unchanged.
+ if(r.mode==='pvp'){
+  const counts=[r.players.filter(p=>p.team===0).length,r.players.filter(p=>p.team===1).length];
+  r.players=r.players.map(p=>{
+   const difference=Math.max(0,counts[1-p.team]-counts[p.team]);
+   const hpBonus=1+.15*difference;
+   const maxHP=Math.round(p.maxHP*hpBonus);
+   return {...p,maxHP,hp:maxHP,handicapAttack:1+.10*difference};
+  });
+  teamLog(r,`⚖️ Handicap active: smaller teams gain +15% HP and +10% attack damage per missing teammate (maximum +45% HP and +30% attack).`);
+ }
+ r.status='playing';r.turn=0;
+ teamLog(r,'Battle started! Turns alternate between teams.');
+ tx.set(ref,r);
+ });
+}
+async function teamPlay(cardIndex,target,ally,attackMode){
+ await runTransaction(db,async tx=>{
+ const ref=teamRef(teamRoomCode),snap=await tx.get(ref);if(!snap.exists())throw Error('Room missing');
+ const r=teamCopy(snap.data()),idx=r.players.findIndex(p=>p.uid===uid);
+ if(r.status!=='playing'||idx<0||r.turn!==idx)throw Error('It is not your turn');if(r.mode==='coop'&&!r.ownerOnline)throw Error('Campaign paused until the owner returns.');
+ const me=r.players[idx],id=me.hand[cardIndex],c=window.elementalCardLookup?.(id);
+ if(!c)throw Error('Card unavailable');
+ me.hand.splice(cardIndex,1);me.hand.push(id); // Reusable simplified team hand; own card collection required.
+ if(r.mode==='coop'&&me.immune>0)me.immune--;
+ let enemy=null;if(r.mode!=='coop'){enemy=r.players[Number(target)];if(!enemy||enemy.team===me.team||enemy.hp<=0)throw Error('Choose a living opponent')}
+ const area=Boolean(c.area)&&r.mode==='pvp';
+ const friend=r.players[Number(ally)]||me;
+ if(friend.team!==me.team||friend.hp<=0)throw Error('No living ally available');
+ const name=safeName(me.name);
+ if(c.kind==='heal'){
+  const partyHeal=Math.max(1,Math.round((c.heal||20)*.65));
+  r.players.filter(p=>p.team===me.team&&p.hp>0).forEach(p=>p.hp=Math.min(p.maxHP,p.hp+partyHeal));
+  teamLog(r,`${name} healed the whole party for up to ${partyHeal} HP each`);
+ }else if(c.kind==='shield'){
+  const amount=Math.max(10,Math.round((c.absorb||30)*.75));
+  const element= ['Fire','Water','Air','Earth','Spirit','Shadow'][c.element??0];
+  r.players.filter(p=>p.team===me.team&&p.hp>0).forEach(p=>{p.shield+=amount;p.ward={element,reduction:.4,turns:2}});
+  teamLog(r,`${name} shielded the party (+${amount} each, 40% ${element} resistance)`);
+ }else{
+  let damage=Math.max(1,Math.round((c.damage||10)*(r.mode==='pvp'?(me.handicapAttack||1):1)));
+  if(r.mode==='coop'){
+   me.activeElement=c.element;
+   const modifier=coopElementMultiplier(c.element,r.bossElement??Math.floor((r.level-1)/50));
+   const raw=Math.max(1,Math.round(damage*modifier));
+   const absorbed=Math.min(r.bossShield||0,raw);
+   r.bossShield=Math.max(0,(r.bossShield||0)-absorbed);
+   const dealt=raw-absorbed;
+   r.bossHP=Math.max(0,r.bossHP-dealt);
+   teamLog(r,`${name} used ${c.name} (${EM[c.element]||'⚔️'} ${E[c.element]||'Neutral'}) for ${dealt} damage${modifier>1?' · ELEMENT ADVANTAGE +25%':modifier<1?' · ELEMENT DISADVANTAGE −25%':''}${absorbed?' · '+absorbed+' shielded':''}`);
+   if(c.status&&r.bossHP>0){
+    const boss=r.level%10===0,base=[.25,.35,.45,.55,.65][c.rarity]||.25;
+    const chance=(c.area?(c.areaStatusChance||base):base)*(boss?.5:1)*(dealt===0?.5:1);
+    const roll=Math.abs(Math.sin(r.move*23.17+r.level*9.31+c.damage*1.13))%1;
+    if((r.bossImmune||0)>0||(r.bossStun||0)>0||(r.bossSleep||0)>0)teamLog(r,'Enemy resisted '+c.status+' (temporary immunity)');
+    else if(roll<chance){r[c.status==='sleep'?'bossSleep':'bossStun']=c.status==='sleep'?2:1;teamLog(r,`${coopEnemyBrief(r).name} is ${c.status==='sleep'?'ASLEEP 💤':'STUNNED ⚡'}!`)}
+    else teamLog(r,`Enemy resisted ${c.status} (${Math.round(chance*100)}% activation chance)`);
+   }
+  }else{
+   me.activeElement=c.element;
+   const targets=area?teamAlive(r,1-me.team):[enemy];
+   const chance=[.25,.35,.45,.55,.65][c.rarity]||.25;
+   const element=['Fire','Water','Air','Earth','Spirit','Shadow'][c.element];
+   let total=0;
+   for(const opponent of targets){
+    const modifier=coopElementMultiplier(c.element,opponent.activeElement??null);
+    let hit=Math.max(1,Math.round(damage*modifier));
+    const reduction=opponent.ward&&opponent.ward.element===element?opponent.ward.reduction:0;
+    hit=Math.max(0,Math.round(hit*(1-reduction)));
+    const absorbed=Math.min(opponent.shield||0,hit);
+    opponent.shield=Math.max(0,(opponent.shield||0)-absorbed);
+    const dealt=Math.max(0,hit-absorbed);
+    opponent.hp=Math.max(0,opponent.hp-dealt);
+    total+=dealt;
+    teamLog(r,`${name} used ${c.name} (${EM[c.element]||'⚔️'} ${E[c.element]||'Neutral'}) against ${opponent.name}${opponent.activeElement==null?' (no active element)':` (${EM[opponent.activeElement]} ${E[opponent.activeElement]})`}: ${dealt} damage${modifier>1?' · ELEMENT ADVANTAGE +25%':modifier<1?' · ELEMENT DISADVANTAGE −25%':' · Neutral matchup'}${absorbed?' ('+absorbed+' shielded)':''}`);
+    if(c.status&&opponent.hp>0){
+     let effective=(c.area?(c.areaStatusChance||0):chance)*(dealt===0?.5:1);
+     if(opponent.immune>0||opponent.stun>0||opponent.sleep>0){teamLog(r,`${opponent.name} resisted ${c.status} (immune or already affected)`)}
+     else if(Math.random()<effective){opponent[c.status]=c.status==='sleep'?2:1;teamLog(r,`${opponent.name} is ${c.status==='sleep'?'ASLEEP 🌙':'STUNNED ⚡'}!`)}
+     else teamLog(r,`${opponent.name} resisted ${c.status} (${Math.round(effective*100)}% chance)`);
+    }
+   }
+   if(area)teamLog(r,`🌪️ ${name} used ${c.name} against ${targets.length} opponents, dealing ${total} total damage`);
+  }
+ }
+ r.lastByTeam[me.team]=idx;r.move++;
+ teamWin(r);
+ if(r.status==='playing'){
+  if(r.mode==='coop'){
+   // Enemy uses a real campaign-tier card, with elemental matchups and defenses.
+   const living=teamAlive(r,0);
+   if(living.length){
+    if((r.bossStun||0)>0||(r.bossSleep||0)>0){
+     const status=(r.bossSleep||0)>0?'asleep 💤':'stunned ⚡';
+     if(r.bossSleep>0)r.bossSleep--;
+     else r.bossStun--;
+     if(!r.bossSleep&&!r.bossStun)r.bossImmune=2;
+     teamLog(r,`${coopEnemyBrief(r).name} is ${status} and misses its attack!`);
+    }else{
+     const card=coopEnemyCard(r),victim=living[r.move%living.length];
+     if(card.kind==='heal'){
+      const amount=Math.min(r.bossMax-r.bossHP,Math.max(1,Math.round(card.heal*r.enemyMultiplier)));
+      r.bossHP+=amount;teamLog(r,`💚 ${coopEnemyBrief(r).name} plays ${card.name} and restores ${amount} HP`);
+     }else if(card.kind==='shield'){
+      const amount=Math.max(5,Math.round((card.absorb||15)*r.enemyMultiplier));
+      r.bossShield=(r.bossShield||0)+amount;
+      teamLog(r,`🛡️ ${coopEnemyBrief(r).name} plays ${card.name} and gains ${amount} shield`);
+     }else{
+      const roll=n=>{const x=Math.sin((r.move*127.1+r.level*311.7+n*74.7))*43758.5453;return x-Math.floor(x)};
+      const critical=roll(2)<.1;
+      const modifier=coopElementMultiplier(card.element,victim.activeElement??null);
+      const variation=.8+roll(1)*.4;
+      const raw=Math.max(1,Math.round(card.damage*r.enemyMultiplier*variation*modifier*(critical?1.5:1)));
+      const blocked=Math.min(victim.shield||0,raw);
+      victim.shield=Math.max(0,(victim.shield||0)-blocked);
+      const dealt=raw-blocked;victim.hp=Math.max(0,victim.hp-dealt);
+      r.bossElement=card.element;
+      teamLog(r,`${EM[card.element]} ${coopEnemyBrief(r).name} plays ${card.name} against ${victim.name}: ${dealt} damage${critical?' · CRITICAL':''}${modifier>1?' · STRONG +25%':modifier<1?' · WEAK −25%':''}${blocked?' · '+blocked+' blocked':''}`);
+      if(card.status&&victim.hp>0){
+       const chance=statusChance(card)*(dealt===0?.5:1);
+       if((victim.immune||0)>0||(victim.stun||0)>0||(victim.sleep||0)>0){
+        teamLog(r,`🛡️ ${victim.name} resists ${card.status} (temporary immunity or already affected)`);
+       }else if(roll(3)<chance){
+        victim[card.status]=card.status==='sleep'?2:1;
+        teamLog(r,`${card.status==='sleep'?'💤':'⚡'} ${victim.name} is ${card.status==='sleep'?'ASLEEP (up to 2 missed turns)':'STUNNED (misses 1 turn)'}!`);
+       }else teamLog(r,`${victim.name} resisted ${card.status} (${Math.round(chance*100)}% chance)`);
+      }
+     }
+    }
+    if(r.bossImmune>0)r.bossImmune--;
+    teamWin(r);
+   }
+   // Skip affected allies, granting two turns of immunity after the final skipped turn.
+   const active=r.players.map((p,i)=>p.hp>0?i:-1).filter(i=>i>=0);
+   let chosen=-1;
+   for(let offset=1;offset<=active.length;offset++){
+    const next=active[(active.indexOf(idx)+offset+active.length)%active.length];
+    const player=r.players[next];
+    if(player.stun||player.sleep){
+     if(player.stun)player.stun--;else player.sleep--;
+     teamLog(r,`${player.name} misses a turn (${player.sleep?'💤 Sleep':'⚡ Stun'})`);
+     if(!player.stun&&!player.sleep){player.immune=2;teamLog(r,`${player.name} gains 2 turns of Stun/Sleep immunity`);}
+     continue;
+    }
+    chosen=next;break;
+   }
+   if(chosen<0){chosen=active[0]??-1;teamLog(r,'All teammates missed their turns; the party recovers.');}
+   r.turn=chosen;
+   // Immunity decreases only when a protected player actually takes a turn.
+  }else{
+   // Stunned/sleeping players skip turns; status recovery grants immunity.
+   let next=teamNext(r,idx),tries=0;
+   while(next>=0&&tries<r.players.length*2){
+    const p=r.players[next];
+    if(p.stun||p.sleep){p.stun=Math.max(0,p.stun-1);p.sleep=Math.max(0,p.sleep-1);if(!p.stun&&!p.sleep)p.immune=2;teamLog(r,`${p.name} misses a turn`);r.lastByTeam[p.team]=next;next=teamNext(r,next);tries++}
+    else break;
+   }
+   r.turn=next<0?idx:next;
+   if(r.players[r.turn]?.immune>0)r.players[r.turn].immune--;
+  }
+ }
+ tx.set(ref,r);
+ });
+}
+document.addEventListener('click',async event=>{
+ const btn=event.target.closest('[data-teamnet]');if(!btn)return;
+ try{
+ teamBusy=true;const action=btn.dataset.teamnet;
+ if(action==='create')await teamCreate();
+ if(action==='join')await teamJoin();
+ if(action==='start')await teamStart();if(action==='resume')await teamResume();if(action==='next')await teamAdvance();if(action==='reset-coop'){
+  if(!window.confirm('Restart this shared co-op campaign at Level 1 for everyone in the room? All players keep their personal BP, EXP, cards, and previously unlocked progress.'))return;
+  await teamResetCoop();
+}
+ if(action==='play')await teamPlay(Number(btn.dataset.i),document.getElementById('team-target')?.value,document.getElementById('team-ally')?.value,null);
+ if(action==='copy')await navigator.clipboard.writeText(teamRoomCode);
+ if(action==='leave'){
+   try{await teamExitRoom();}
+   catch(leaveErr){
+     teamError='Could not remove you from the online room: '+(leaveErr.message||String(leaveErr));
+     teamUI();return;
+   }
+   teamUnsub?.();teamUnsub=null;teamRoomCode='';teamRoom=null;
+ }
+ teamError='';
+ }catch(err){teamError=err.message||String(err)}finally{teamBusy=false;teamUI()}
+});
+setInterval(()=>{if(teamRoomCode&&document.getElementById('team-online-root'))teamUI()},3000);
+
+
+// Update 65: automatically maintained rankings for signed-in players.
+let leaderboardRows=[],leaderboardError='',leaderboardMode='solo',leaderboardBusy=false;
+let lbTimer=null,lbResetting=false,lbLastPayload='',lbResetVersion=0;
+const lbModes={solo:'Solo campaign',coop:'Co-op campaign',wins:'Online wins',rank:'Player rank'};
+function leaderboardView(){
+ const root=document.getElementById('leaderboard-root');if(!root)return;
+ const sorted=[...leaderboardRows].sort((a,b)=>Number(b[leaderboardMode]||0)-Number(a[leaderboardMode]||0)).slice(0,50);
+ root.innerHTML=`<div class="row">${Object.entries(lbModes).map(([k,v])=>`<button data-lb="mode" data-value="${k}" class="${leaderboardMode===k?'primary':''}">${v}</button>`).join('')}</div><p class="muted">Rankings update automatically for signed-in players. Resetting your game removes your leaderboard record. Scores are client-reported and are not cheat-proof.</p><div class="row"><button data-lb="refresh">Refresh Rankings</button></div>${leaderboardError?`<p class="bad">${safeName(leaderboardError)}</p>`:''}<div class="lb-table"><div class="lb-entry lb-heading"><b>Place</b><b>Player</b><b>${lbModes[leaderboardMode]}</b></div>${sorted.map((r,i)=>`<div class="lb-entry"><span>${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</span><span>${safeName(r.name)}${r.id===uid?' (You)':''}</span><strong>${Number(r[leaderboardMode]||0).toLocaleString('en-GB')}</strong></div>`).join('')||'<p>No rankings yet. Play to appear automatically!</p>'}</div>`;
+}
+async function leaderboardLoad(){
+ try{const snap=await getDocs(query(collection(db,'leaderboardProfiles'),limit(500)));leaderboardRows=snap.docs.map(d=>({id:d.id,...d.data()}));leaderboardError='';}
+ catch(err){leaderboardError='Could not load rankings: '+err.message;}leaderboardView();
+}
+function leaderboardPayload(){
+ const stats=window.elementalLeaderboardStats?.();if(!stats)return null;
+ return {name:safeName(profileName()),rank:Math.min(31,Math.max(1,Math.trunc(Number(stats.rank)||1))),solo:Math.min(300,Math.max(0,Math.trunc(Number(stats.solo)||0))),coop:Math.min(300,Math.max(0,Math.trunc(Number(stats.coop)||0))),wins:Math.max(0,Math.min(1000000,Math.trunc(Number(stats.wins)||0)))};
+}
+async function leaderboardPublish(){
+ if(!uid||lbResetting)return;
+ const payload=leaderboardPayload();if(!payload)return;
+ const signature=JSON.stringify(payload);if(signature===lbLastPayload)return;
+ const version=lbResetVersion;
+ await setDoc(doc(db,'leaderboardProfiles',uid),{...payload,updatedAt:serverTimestamp()});
+ if(version===lbResetVersion)lbLastPayload=signature;
+ if(document.getElementById('leaderboard-root'))await leaderboardLoad();
+}
+function leaderboardSchedule(){
+ if(!uid||lbResetting)return;
+ clearTimeout(lbTimer);
+ lbTimer=setTimeout(()=>leaderboardPublish().catch(err=>{leaderboardError='Auto-update failed: '+err.message;leaderboardView()}),900);
+}
+window.elementalLeaderboardChanged=leaderboardSchedule;
+window.elementalPublishLeaderboard=leaderboardSchedule;
+window.elementalLeaderboardReset=()=>{
+ clearTimeout(lbTimer);lbResetVersion++;lbResetting=true;lbLastPayload='';
+ // Delete the old public entry rather than publishing a zero score.
+ const account=uid;
+ if(!account){lbResetting=false;return;}
+ deleteDoc(doc(db,'leaderboardProfiles',account)).then(()=>{
+  leaderboardRows=leaderboardRows.filter(row=>row.id!==account);
+  leaderboardView();
+ }).catch(err=>{
+  leaderboardError='Leaderboard removal failed: '+err.message;
+  leaderboardView();
+ }).finally(()=>{lbResetting=false;});
+};
+window.renderLeaderboard=()=>{leaderboardView();leaderboardLoad()};
+document.addEventListener('click',async ev=>{
+ const btn=ev.target.closest('[data-lb]');if(!btn)return;
+ if(btn.dataset.lb==='mode'){leaderboardMode=btn.dataset.value;leaderboardView();return;}
+ if(leaderboardBusy)return;leaderboardBusy=true;btn.disabled=true;
+ try{await leaderboardLoad()}finally{leaderboardBusy=false;btn.disabled=false;}
+});
+onAuthStateChanged(auth,user=>{uid=user?.uid||null;if(uid){lbLastPayload='';info=user.isAnonymous?'Signed in as guest':'Signed in with email';loadProfile().then(()=>{leaderboardSchedule();socialPublish().catch(()=>{});socialLoadDirectory();socialListen()}).catch(e=>{profileNotice='Profile loading error: '+e.message;window.renderProfile?.()});show()}else signInAnonymously(auth).catch(err=>{info='Sign-in failed: '+err.message;show()})});
+</script><audio id="game-music" loop preload="none" src="royaltyfreemusicstudio-medieval-fantasy-music-462199.mp3"></audio><script>(function(){const a=document.getElementById('game-music'),b=document.getElementById('music-toggle'),v=document.getElementById('music-volume');a.volume=.35;function sync(){b.textContent=a.paused?'🎵 Play music':'🔊 Pause music'}b.addEventListener('click',async()=>{if(a.paused){try{await a.play()}catch(e){console.warn('Audio playback blocked',e);b.textContent='Tap to play music'}}else a.pause();sync()});v.addEventListener('input',()=>a.volume=Number(v.value)/100);a.addEventListener('ended',sync);sync()})();</script></body></html>
